@@ -6,7 +6,7 @@ import { getFirestore } from 'firebase/firestore'
 import { getStorage } from 'firebase/storage'
 import constants from '../../constants/constants'
 
-const FIREBASE_API_KEY = constants.FIREBASE_API_KEY
+const FIREBASE_API_KEY = constants.firebase.FIREBASE_API_KEY
 
 const firebaseConfig = {
   apiKey: FIREBASE_API_KEY,

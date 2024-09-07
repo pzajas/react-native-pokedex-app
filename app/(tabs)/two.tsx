@@ -1,5 +1,6 @@
 import EditScreenInfo from '@/components/EditScreenInfo'
 import { Text, View } from '@/components/Themed'
+import { fetchPokemonData } from '@/services/api/fetchPokemons'
 import { logoutUser } from '@/services/firebase/firebaseFunctions'
 import { useRouter } from 'expo-router'
 import React from 'react'
@@ -12,12 +13,17 @@ export default function TabTwoScreen() {
     router.replace('/(auth)/')
   }
 
+  const handleFetchData = async () => {
+    await fetchPokemonData()
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Tab Two</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       <EditScreenInfo path="app/(tabs)/two.tsx" />
       <Button title="Log Out" onPress={handleLogout} color="#007bff" />
+      <Button title="FETCH DATA" onPress={handleFetchData} color="red" />
     </View>
   )
 }
