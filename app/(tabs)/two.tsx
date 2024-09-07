@@ -1,13 +1,23 @@
 import EditScreenInfo from '@/components/EditScreenInfo'
 import { Text, View } from '@/components/Themed'
-import { StyleSheet } from 'react-native'
+import { logoutUser } from '@/services/firebase/firebaseFunctions'
+import { useRouter } from 'expo-router'
+import React from 'react'
+import { Button, StyleSheet } from 'react-native'
 
 export default function TabTwoScreen() {
+  const router = useRouter()
+  const handleLogout = async () => {
+    await logoutUser()
+    router.replace('/(auth)/')
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Tab Two</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       <EditScreenInfo path="app/(tabs)/two.tsx" />
+      <Button title="Log Out" onPress={handleLogout} color="#007bff" />
     </View>
   )
 }
