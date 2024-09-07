@@ -1,13 +1,20 @@
 import axios from 'axios'
-import constants from '../../constants/constants'
+import { queryClient } from '../tanstack/queryClient'
 
-const POKE_API_URL = constants.api.POKE_API_URL
+const POKE_API_URL = 'https://pokeapi.co/api/v2/pokemon'
 
 export const fetchPokemonData = async () => {
   try {
-    const response = await axios.get(POKE_API_URL)
-    console.log('Data fetched from PokeAPI:', response.data)
+    const response = await axios.get(POKE_API_URL, {
+      params: {
+        offset: 0
+      }
+    })
+
+    const pokemonData = response.data
+    queryClient.setQueryData(['pokemon'], pokemonData)
+    return pokemonData
   } catch (error) {
-    console.error('Error fetching data from PokeAPI:', error)
+    throw error
   }
 }
