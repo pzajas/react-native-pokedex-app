@@ -3,9 +3,9 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   sendPasswordResetEmail,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
+  signOut
 } from 'firebase/auth'
-import { Alert } from 'react-native'
 import { auth } from '../../services/firebase/firebase'
 
 interface IUserCredentials {
@@ -19,15 +19,15 @@ export const registerUser = async ({ email, password }: IUserCredentials) => {
 
     await sendEmailVerification(userCredential.user)
 
-    Alert.alert(
+    console.log(
       'Registration Successful',
       `A verification email has been sent to ${userCredential.user.email}. Please check your inbox.`
     )
   } catch (error) {
     if (error instanceof FirebaseError) {
-      Alert.alert('Registration Failed', error.message)
+      console.log('Registration Failed', error.message)
     } else {
-      Alert.alert('Registration Failed', 'An unknown error occurred.')
+      console.log('Registration Failed', 'An unknown error occurred.')
     }
   }
 }
@@ -37,17 +37,17 @@ export const loginUser = async ({ email, password }: IUserCredentials) => {
     const userCredential = await signInWithEmailAndPassword(auth, email, password)
 
     if (!userCredential.user.emailVerified) {
-      Alert.alert('Email Not Verified', 'Please verify your email address before logging in.')
+      console.log('Email Not Verified', 'Please verify your email address before logging in.')
       await auth.signOut()
       return
     }
 
-    Alert.alert('Login Successful', `Welcome back, ${userCredential.user.email}!`)
+    console.log('Login Successful', `Welcome back, ${userCredential.user.email}!`)
   } catch (error) {
     if (error instanceof FirebaseError) {
-      Alert.alert('Login Process Failed', error.message)
+      console.log('Login Process Failed', error.message)
     } else {
-      Alert.alert('Login Process Failed', 'An unknown error occurred.')
+      console.log('Login Process Failed', 'An unknown error occurred.')
     }
   }
 }
@@ -55,12 +55,21 @@ export const loginUser = async ({ email, password }: IUserCredentials) => {
 export const resetPassword = async ({ email }: { email: string }) => {
   try {
     await sendPasswordResetEmail(auth, email)
-    Alert.alert('Password Reset', 'A password reset email has been sent.')
+    console.log('Password Reset', 'A password reset email has been sent.')
   } catch (error) {
     if (error instanceof FirebaseError) {
-      Alert.alert('Password Reset Failed', error.message)
+      console.log('Password Reset Failed', error.message)
     } else {
-      Alert.alert('Password Reset Failed', 'An unknown error occurred.')
+      console.log('Password Reset Failed', 'An unknown error occurred.')
     }
+  }
+}
+
+export const logoutUser = async () => {
+  try {
+    await signOut(auth)
+    console.log('Success', 'You have been logged out.')
+  } catch (error) {
+    console.log('Error', 'An error occurred while logging out.')
   }
 }

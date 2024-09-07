@@ -1,52 +1,77 @@
 import { useColorScheme } from '@/components/useColorScheme'
+import { auth } from '@/services/firebase/firebase'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
-
 import { useFonts } from 'expo-font'
-import { Stack } from 'expo-router'
+import { Stack, useRouter } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
-import { useEffect } from 'react'
-
+import { onAuthStateChanged } from 'firebase/auth'
+import React, { useEffect, useState } from 'react'
 import 'react-native-reanimated'
 import SpaceMono from '../assets/fonts/SpaceMono-Regular.ttf'
+
+SplashScreen.preventAutoHideAsync()
 
 export const unstable_settings = {
   initialRouteName: '(tabs)'
 }
 
-SplashScreen.preventAutoHideAsync()
-
 export default function RootLayout() {
-  const [loaded, error] = useFonts({
+  const router = useRouter()
+  const [fontsLoaded] = useFonts({
     SpaceMono,
     ...FontAwesome.font
   })
 
-  useEffect(() => {
-    if (error) throw error
-  }, [error])
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
+  const [isEmailVerified, setIsEmailVerified] = useState<boolean>(false)
 
   useEffect(() => {
-    if (loaded) {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsLoggedIn(true)
+        setIsEmailVerified(user.emailVerified)
+      } else {
+        setIsLoggedIn(false)
+        setIsEmailVerified(false)
+      }
+    })
+
+    return () => unsubscribe()
+  }, [])
+
+  useEffect(() => {
+    if (fontsLoaded && isLoggedIn !== null) {
       SplashScreen.hideAsync()
+      if (isLoggedIn) {
+        router.replace(isEmailVerified ? '/(tabs)/' : '/(auth)/')
+      } else {
+        router.replace('/(auth)/')
+      }
     }
-  }, [loaded])
+  }, [fontsLoaded, isLoggedIn, isEmailVerified, router])
 
-  if (!loaded) {
+  if (!fontsLoaded || isLoggedIn === null) {
     return null
   }
 
-  return <RootLayoutNav />
+  return <RootLayoutNav isLoggedIn={isLoggedIn} />
 }
 
-function RootLayoutNav() {
+function RootLayoutNav({ isLoggedIn }: { isLoggedIn: boolean }) {
   const colorScheme = useColorScheme()
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
+      {isLoggedIn ? (
+        <Stack>
+          <Stack.Screen name={'(tabs)'} options={{ headerShown: false }} />
+        </Stack>
+      ) : (
+        <Stack>
+          <Stack.Screen name={'(auth)'} options={{ headerShown: false }} />
+        </Stack>
+      )}
     </ThemeProvider>
   )
 }
