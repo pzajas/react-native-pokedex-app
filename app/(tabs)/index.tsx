@@ -1,20 +1,41 @@
 import { Text, View } from '@/components/Themed'
 import { queryClient } from '@/services/tanstack/queryClient'
 import { useQuery } from '@tanstack/react-query'
+import { useRouter } from 'expo-router'
 import { ActivityIndicator, FlatList, StyleSheet } from 'react-native'
+interface PokemonResult {
+  name: string
+  url: string
+}
+interface PokemonData {
+  count: number
+  next: string | null
+  previous: string | null
+  results: PokemonResult[]
+}
 
 export default function TabOneScreen() {
+  const router = useRouter()
   const { data: pokemonData, isFetched } = useQuery({
     queryKey: ['pokemonData'],
-    queryFn: () => queryClient.getQueryData<any[]>(['pokemonData']),
+    queryFn: () => queryClient.getQueryData<PokemonData>(['pokemonData']),
     staleTime: Infinity
   })
+
+  const handlePress = (item: any) => {
+    router.push({
+      pathname: `/(pages)/pokemon/${item.name}` as `/(pages)/pokemon/[id]`,
+      params: item?.name
+    })
+  }
 
   const renderItem = ({ item }: { item: any }) => (
     <>
       {isFetched ? (
         <View style={styles.itemContainer}>
-          <Text style={styles.itemText}>{item?.name}</Text>
+          <Text style={styles.itemText} onPress={() => handlePress(item)}>
+            {item?.name}
+          </Text>
         </View>
       ) : (
         <ActivityIndicator />

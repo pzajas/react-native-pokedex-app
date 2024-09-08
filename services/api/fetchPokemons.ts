@@ -1,7 +1,8 @@
 import axios from 'axios'
+import constants from '../../constants/constants'
 import { queryClient } from '../tanstack/queryClient'
 
-const POKE_API_URL = 'https://pokeapi.co/api/v2/pokemon'
+const POKE_API_URL = constants.api.POKE_API_URL
 
 export const fetchPokemonData = async () => {
   try {

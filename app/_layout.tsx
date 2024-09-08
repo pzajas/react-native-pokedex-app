@@ -72,13 +72,14 @@ function RootLayoutNav({ isLoggedIn }: { isLoggedIn: boolean }) {
     <PersistQueryClientProvider client={queryClient} persistOptions={{ persister }}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         {isLoggedIn ? (
-          <Stack>
-            <Stack.Screen name={'(fetching)'} options={{ headerShown: false }} />
-            <Stack.Screen name={'(tabs)'} options={{ headerShown: false }} />
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name={'(fetching)'} />
+            <Stack.Screen name={'(tabs)'} />
+            <Stack.Screen name={'(pages)'} />
           </Stack>
         ) : (
-          <Stack>
-            <Stack.Screen name={'(auth)'} options={{ headerShown: false }} />
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name={'(auth)'} />
           </Stack>
         )}
       </ThemeProvider>
