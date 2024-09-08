@@ -1,7 +1,7 @@
 import EditScreenInfo from '@/components/EditScreenInfo'
 import { Text, View } from '@/components/Themed'
 import { loginUser, registerUser, resetPassword } from '@/services/firebase/firebaseFunctions'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Button, StyleSheet, TextInput } from 'react-native'
 
 export default function AuthenticationScreen() {

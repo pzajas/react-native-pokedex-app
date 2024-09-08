@@ -1,8 +1,9 @@
 import EditScreenInfo from '@/components/EditScreenInfo'
 import { Text, View } from '@/components/Themed'
 import { logoutUser } from '@/services/firebase/firebaseFunctions'
+import { queryClient } from '@/services/tanstack/queryClient'
+import { useQuery } from '@tanstack/react-query'
 import { useRouter } from 'expo-router'
-import React from 'react'
 import { Button, StyleSheet } from 'react-native'
 
 export default function TabTwoScreen() {
@@ -11,6 +12,16 @@ export default function TabTwoScreen() {
     await logoutUser()
     router.replace('/(auth)/')
   }
+
+  // const handleFetchData = async () => {
+  //   await fetchPokemonData()
+  // }
+
+  const { data: pokemonData, isLoading } = useQuery({
+    queryKey: ['pokemonData'],
+    queryFn: () => queryClient.getQueryData<any[]>(['pokemonData']) || [],
+    staleTime: Infinity
+  })
 
   return (
     <View style={styles.container}>

@@ -2597,6 +2597,39 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
+"@tanstack/query-async-storage-persister@^5.54.1":
+  version "5.54.1"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-async-storage-persister/-/query-async-storage-persister-5.54.1.tgz#a8573fe226aaec3dad3e2a5a341be34ded11e7ee"
+  integrity sha512-2nbQy1ZxT8OICDZLcijCxdx6UzVzwHJp82t90BzbsbZjsNDRSZ2aoy52wyt4LsWup+YPknzX0lRd+LHT6FGvgA==
+  dependencies:
+    "@tanstack/query-persist-client-core" "5.54.1"
+
+"@tanstack/query-core@5.54.1":
+  version "5.54.1"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.54.1.tgz#8d6c5e6691dd023f9181d69f7f9d790f52f1bdda"
+  integrity sha512-hKS+WRpT5zBFip21pB6Jx1C0hranWQrbv5EJ7qPoiV5MYI3C8rTCqWC9DdBseiPT1JgQWh8Y55YthuYZNiw3Xw==
+
+"@tanstack/query-persist-client-core@5.54.1":
+  version "5.54.1"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-persist-client-core/-/query-persist-client-core-5.54.1.tgz#ecf8fd55692c32f1e9962918cc91ebc3fa8a7db6"
+  integrity sha512-qmBkrC5HA3XHwwrx/pWjegncQFcmuoAaffwbrXm07OrsOxxeTGLt8aFl8RYbWAs75a8+9uneqVFQfgv5QRqxBA==
+  dependencies:
+    "@tanstack/query-core" "5.54.1"
+
+"@tanstack/react-query-persist-client@^5.55.0":
+  version "5.55.0"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query-persist-client/-/react-query-persist-client-5.55.0.tgz#bd8533b17a990feaa1e5ffd2c350a8d6171a0531"
+  integrity sha512-NvUcyc+MaaU/aV00Jnl+KYCMoYWx2s0ycuSkc+ZArvBlioy9NAqrKgyiWn8nXGzbew6bLxg82bgupOr+ivzuLA==
+  dependencies:
+    "@tanstack/query-persist-client-core" "5.54.1"
+
+"@tanstack/react-query@^5.55.0":
+  version "5.55.0"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.55.0.tgz#6221031f2ef1397261a63794ee021635e5f1ec84"
+  integrity sha512-2uYuxEbRQD8TORUiTUacEOwt1e8aoSqUOJFGY5TUrh6rQ3U85zrMS2wvbNhBhXGh6Vj69QDCP2yv8tIY7joo6Q==
+  dependencies:
+    "@tanstack/query-core" "5.54.1"
+
 "@tootallnate/once@2":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-2.0.0.tgz#f544a148d3ab35801c1f633a7441fd87c2e484bf"
@@ -3209,6 +3242,15 @@ available-typed-arrays@^1.0.7:
   integrity sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==
   dependencies:
     possible-typed-array-names "^1.0.0"
+
+axios@^1.7.7:
+  version "1.7.7"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.7.7.tgz#2f554296f9892a72ac8d8e4c5b79c14a91d0a47f"
+  integrity sha512-S4kL7XrjgBmvdGut0sN3yJxqYzrDOnivkBiN0OFs6hLiUam3UPvswUo0kqGyhqUZGEOytHyumEdXsAkgCOUf3Q==
+  dependencies:
+    follow-redirects "^1.15.6"
+    form-data "^4.0.0"
+    proxy-from-env "^1.1.0"
 
 babel-core@^7.0.0-bridge.0:
   version "7.0.0-bridge.0"
@@ -5034,6 +5076,11 @@ flow-parser@0.*:
   version "0.245.2"
   resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.245.2.tgz#995bbee7874814d56a1a365e46a5bb348384608a"
   integrity sha512-FU4yuqC1j2IeWWicpzG0YJrXHJgKjK/AU8QKK/7MvQaNhcoGisDoE7FJLGCtbvnifzsgDWdm9/jtTF7Mp+PJXQ==
+
+follow-redirects@^1.15.6:
+  version "1.15.9"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.9.tgz#a604fa10e443bf98ca94228d9eebcc2e8a2c8ee1"
+  integrity sha512-gew4GsXizNgdoRyqmyfMHyAmXsZDk6mHkSxZFCzW9gwlbtOW44CDtYavM+y+72qD/Vq2l550kMF52DT8fOLJqQ==
 
 fontfaceobserver@^2.1.0:
   version "2.3.0"
@@ -7968,6 +8015,11 @@ protobufjs@^7.2.5:
     "@protobufjs/utf8" "^1.1.0"
     "@types/node" ">=13.7.0"
     long "^5.0.0"
+
+proxy-from-env@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/proxy-from-env/-/proxy-from-env-1.1.0.tgz#e102f16ca355424865755d2c9e8ea4f24d58c3e2"
+  integrity sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==
 
 psl@^1.1.33:
   version "1.9.0"

@@ -1,12 +1,16 @@
 import { useColorScheme } from '@/components/useColorScheme'
 import { auth } from '@/services/firebase/firebase'
+import { queryClient } from '@/services/tanstack/queryClient'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
+import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import { useFonts } from 'expo-font'
 import { Stack, useRouter } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { onAuthStateChanged } from 'firebase/auth'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import 'react-native-reanimated'
 import SpaceMono from '../assets/fonts/SpaceMono-Regular.ttf'
 
@@ -23,7 +27,7 @@ export default function RootLayout() {
     ...FontAwesome.font
   })
 
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
   const [isEmailVerified, setIsEmailVerified] = useState<boolean>(false)
 
   useEffect(() => {
@@ -44,7 +48,7 @@ export default function RootLayout() {
     if (fontsLoaded && isLoggedIn !== null) {
       SplashScreen.hideAsync()
       if (isLoggedIn) {
-        router.replace(isEmailVerified ? '/(tabs)/' : '/(auth)/')
+        router.replace(isEmailVerified ? '/(fetching)/' : '/(auth)/')
       } else {
         router.replace('/(auth)/')
       }
@@ -60,18 +64,25 @@ export default function RootLayout() {
 
 function RootLayoutNav({ isLoggedIn }: { isLoggedIn: boolean }) {
   const colorScheme = useColorScheme()
+  const persister = createAsyncStoragePersister({
+    storage: AsyncStorage
+  })
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      {isLoggedIn ? (
-        <Stack>
-          <Stack.Screen name={'(tabs)'} options={{ headerShown: false }} />
-        </Stack>
-      ) : (
-        <Stack>
-          <Stack.Screen name={'(auth)'} options={{ headerShown: false }} />
-        </Stack>
-      )}
-    </ThemeProvider>
+    <PersistQueryClientProvider client={queryClient} persistOptions={{ persister }}>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        {isLoggedIn ? (
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name={'(fetching)'} />
+            <Stack.Screen name={'(tabs)'} />
+            <Stack.Screen name={'(pages)'} />
+          </Stack>
+        ) : (
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name={'(auth)'} />
+          </Stack>
+        )}
+      </ThemeProvider>
+    </PersistQueryClientProvider>
   )
 }
