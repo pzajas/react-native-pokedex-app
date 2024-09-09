@@ -12,6 +12,6 @@ export const getIconComponent = (type: PokemonType) => {
     case 'grass':
       return GrassIcon
     default:
-      return FireIcon // Or some default icon if preferred
+      return FireIcon
   }
 }

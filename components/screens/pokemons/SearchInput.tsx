@@ -1,6 +1,6 @@
 import { CustomText } from '@/components/typography/customText'
 import { MaterialIcons } from '@expo/vector-icons'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { StyleSheet, TextInput, View } from 'react-native'
 
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'black',
     borderRadius: 8,
-    marginHorizontal: 8,
+
     height: 50
   },
   inputContainer: {

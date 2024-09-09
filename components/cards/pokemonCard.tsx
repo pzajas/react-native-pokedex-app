@@ -73,13 +73,5 @@ const styles = StyleSheet.create({
     top: 0,
     right: 0,
     zIndex: 1
-  },
-  fireIcon: {
-    width: 50,
-    height: 50,
-    position: 'absolute',
-    top: -20,
-    right: -20,
-    zIndex: 0
   }
 })

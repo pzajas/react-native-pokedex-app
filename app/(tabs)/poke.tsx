@@ -1,12 +1,14 @@
 import { PokemoneCard } from '@/components/cards/pokemonCard'
+import { PokemonsHeader } from '@/components/screens/pokemons/PokemonsHeader'
+import { PokemonsNoResults } from '@/components/screens/pokemons/PokemonsNoResults'
 import { SearchInput } from '@/components/screens/pokemons/SearchInput'
 import { View } from '@/components/Themed'
-import { CustomText } from '@/components/typography/customText'
+import palette from '@/constants/palette'
 import { queryClient } from '@/services/tanstack/queryClient'
 import { PokemonData } from '@/typescript/types/pokemonTypes'
 import { useQuery } from '@tanstack/react-query'
 import { useRouter } from 'expo-router'
-import React, { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { ActivityIndicator, FlatList, StyleSheet } from 'react-native'
 
 type PokemonRouteParams = {
@@ -41,31 +43,55 @@ export default function PokeScreen() {
     </View>
   )
 
+  if (!isFetched) {
+    return <ActivityIndicator style={styles.loader} />
+  }
+
   return (
-    <View style={styles.container}>
-      <CustomText>Pokedex</CustomText>
-      <SearchInput searchQuery={searchQuery} onSearchChange={setSearchQuery} />
-      {isFetched ? (
-        <FlatList data={filteredData} renderItem={renderItem} keyExtractor={(item) => String(item.id)} />
-      ) : (
-        <ActivityIndicator />
-      )}
-    </View>
+    <FlatList
+      data={filteredData}
+      renderItem={renderItem}
+      keyExtractor={(item) => item.id.toString()}
+      ListHeaderComponent={
+        <View style={styles.listHeader}>
+          <PokemonsHeader />
+          <SearchInput searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+        </View>
+      }
+      contentContainerStyle={styles.container}
+      ListEmptyComponent={
+        <View style={styles.noResults}>
+          <PokemonsNoResults />
+        </View>
+      }
+    />
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: 'black',
-    height: 50,
-    marginHorizontal: 8,
-    borderRadius: 8
+    flexGrow: 1,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    backgroundColor: palette.light.background,
+    gap: 10
   },
   itemContainer: {
-    padding: 10
+    paddingVertical: 10
+  },
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexGrow: 1
+  },
+  noResults: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 50
+  },
+  listHeader: {
+    gap: 10
   }
 })
