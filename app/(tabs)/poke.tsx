@@ -1,17 +1,13 @@
 import { PokemoneCard } from '@/components/cards/pokemonCard'
+import { SearchInput } from '@/components/screens/pokemons/SearchInput'
 import { View } from '@/components/Themed'
 import { CustomText } from '@/components/typography/customText'
 import { queryClient } from '@/services/tanstack/queryClient'
 import { PokemonData } from '@/typescript/types/pokemonTypes'
 import { useQuery } from '@tanstack/react-query'
 import { useRouter } from 'expo-router'
-import React, { useMemo } from 'react'
-import { Controller, useForm } from 'react-hook-form'
-import { ActivityIndicator, FlatList, StyleSheet, TextInput } from 'react-native'
-
-type FormValues = {
-  search: string
-}
+import React, { useMemo, useState } from 'react'
+import { ActivityIndicator, FlatList, StyleSheet } from 'react-native'
 
 type PokemonRouteParams = {
   id: string
@@ -19,12 +15,7 @@ type PokemonRouteParams = {
 
 export default function PokeScreen() {
   const router = useRouter()
-  const { control, setValue, watch } = useForm<FormValues>({
-    defaultValues: {
-      search: ''
-    }
-  })
-  const searchQuery = watch('search')
+  const [searchQuery, setSearchQuery] = useState('')
 
   const { data: pokemonData = [], isFetched } = useQuery({
     queryKey: ['pokemonData'],
@@ -53,20 +44,7 @@ export default function PokeScreen() {
   return (
     <View style={styles.container}>
       <CustomText>Pokedex</CustomText>
-      <Controller
-        control={control}
-        name="search"
-        render={({ field: { onChange, value } }) => (
-          <TextInput
-            style={styles.input}
-            placeholder="Type a pokemon name..."
-            onChangeText={(text) => {
-              onChange(text)
-            }}
-            value={value}
-          />
-        )}
-      />
+      <SearchInput searchQuery={searchQuery} onSearchChange={setSearchQuery} />
       {isFetched ? (
         <FlatList data={filteredData} renderItem={renderItem} keyExtractor={(item) => String(item.id)} />
       ) : (
