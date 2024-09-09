@@ -1,10 +1,11 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome'
-import { Link, Tabs } from 'expo-router'
+import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { Link, Tabs, useRouter } from 'expo-router'
 import { Pressable } from 'react-native'
 
 import { useClientOnlyValue } from '@/components/useClientOnlyValue'
 import { useColorScheme } from '@/components/useColorScheme'
-import Colors from '@/constants/Colors'
+import palette from '@/constants/palette'
 
 function TabBarIcon(props: { name: React.ComponentProps<typeof FontAwesome>['name']; color: string }) {
   return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />
@@ -12,11 +13,12 @@ function TabBarIcon(props: { name: React.ComponentProps<typeof FontAwesome>['nam
 
 export default function TabLayout() {
   const colorScheme = useColorScheme()
+  const router = useRouter()
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: palette[colorScheme ?? 'light'].tint,
         headerShown: useClientOnlyValue(false, true)
       }}
     >
@@ -32,7 +34,7 @@ export default function TabLayout() {
                   <FontAwesome
                     name="info-circle"
                     size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
+                    color={palette[colorScheme ?? 'light'].text}
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                   />
                 )}
@@ -42,9 +44,30 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="poke"
         options={{
-          title: 'Tab Two',
+          title: 'Pokemon List',
+          headerStyle: {
+            backgroundColor: 'crimson'
+          },
+          headerTintColor: 'white',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          headerLeft: () => (
+            <Pressable
+              onPress={() => {
+                router.back()
+              }}
+              style={{ marginLeft: 15 }}
+            >
+              <MaterialIcons name="arrow-back" size={24} color="white" />
+            </Pressable>
+          )
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />
         }}
       />

@@ -7,6 +7,7 @@ import {
   signOut
 } from 'firebase/auth'
 import { auth } from '../../services/firebase/firebase'
+import { queryClient } from '../tanstack/queryClient'
 
 interface IUserCredentials {
   email: string
@@ -67,6 +68,8 @@ export const resetPassword = async ({ email }: { email: string }) => {
 
 export const logoutUser = async () => {
   try {
+    queryClient.removeQueries()
+    queryClient.invalidateQueries()
     await signOut(auth)
     console.log('Success', 'You have been logged out.')
   } catch (error) {

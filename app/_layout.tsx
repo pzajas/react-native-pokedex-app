@@ -12,7 +12,7 @@ import * as SplashScreen from 'expo-splash-screen'
 import { onAuthStateChanged } from 'firebase/auth'
 import { useEffect, useState } from 'react'
 import 'react-native-reanimated'
-import SpaceMono from '../assets/fonts/SpaceMono-Regular.ttf'
+import { PoppinsBold, PoppinsLight, PoppinsMedium, PoppinsRegular } from '../assets/fonts'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -23,7 +23,10 @@ export const unstable_settings = {
 export default function RootLayout() {
   const router = useRouter()
   const [fontsLoaded] = useFonts({
-    SpaceMono,
+    PoppinsLight,
+    PoppinsRegular,
+    PoppinsMedium,
+    PoppinsBold,
     ...FontAwesome.font
   })
 
