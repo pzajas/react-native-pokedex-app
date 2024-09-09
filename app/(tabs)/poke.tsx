@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     gap: 10
   },
   itemContainer: {
-    paddingVertical: 10
+    paddingVertical: 6
   },
   loader: {
     flex: 1,

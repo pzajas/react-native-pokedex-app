@@ -1,5 +1,6 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome'
-import { Link, Tabs } from 'expo-router'
+import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { Link, Tabs, useRouter } from 'expo-router'
 import { Pressable } from 'react-native'
 
 import { useClientOnlyValue } from '@/components/useClientOnlyValue'
@@ -12,6 +13,7 @@ function TabBarIcon(props: { name: React.ComponentProps<typeof FontAwesome>['nam
 
 export default function TabLayout() {
   const colorScheme = useColorScheme()
+  const router = useRouter()
 
   return (
     <Tabs
@@ -44,8 +46,22 @@ export default function TabLayout() {
       <Tabs.Screen
         name="poke"
         options={{
-          title: 'Pokemons',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />
+          title: 'Pokemon List',
+          headerStyle: {
+            backgroundColor: 'crimson'
+          },
+          headerTintColor: 'white',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          headerLeft: () => (
+            <Pressable
+              onPress={() => {
+                router.back()
+              }}
+              style={{ marginLeft: 15 }}
+            >
+              <MaterialIcons name="arrow-back" size={24} color="white" />
+            </Pressable>
+          )
         }}
       />
       <Tabs.Screen
