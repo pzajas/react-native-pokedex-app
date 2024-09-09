@@ -10,7 +10,7 @@ export const fetchPokemonData = async () => {
     const pokemonListResponse = await axios.get(POKE_API_URL, {
       params: {
         offset: 0,
-        limit: 75
+        limit: 151
       }
     })
 
