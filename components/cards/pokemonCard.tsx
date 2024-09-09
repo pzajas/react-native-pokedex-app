@@ -20,9 +20,9 @@ export const PokemoneCard = ({ item, handleNavigatePokemon }: { item: any; handl
   return (
     <Pressable onPress={handleNavigatePokemon}>
       <View style={[styles.wrapper, { backgroundColor }]}>
-        <View style={{ justifyContent: 'space-between' }}>
-          <CustomText>#{formattedId}</CustomText>
-          <CustomText style={{ fontSize: 25, color: palette.light.textLight }}>{capitalizedName}</CustomText>
+        <View style={styles.textContainer}>
+          <CustomText style={{ color: palette.light.textLight }}>#{formattedId}</CustomText>
+          <CustomText style={styles.nameText}>{capitalizedName}</CustomText>
           <CustomText>
             {item?.types.map((type: PokemonType, index: number) => (
               <TypeChip type={type} key={`${item.id}-${index}`} />
@@ -30,7 +30,7 @@ export const PokemoneCard = ({ item, handleNavigatePokemon }: { item: any; handl
           </CustomText>
         </View>
 
-        <View>
+        <View style={styles.imageContainer}>
           <Image source={{ uri: artworkUrl }} style={styles.image} />
         </View>
       </View>
@@ -46,14 +46,40 @@ const styles = StyleSheet.create({
     padding: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    position: 'relative'
+    position: 'relative',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  textContainer: {
+    justifyContent: 'space-between'
+  },
+  nameText: {
+    fontSize: 25,
+    color: palette.light.textLight
+  },
+  imageContainer: {
+    position: 'relative',
+    width: 140,
+    height: 140
   },
   image: {
     width: 140,
     height: 140,
     resizeMode: 'contain',
     position: 'absolute',
+    top: 0,
+    right: 0,
+    zIndex: 1
+  },
+  fireIcon: {
+    width: 50,
+    height: 50,
+    position: 'absolute',
     top: -20,
-    right: 0
+    right: -20,
+    zIndex: 0
   }
 })
