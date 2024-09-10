@@ -1,8 +1,8 @@
 import constants from '@/constants/constants'
 import palette from '@/constants/palette'
 import { PokemonType } from '@/typescript/types/pokemonTypes'
-import { capitalizeFirstLetter } from '@/utils/formatters/capitalizeFirstLetter'
 import { formatPokemonId } from '@/utils/formatters/formatPokemonId'
+import { capitalize } from 'lodash'
 import { Image, Pressable, StyleSheet, View } from 'react-native'
 import { TypeChip } from '../chips/typeChip'
 import { CustomText } from '../typography/customText'
@@ -10,7 +10,7 @@ import { CustomText } from '../typography/customText'
 const ARTWORK_API_URL = constants.api.ARTWORK_API_URL
 
 export const PokemoneCard = ({ item, handleNavigatePokemon }: { item: any; handleNavigatePokemon: any }) => {
-  const capitalizedName = capitalizeFirstLetter(item.name)
+  const capitalizedName = capitalize(item.name)
   const formattedId = formatPokemonId(item.id)
   const artworkUrl = `${ARTWORK_API_URL}/${item.id}.png`
 
@@ -18,7 +18,7 @@ export const PokemoneCard = ({ item, handleNavigatePokemon }: { item: any; handl
   const backgroundColor = palette.typeColors[primaryType] || palette.typeColors.default
 
   return (
-    <Pressable onPress={handleNavigatePokemon}>
+    <Pressable onPress={() => handleNavigatePokemon(item)}>
       <View style={[styles.wrapper, { backgroundColor }]}>
         <View style={styles.textContainer}>
           <CustomText style={{ color: palette.light.textLight }}>#{formattedId}</CustomText>
