@@ -10,7 +10,7 @@ interface IPokeTabs {
 export const PokeTabs = ({ currentPokemon }: IPokeTabs) => {
   const tabs = [
     { label: 'About', component: <About currentPokemon={currentPokemon} /> },
-    { label: 'Stats', component: <Stats /> },
+    { label: 'Stats', component: <Stats currentPokemon={currentPokemon} /> },
     { label: 'Evolution', component: <Evolution /> },
     { label: 'Moves', component: <Moves /> }
   ]

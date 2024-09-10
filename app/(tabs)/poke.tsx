@@ -27,8 +27,6 @@ export default function PokeScreen() {
   const filteredData = useFilteredPokemonData(searchQuery, pokemonData)
 
   const handleNavigatePokemon = (item: PokemonData) => {
-    console.log(item?.name, 'Name?')
-
     router.push({
       pathname: `/(pages)/pokemon/[id]`,
       params: { id: item.name }
