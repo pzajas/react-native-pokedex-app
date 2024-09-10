@@ -1,10 +1,10 @@
 // About.tsx
-import { CustomText } from '@/components/typography/customText'
 import { filterPokemonDescriptions } from '@/utils/arrays/filterPokemonDescriptions'
 import { getRandomItem } from '@/utils/arrays/getRandomArrayItem'
 import { formatPokemonDescription } from '@/utils/formatters/formatPokemonDescription'
 import { StyleSheet, View } from 'react-native'
 import { Breeding } from './components/PokemonBreeding'
+import { PokemonDescription } from './components/PokemonDescription'
 import { Information } from './components/PokemonInformation'
 
 export const About = ({ currentPokemon }: any) => {
@@ -23,11 +23,7 @@ export const About = ({ currentPokemon }: any) => {
 
   return (
     <View style={styles.container}>
-      <CustomText weight="semibold" style={{ marginBottom: 10 }}>
-        Description
-      </CustomText>
-      <CustomText style={styles.description}>{formattedDescription}</CustomText>
-
+      <PokemonDescription description={formattedDescription} />
       <Information
         height={formattedHeight}
         weight={formattedWeight}
