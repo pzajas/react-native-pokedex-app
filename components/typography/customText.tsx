@@ -1,7 +1,7 @@
 import { Text as DefaultText, TextProps } from 'react-native'
 
 interface CustomTextProps extends TextProps {
-  weight?: 'light' | 'regular' | 'medium' | 'bold'
+  weight?: 'light' | 'regular' | 'medium' | 'semibold' | 'bold'
 }
 
 export const CustomText: React.FC<CustomTextProps> = ({ style, weight = 'medium', ...props }) => {
@@ -11,6 +11,8 @@ export const CustomText: React.FC<CustomTextProps> = ({ style, weight = 'medium'
         return 'PoppinsLight'
       case 'medium':
         return 'PoppinsMedium'
+      case 'semibold':
+        return 'PoppinsSemiBold'
       case 'bold':
         return 'PoppinsBold'
       default:

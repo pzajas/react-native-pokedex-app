@@ -21,7 +21,7 @@ export default {
     fire: '#fba64a',
     water: '#5face2',
     grass: '#5dc067',
-    electric: '#f3db55',
+    electric: '#F4D23C',
     ice: '#7bd3c6',
     fighting: '#d7425a',
     poison: '#b363cd',
@@ -56,5 +56,9 @@ export default {
     steel: '#467d89',
     fairy: '#cc7cc2',
     default: '#7f8183'
+  },
+  gender: {
+    female: '#ff66b9',
+    male: '#369fff'
   }
 }

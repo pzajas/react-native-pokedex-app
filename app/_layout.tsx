@@ -12,7 +12,7 @@ import * as SplashScreen from 'expo-splash-screen'
 import { onAuthStateChanged } from 'firebase/auth'
 import { useEffect, useState } from 'react'
 import 'react-native-reanimated'
-import { PoppinsBold, PoppinsLight, PoppinsMedium, PoppinsRegular } from '../assets/fonts'
+import { PoppinsBold, PoppinsLight, PoppinsMedium, PoppinsRegular, PoppinsSemiBold } from '../assets/fonts'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -26,6 +26,7 @@ export default function RootLayout() {
     PoppinsLight,
     PoppinsRegular,
     PoppinsMedium,
+    PoppinsSemiBold,
     PoppinsBold,
     ...FontAwesome.font
   })

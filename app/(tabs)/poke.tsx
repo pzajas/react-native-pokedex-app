@@ -1,10 +1,10 @@
 import { SmallRoundButton } from '@/components/buttons/SmallRoundButton'
 import { PokemoneCard } from '@/components/cards/pokemonCard'
-import { PokemonsHeader } from '@/components/screens/pokemons/PokemonsHeader'
-import { PokemonsNoResults } from '@/components/screens/pokemons/PokemonsNoResults'
-import { SearchInput } from '@/components/screens/pokemons/SearchInput'
 import palette from '@/constants/palette'
 import { useFilteredPokemonData } from '@/hooks/useFilteredPokemonData'
+import { PokemonsHeader } from '@/screens/pokemons/PokemonsHeader'
+import { PokemonsNoResults } from '@/screens/pokemons/PokemonsNoResults'
+import { SearchInput } from '@/screens/pokemons/SearchInput'
 import { queryClient } from '@/services/tanstack/queryClient'
 import { PokemonData } from '@/typescript/types/pokemonTypes'
 import { useScrollToTop } from '@react-navigation/native'
@@ -27,8 +27,10 @@ export default function PokeScreen() {
   const filteredData = useFilteredPokemonData(searchQuery, pokemonData)
 
   const handleNavigatePokemon = (item: PokemonData) => {
+    console.log(item?.name, 'Name?')
+
     router.push({
-      pathname: `/(pages)/pokemon/${item.name}` as `/(pages)/pokemon/[id]`,
+      pathname: `/(pages)/pokemon/[id]`,
       params: { id: item.name }
     })
   }
