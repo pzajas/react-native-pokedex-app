@@ -7,7 +7,7 @@ import { PokemonDescription } from './components/PokemonDescription'
 import { Information } from './components/PokemonInformation'
 
 export const About = ({ currentPokemon }: any) => {
-  const [pokemonCategory] = currentPokemon?.category.split(' ') || []
+  const [pokemonCategory] = currentPokemon?.category?.split(' ') || []
 
   const descriptions = currentPokemon?.descriptions || []
   const filteredDescriptions = filterPokemonDescriptions(descriptions)

@@ -2,9 +2,7 @@ import constants from '@/constants/constants'
 import palette from '@/constants/palette'
 import { Header } from '@/screens/pokemon/main/Header'
 import { PokeTabs } from '@/screens/pokemon/tab/PokeTabs'
-import { queryClient } from '@/services/tanstack/queryClient'
-import { PokemonData } from '@/typescript/types/pokemonTypes'
-import { useQuery } from '@tanstack/react-query'
+import { usePokemonData } from '@/services/api/fetchPokemonData'
 import { useLocalSearchParams } from 'expo-router'
 import { Image, StyleSheet, View } from 'react-native'
 
@@ -12,15 +10,12 @@ const ARTWORK_API_URL = constants.api.ARTWORK_API_URL
 
 export default function PokemonScreen() {
   const { id } = useLocalSearchParams()
+  const { data } = usePokemonData()
 
-  const { data: pokemonData } = useQuery({
-    queryKey: ['pokemonData'],
-    queryFn: () => queryClient.getQueryData<PokemonData[]>(['pokemonData']),
-    staleTime: Infinity
-  })
+  const pokemonData = data?.pages.flatMap((page) => page.pokemonDetails) || []
 
-  const currentPokemon = pokemonData?.find((pokemon) => pokemon?.name === id)
-  const artworkUrl = `${ARTWORK_API_URL}/${currentPokemon?.id}.png`
+  const currentPokemon = pokemonData.find((pokemon) => pokemon?.name === id)
+  const artworkUrl = `${ARTWORK_API_URL}/${currentPokemon?.id.toString().replace(/^0+/, '')}.png`
 
   const primaryType = currentPokemon?.types[0] || 'default'
   const backgroundColor = palette.typeColors[primaryType] || palette.typeColors.default
