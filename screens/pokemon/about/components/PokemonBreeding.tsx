@@ -1,4 +1,3 @@
-// Breeding.tsx
 import { GenderIcon } from '@/assets/icons/GenderIcon'
 import { GenderBalanceBar } from '@/components/bars/GenderBalanceBar'
 import { CustomText } from '@/components/typography/customText'

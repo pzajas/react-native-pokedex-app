@@ -8,7 +8,7 @@ const POKE_API_URL = constants.api.POKE_API_URL
 // Helper function to calculate gender percentages
 const calculateGenderPercentage = (genderRate: number) => {
   if (genderRate === -1) {
-    return { male: 0, female: 0, genderless: true } // Genderless Pokémon
+    return { male: 0, female: 0, genderless: true }
   }
 
   const malePercentage = ((8 - genderRate) / 8) * 100
@@ -63,10 +63,11 @@ export const fetchPokemonData = async () => {
           weight: details.weight,
           height: details.height,
           abilities: details.abilities.map((ability) => ability.ability.name),
-          color: speciesData.color.name, // Add the color field from species endpoint
-          category: category ? category.genus : 'Unknown', // Add category in English
-          descriptions: descriptions.length > 0 ? descriptions : ['No description available'], // Add all descriptions in English
-          gender: gender // Add gender information (male %, female %, genderless)
+          color: speciesData.color.name,
+          category: category ? category.genus : 'Unknown',
+          descriptions: descriptions.length > 0 ? descriptions : ['No description available'],
+          gender: gender,
+          moves: details.moves
         }
       })
     )

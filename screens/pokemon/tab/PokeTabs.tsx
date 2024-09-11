@@ -1,6 +1,6 @@
 import { About, Evolution, Moves, Stats } from '@/screens/pokemon/tab/content'
 import { useState } from 'react'
-import { ScrollView, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { PokeTabButton } from './PokeTabButton'
 
 interface IPokeTabs {
@@ -12,7 +12,7 @@ export const PokeTabs = ({ currentPokemon }: IPokeTabs) => {
     { label: 'About', component: <About currentPokemon={currentPokemon} /> },
     { label: 'Stats', component: <Stats currentPokemon={currentPokemon} /> },
     { label: 'Evolution', component: <Evolution /> },
-    { label: 'Moves', component: <Moves /> }
+    { label: 'Moves', component: <Moves currentPokemon={currentPokemon} /> }
   ]
 
   const [selectedTab, setSelectedTab] = useState(tabs[0].label)
@@ -30,9 +30,7 @@ export const PokeTabs = ({ currentPokemon }: IPokeTabs) => {
         ))}
       </View>
 
-      <ScrollView style={styles.tabContentContainer}>
-        {tabs.find((tab) => tab.label === selectedTab)?.component}
-      </ScrollView>
+      <View style={styles.tabContentContainer}>{tabs.find((tab) => tab.label === selectedTab)?.component}</View>
     </View>
   )
 }
