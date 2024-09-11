@@ -1,0 +1,20 @@
+export const moveImages = {
+  Normal: require('../../assets/icons/NormalIcon.png'),
+  Fire: require('../../assets/icons/FireIcon.png'),
+  Water: require('../../assets/icons/WaterIcon.png'),
+  Electric: require('../../assets/icons/ElectricIcon.png'),
+  Grass: require('../../assets/icons/GrassIcon.png'),
+  Ice: require('../../assets/icons/IceIcon.png'),
+  Fighting: require('../../assets/icons/FightingIcon.png'),
+  Poison: require('../../assets/icons/PoisonIcon.png'),
+  Ground: require('../../assets/icons/GroundIcon.png'),
+  Flying: require('../../assets/icons/FlyingIcon.png'),
+  Psychic: require('../../assets/icons/PsychicIcon.png'),
+  Bug: require('../../assets/icons/BugIcon.png'),
+  Rock: require('../../assets/icons/RockIcon.png'),
+  Ghost: require('../../assets/icons/GhostIcon.png'),
+  Dragon: require('../../assets/icons/DragonIcon.png'),
+  Dark: require('../../assets/icons/DarkIcon.png'),
+  Steel: require('../../assets/icons/SteelIcon.png'),
+  Fairy: require('../../assets/icons/FairyIcon.png')
+}

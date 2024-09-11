@@ -51,10 +51,10 @@ export interface PokemonDetails {
   types: { type: { name: string } }[]
   stats: { stat: { name: string }; base_stat: number }[]
   species: { name: string }
-  gender_rate: number // Add this if you want to handle gender data
+  gender_rate: number
   egg_groups: { name: string }[]
-  base_happiness: number // Add this if you want to handle base happiness
-  hatch_counter: number // Egg cycles
+  base_happiness: number
+  hatch_counter: number
 }
 
 export interface StatsAccumulator {

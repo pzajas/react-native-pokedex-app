@@ -1,4 +1,3 @@
-// About.tsx
 import { filterPokemonDescriptions } from '@/utils/arrays/filterPokemonDescriptions'
 import { getRandomItem } from '@/utils/arrays/getRandomArrayItem'
 import { formatPokemonDescription } from '@/utils/formatters/formatPokemonDescription'
