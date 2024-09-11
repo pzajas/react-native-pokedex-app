@@ -1,13 +1,45 @@
-import { About, Evolution, Moves, Stats } from '@/screens/pokemon/tab/content'
 import { useState } from 'react'
 import { StyleSheet, View } from 'react-native'
+import { About, Evolution, Moves, Stats } from './content'
 import { PokeTabButton } from './PokeTabButton'
-
-interface IPokeTabs {
-  currentPokemon: any
+interface IMove {
+  name: string
+  type: string
+}
+interface IStats {
+  attack: number
+  defense: number
+  hp: number
+  'special-attack': number
+  'special-defense': number
+  speed: number
 }
 
-export const PokeTabs = ({ currentPokemon }: IPokeTabs) => {
+interface IGender {
+  female: number
+  genderless: boolean
+  male: number
+}
+export interface IPokemon {
+  abilities: string[]
+  category: string
+  color: string
+  descriptions: string[]
+  gender: IGender
+  height: number
+  id: string
+  image: string
+  moves: IMove[]
+  name: string
+  stats: IStats
+  types: string[]
+  weight: number
+}
+export interface ICurrentPokemon {
+  currentPokemon: IPokemon
+}
+
+export const PokeTabs = ({ currentPokemon }: ICurrentPokemon) => {
   const tabs = [
     { label: 'About', component: <About currentPokemon={currentPokemon} /> },
     { label: 'Stats', component: <Stats currentPokemon={currentPokemon} /> },

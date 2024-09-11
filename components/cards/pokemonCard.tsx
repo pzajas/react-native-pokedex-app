@@ -12,7 +12,7 @@ const ARTWORK_API_URL = constants.api.ARTWORK_API_URL
 export const PokemoneCard = ({ item, handleNavigatePokemon }: { item: any; handleNavigatePokemon: any }) => {
   const capitalizedName = capitalize(item.name)
   const formattedId = formatPokemonId(item.id)
-  const artworkUrl = `${ARTWORK_API_URL}/${item.id}.png`
+  const artworkUrl = `${ARTWORK_API_URL}/${item.id.toString().replace(/^0+/, '')}.png`
 
   const primaryType: PokemonType = item.types[0] || 'default'
   const backgroundColor = palette.typeColors[primaryType] || palette.typeColors.default
