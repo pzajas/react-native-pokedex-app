@@ -1,11 +1,16 @@
-import { usePokemonData } from '@/services/api/fetchPokemonData'
 import { useRouter } from 'expo-router'
 import { useEffect } from 'react'
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
+
+import { LoadingIndicator } from '@/components/indicators/LoadingIndicator'
+import { usePokemonData } from '@/services/api/fetchPokemonData'
+
+import palette from '@/constants/palette'
+import { typography } from '@/constants/typography'
 
 export default function FetchingScreen() {
   const router = useRouter()
-  const { isFetching, isFetched, fetchNextPage } = usePokemonData()
+  const { isFetching, isFetched, error } = usePokemonData()
 
   useEffect(() => {
     if (!isFetching && isFetched) {
@@ -13,10 +18,20 @@ export default function FetchingScreen() {
     }
   }, [isFetching, isFetched, router])
 
+  if (error) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.errorText}>
+          {typography.somethingWentWrong} {error.message}
+        </Text>
+      </View>
+    )
+  }
+
   return (
     <View style={styles.container}>
-      <ActivityIndicator size="large" color="#6200ee" style={styles.spinner} />
-      <Text style={styles.text}>Fetching data...</Text>
+      <LoadingIndicator />
+      <Text style={styles.text}>{typography.loadingData}</Text>
     </View>
   )
 }
@@ -26,13 +41,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5'
-  },
-  spinner: {
-    marginBottom: 20
+    backgroundColor: palette.colors.white
   },
   text: {
     fontSize: 18,
-    color: '#333'
+    color: palette.colors.grey
+  },
+  errorText: {
+    fontSize: 18,
+    color: palette.colors.red
   }
 })

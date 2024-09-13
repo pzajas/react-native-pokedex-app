@@ -1,7 +1,7 @@
-import { PokemonListCardProps } from '@/typescript/types/interfaces'
+import { PokemonData } from '@/services/api/fetchPokemonData'
 import { Image, StyleSheet, View } from 'react-native'
 
-export const PokemonCardImage = ({ pokemon }: PokemonListCardProps) => {
+export const PokemonCardImage = ({ pokemon }: { pokemon: PokemonData }) => {
   const { artworkUrl } = pokemon
 
   return (

@@ -3,8 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { capitalize } from 'lodash'
 import typesData from '../data/types.json'
-
-interface PokemonData {
+export interface PokemonData {
   pokemonName: string
   pokemonNameCapitalized: string
   url: string
@@ -14,9 +13,9 @@ interface PokemonData {
   artworkUrl: string
   pokemonBackgroundColor: string
   pokemonChipColor: string
-  types: string[] // Changed to a simple array of type names
-  chipColors: string[] // Added separate array for chip colors
-  backgroundColors: string[] // Added separate array for background colors
+  types: string[]
+  chipColors: string[]
+  backgroundColors: string[]
   image: string
   name: string
   stats: {
@@ -75,9 +74,9 @@ const transformPokemonData = (pokemon: PokemonData) => {
     pokemonSimpleId,
     pokemonExtendedId,
     url: pokemon.url,
-    types, // Simple array of type names
-    chipColors, // Separate array for chip colors
-    backgroundColors, // Separate array for background colors
+    types,
+    chipColors,
+    backgroundColors,
     artworkUrl
   }
 }
@@ -107,10 +106,20 @@ const fetchPokemonData = async ({
 }
 
 export const usePokemonData = () => {
-  return useInfiniteQuery({
+  const query = useInfiniteQuery({
     queryKey: ['pokemonData'],
     queryFn: fetchPokemonData,
     getNextPageParam: (lastPage) => (lastPage.hasMore ? lastPage.nextOffset : undefined),
     initialPageParam: 0
   })
+
+  return {
+    isFetching: query.isFetching,
+    isFetched: query.isFetched,
+    error: query.error,
+    data: query.data,
+    fetchNextPage: query.fetchNextPage,
+    hasNextPage: query.hasNextPage,
+    isFetchingNextPage: query.isFetchingNextPage
+  }
 }

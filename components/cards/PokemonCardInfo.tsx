@@ -1,11 +1,11 @@
 // Information.tsx
 import palette from '@/constants/palette'
-import { PokemonListCardProps } from '@/typescript/types/interfaces'
+import { PokemonData } from '@/services/api/fetchPokemonData'
 import { StyleSheet, View } from 'react-native'
 import { TypeChip } from '../chips/TypeChip'
 import { CustomText } from '../typography/customText'
 
-export const PokemonCardInfo = ({ pokemon }: PokemonListCardProps) => {
+export const PokemonCardInfo = ({ pokemon }: { pokemon: PokemonData }) => {
   const { pokemonNameCapitalized, pokemonExtendedId, types } = pokemon
 
   return (

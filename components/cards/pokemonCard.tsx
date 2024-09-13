@@ -1,11 +1,17 @@
 import palette from '@/constants/palette'
-import { PokemonListCardProps } from '@/typescript/types/interfaces'
+import { PokemonData } from '@/services/api/fetchPokemonData'
 import { Pressable, StyleSheet, View } from 'react-native'
 import { PokemonCardImage } from './PokemonCardImage'
 import { PokemonCardInfo } from './PokemonCardInfo'
 
-export const PokemonCard = ({ pokemon, handleNavigatePokemon }: PokemonListCardProps) => {
-  const { types, backgroundColors } = pokemon
+export const PokemonCard = ({
+  pokemon,
+  handleNavigatePokemon
+}: {
+  pokemon: PokemonData
+  handleNavigatePokemon: any
+}) => {
+  const { backgroundColors } = pokemon
 
   return (
     <Pressable onPress={() => handleNavigatePokemon && handleNavigatePokemon(pokemon)}>

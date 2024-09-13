@@ -1,18 +1,11 @@
 import palette from '@/constants/palette'
-import { PokemonType } from '@/typescript/types/pokemonTypes'
 import { pokemonTypeIcons } from '@/utils/icons/pokemonTypeIcons'
 import { Image, StyleSheet, View } from 'react-native'
 import { CustomText } from '../typography/customText'
 
-interface TypeChipProps {
-  type: PokemonType
-}
-
-export const TypeChip = ({ type }: TypeChipProps) => {
-  // Clean type name and ensure it matches with icon keys
+export const TypeChip = ({ type }: { type: string }) => {
   const cleanType = type.replace(' Type', '').toLowerCase() as keyof typeof pokemonTypeIcons
 
-  // Get background color and icon for the type
   const backgroundColor = palette.chipColors[cleanType] || palette.chipColors.default
   const icon = pokemonTypeIcons[cleanType] || pokemonTypeIcons['default']
 
