@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { About, Evolution, Moves, Stats } from './content'
 import { PokeTabButton } from './PokeTabButton'
+
 interface IMove {
   name: string
   type: string
@@ -14,7 +15,6 @@ interface IStats {
   'special-defense': number
   speed: number
 }
-
 interface IGender {
   female: number
   genderless: boolean
@@ -37,44 +37,65 @@ export interface IPokemon {
 }
 export interface ICurrentPokemon {
   currentPokemon: IPokemon
+  speciesData: any
+  pokemonDetails: any
 }
 
-export const PokeTabs = ({ currentPokemon }: ICurrentPokemon) => {
+export const PokeTabs = () => {
   const tabs = [
-    { label: 'About', component: <About currentPokemon={currentPokemon} /> },
-    { label: 'Stats', component: <Stats currentPokemon={currentPokemon} /> },
+    {
+      label: 'About',
+      component: <About />
+    },
+    { label: 'Stats', component: <Stats /> },
     { label: 'Evolution', component: <Evolution /> },
-    { label: 'Moves', component: <Moves currentPokemon={currentPokemon} /> }
+    { label: 'Moves', component: <Moves /> }
   ]
 
   const [selectedTab, setSelectedTab] = useState(tabs[0].label)
 
   return (
-    <View>
-      <View style={styles.tabHeader}>
-        {tabs.map((tab) => (
-          <PokeTabButton
-            key={tab.label}
-            label={tab.label}
-            isActive={selectedTab === tab.label}
-            onPress={() => setSelectedTab(tab.label)}
-          />
-        ))}
+    <View style={styles.container}>
+      <View style={styles.tabHeaderContainer}>
+        <View style={styles.tabHeader}>
+          {tabs.map((tab) => (
+            <PokeTabButton
+              key={tab.label}
+              label={tab.label}
+              isActive={selectedTab === tab.label}
+              onPress={() => setSelectedTab(tab.label)}
+            />
+          ))}
+        </View>
       </View>
-
       <View style={styles.tabContentContainer}>{tabs.find((tab) => tab.label === selectedTab)?.component}</View>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    zIndex: 80
+  },
+  tabHeaderContainer: {
+    backgroundColor: 'white',
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    elevation: 4,
+    overflow: 'hidden'
+  },
   tabHeader: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: 50,
-    padding: 10
+    paddingHorizontal: 8,
+    paddingTop: 32
   },
   tabContentContainer: {
+    flex: 1,
     padding: 16
   }
 })

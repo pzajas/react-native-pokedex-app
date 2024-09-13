@@ -1,61 +1,73 @@
 import { CustomText } from '@/components/typography/customText'
-import { moveImages } from '@/utils/images/typeImageUrls'
-import { FlatList, Image, StyleSheet, View } from 'react-native'
-import { ICurrentPokemon } from '../tab/PokeTabs'
-interface IMove {
-  accuracy: number
-  category: string
-  cname: string
-  ename: string
-  id: number
-  jname: string
-  power: number | null
-  pp: number
-  type: string
-  tm?: string
-  max_pp?: number
+import { usePokemonData } from '@/services/hooks/usePokemonData'
+import { pokemonTypeIcons } from '@/utils/icons/pokemonTypeIcons'
+import { useLocalSearchParams } from 'expo-router'
+import { capitalize } from 'lodash'
+import { ActivityIndicator, FlatList, Image, StyleSheet, View } from 'react-native'
+import movesData from '../../../services/data/moves.json'
 
-  name: string
+const normalizeMoveName = (name: string) => {
+  return name
+    .replace(/-/g, ' ') // Replace hyphens with spaces
+    .toLowerCase() // Convert to lowercase
+    .replace(/\b\w/g, (char) => char.toUpperCase()) // Capitalize first letter of each word
 }
 
-export const Moves = ({ currentPokemon }: ICurrentPokemon) => {
-  if (!currentPokemon) {
-    return (
-      <View style={styles.container}>
-        <CustomText>No Pokémon selected</CustomText>
-      </View>
-    )
-  }
+const movesMap = new Map<string, MoveDetail>(movesData.map((move: MoveDetail) => [normalizeMoveName(move.ename), move]))
 
-  const renderMove = ({ item }: { item: IMove }) => {
-    const moveIcon = moveImages[item.type] || moveImages['Normal']
+export const Moves = () => {
+  const { name } = useLocalSearchParams()
+  const { pokemon, isLoading } = usePokemonData(name)
+  const { moves } = pokemon ?? []
+
+  const renderMove = ({ item }: { item: string }) => {
+    const normalizedMove = normalizeMoveName(item)
+    const moveDetail = movesMap.get(normalizedMove)
+
+    // Determine the move type for the icon
+    const iconSource = moveDetail
+      ? pokemonTypeIcons[moveDetail.type.toLowerCase()] || pokemonTypeIcons.default
+      : pokemonTypeIcons.default
 
     return (
       <View style={styles.moveItem}>
-        <View style={styles.textContainer}>
-          <CustomText style={styles.moveText}> {item.name.replace(/-/g, ' ')}</CustomText>
-          <CustomText style={styles.moveTypeText}>{item.type}</CustomText>
-        </View>
-        <Image source={moveIcon} style={styles.icon} />
+        {moveDetail && (
+          <>
+            <View style={styles.textContainer}>
+              <CustomText style={styles.moveText}>{capitalize(moveDetail.ename.replace(/-/g, ' '))}</CustomText>
+              <CustomText style={styles.moveTypeText}>{moveDetail.type}</CustomText>
+            </View>
+            {iconSource ? (
+              <Image source={iconSource} style={styles.icon} />
+            ) : (
+              <ActivityIndicator size="small" color="#0000ff" style={styles.icon} />
+            )}
+          </>
+        )}
       </View>
     )
   }
 
   return (
     <View style={styles.container}>
-      <FlatList data={currentPokemon.moves} renderItem={renderMove} />
+      <FlatList
+        data={moves}
+        renderItem={renderMove}
+        keyExtractor={(item) => item}
+        ListEmptyComponent={() => <ActivityIndicator size="large" color="#0000ff" />}
+      />
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingBottom: 250
+    flex: 1
   },
   moveItem: {
     padding: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    borderBottomColor: 'rgba(180, 180, 180, 0.05)',
     flexDirection: 'row',
     alignItems: 'center'
   },
@@ -76,6 +88,7 @@ const styles = StyleSheet.create({
   },
   moveTypeText: {
     fontSize: 16,
+    marginRight: 20,
     color: '#555'
   }
 })

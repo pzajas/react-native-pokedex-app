@@ -1,47 +1,73 @@
-import { filterPokemonDescriptions } from '@/utils/arrays/filterPokemonDescriptions'
-import { getRandomItem } from '@/utils/arrays/getRandomArrayItem'
-import { formatPokemonDescription } from '@/utils/formatters/formatPokemonDescription'
-import { StyleSheet, View } from 'react-native'
+import { CustomText } from '@/components/typography/customText'
+import { usePokemonData } from '@/services/hooks/usePokemonData'
+import { useLocalSearchParams } from 'expo-router'
+import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native'
 import { Breeding } from './components/PokemonBreeding'
 import { PokemonDescription } from './components/PokemonDescription'
 import { Information } from './components/PokemonInformation'
 
-export const About = ({ currentPokemon }: any) => {
-  const [pokemonCategory] = currentPokemon?.category?.split(' ') || []
+export const About = () => {
+  const { name } = useLocalSearchParams()
+  const { species, isLoading, isError } = usePokemonData(name)
 
-  const descriptions = currentPokemon?.descriptions || []
-  const filteredDescriptions = filterPokemonDescriptions(descriptions)
-  const description = filteredDescriptions.length > 0 ? getRandomItem(filteredDescriptions) : 'No description available'
-  const formattedDescription = formatPokemonDescription(description)
+  const { description, genderRate } = species ?? {}
 
-  const formattedHeight = (currentPokemon?.height || 0) / 10 + 'm'
-  const formattedWeight = (currentPokemon?.weight || 0) / 10 + 'kg'
-  const malePercentage = currentPokemon?.gender?.male || 0
-  const femalePercentage = currentPokemon?.gender?.female || 0
-  const abilities = currentPokemon?.abilities[0] || 'N/A'
+  let malePercentage, femalePercentage
+
+  if (genderRate !== -1) {
+    femalePercentage = genderRate * 12.5
+    malePercentage = (8 - genderRate) * 12.5
+  } else {
+    malePercentage = 0
+    femalePercentage = 0
+  }
+
+  if (isLoading) {
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    )
+  }
+
+  if (isError) {
+    return (
+      <View style={styles.errorContainer}>
+        <CustomText>Error loading data</CustomText>
+      </View>
+    )
+  }
 
   return (
-    <View style={styles.container}>
-      <PokemonDescription description={formattedDescription} />
-      <Information
-        height={formattedHeight}
-        weight={formattedWeight}
-        pokemonCategory={pokemonCategory}
-        abilities={abilities}
-      />
+    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainerStyle}>
+      <PokemonDescription description={description} />
+      <Information />
       <Breeding malePercentage={malePercentage} femalePercentage={femalePercentage} />
-    </View>
+    </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    justifyContent: 'space-around',
     gap: 10
   },
   description: {
     fontSize: 16,
     marginBottom: 8
+  },
+  contentContainerStyle: {
+    flex: 1,
+    justifyContent: 'space-between'
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 })

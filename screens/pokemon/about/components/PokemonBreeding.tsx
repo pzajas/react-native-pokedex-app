@@ -10,8 +10,8 @@ interface BreedingProps {
 
 export const Breeding = ({ malePercentage, femalePercentage }: BreedingProps) => {
   return (
-    <>
-      <CustomText weight="semibold" style={{ marginBottom: 10 }}>
+    <View style={styles.title}>
+      <CustomText weight="semibold" style={styles.title}>
         Breeding
       </CustomText>
       <View style={styles.row}>
@@ -20,7 +20,7 @@ export const Breeding = ({ malePercentage, femalePercentage }: BreedingProps) =>
         <GenderIcon gender="female" />
       </View>
       <GenderBalanceBar malePercentage={malePercentage} femalePercentage={femalePercentage} />
-    </>
+    </View>
   )
 }
 
@@ -31,5 +31,8 @@ const styles = StyleSheet.create({
   },
   info: {
     fontSize: 16
+  },
+  title: {
+    marginBottom: 10
   }
 })

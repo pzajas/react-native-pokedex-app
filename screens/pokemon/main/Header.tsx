@@ -1,10 +1,11 @@
 import { IconButton } from '@/components/buttons/IconButton'
 import { CustomText } from '@/components/typography/customText'
-import { useRouter } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { capitalize } from 'lodash'
-import { SafeAreaView, StyleSheet, View } from 'react-native'
+import { SafeAreaView, View } from 'react-native'
 
-export const Header = ({ currentPokemon }: any) => {
+export const Header = ({ name }: any) => {
+  const { backgroundColor } = useLocalSearchParams()
   const router = useRouter()
 
   const navigateBack = () => {
@@ -17,15 +18,14 @@ export const Header = ({ currentPokemon }: any) => {
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
-          padding: 16
+          padding: 16,
+          backgroundColor: backgroundColor
         }}
       >
         <IconButton name={'left'} press={navigateBack} />
-        <CustomText style={{ fontSize: 20, color: 'white' }}>{capitalize(currentPokemon?.name)}</CustomText>
+        <CustomText style={{ fontSize: 20, color: 'white' }}>{capitalize(name)}</CustomText>
         <IconButton name={'hearto'} press={() => console.log('favo')} />
       </View>
     </SafeAreaView>
   )
 }
-
-const styles = StyleSheet.create({})

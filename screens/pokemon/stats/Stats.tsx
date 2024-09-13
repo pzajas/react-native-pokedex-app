@@ -1,39 +1,40 @@
 import { CustomText } from '@/components/typography/customText'
 import palette from '@/constants/palette'
+import { usePokemonData } from '@/services/hooks/usePokemonData'
+import { useLocalSearchParams } from 'expo-router'
 import { random } from 'lodash'
 import { StyleSheet, View } from 'react-native'
 import { PokemonStatsBarItem } from './components/PokemonStatsBarItem'
 
 export const Stats = ({ currentPokemon }: any) => {
-  const { attack, defense, hp, 'special-attack': spAtk, 'special-defense': spDef, speed } = currentPokemon?.stats || {}
-  const totalStats = attack + defense + hp + spAtk + spDef + speed
-  const maxValue = 255
+  const { name } = useLocalSearchParams()
+  const { pokemon } = usePokemonData(name)
+  const { stats, moves, forms } = pokemon ?? {}
 
-  const stats = [
-    { label: 'Health', value: hp },
-    { label: 'Attack', value: attack },
-    { label: 'Defense', value: defense },
-    { label: 'S. Att', value: spAtk },
-    { label: 'S. Def', value: spDef },
-    { label: 'Speed', value: speed },
-    { label: 'Total', value: totalStats }
-  ]
+  const labelMap = {
+    hp: 'Health',
+    attack: 'Attack',
+    defense: 'Defense',
+    'special-attack': 'Sp. Att',
+    'special-defense': 'Sp. Def',
+    speed: 'Speed'
+  }
 
   const primaryType = currentPokemon?.types[0] || 'default'
   const backgroundColor = palette.typeColors[primaryType] || palette.typeColors.default
 
   return (
-    <View style={styles.container}>
+    <View>
       <CustomText weight="semibold" style={styles.title}>
         Base Stats
       </CustomText>
 
-      {stats.map((stat, index) => (
+      {stats?.map((stat, index) => (
         <PokemonStatsBarItem
-          key={currentPokemon?.id + index}
-          label={stat.label}
+          key={index}
+          label={labelMap[stat.name] || stat.name}
           value={stat.value}
-          maxValue={maxValue}
+          maxValue={255}
           backgroundColor={backgroundColor}
           min={random(80, 200)}
           max={random(200, 300)}

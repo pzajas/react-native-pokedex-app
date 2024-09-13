@@ -36,7 +36,7 @@ export default {
     steel: '#5599a5',
     fairy: '#ee92e6',
     default: '#9b9ea1'
-  },
+  } as { [key: string]: string },
   chipColors: {
     fire: '#e28c3f',
     water: '#4e98c4',
@@ -56,7 +56,7 @@ export default {
     steel: '#467d89',
     fairy: '#cc7cc2',
     default: '#7f8183'
-  },
+  } as { [key: string]: string },
   gender: {
     female: '#ff66b9',
     male: '#369fff'

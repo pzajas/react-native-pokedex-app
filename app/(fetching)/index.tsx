@@ -1,35 +1,17 @@
-import { fetchPokemonData } from '@/services/api/fetchPokemonData'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { usePokemonData } from '@/services/api/fetchPokemonData'
 import { useRouter } from 'expo-router'
 import { useEffect } from 'react'
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
 
 export default function FetchingScreen() {
   const router = useRouter()
-  const queryClient = useQueryClient()
+  const { isFetching, isFetched, fetchNextPage } = usePokemonData()
 
   useEffect(() => {
-    console.log('fetching...')
-
-    setTimeout(() => {
-      queryClient.prefetchQuery({
-        queryKey: ['pokemonData'],
-        queryFn: fetchPokemonData
-      })
-    }, 3000)
-  }, [queryClient])
-
-  const { isFetched: pokemonsFetched } = useQuery({
-    queryKey: ['pokemonData'],
-    queryFn: fetchPokemonData,
-    staleTime: 1000 * 60 * 5
-  })
-
-  useEffect(() => {
-    if (pokemonsFetched) {
+    if (!isFetching && isFetched) {
       router.replace('/(tabs)/')
     }
-  }, [pokemonsFetched, router])
+  }, [isFetching, isFetched, router])
 
   return (
     <View style={styles.container}>

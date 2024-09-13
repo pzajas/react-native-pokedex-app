@@ -7,20 +7,24 @@ import { StyleSheet, TextInput, View } from 'react-native'
 type FormValues = {
   search: string
 }
-
 interface SearchInputProps {
   searchQuery: string
   onSearchChange: (query: string) => void
 }
 
 export const SearchInput = ({ searchQuery, onSearchChange }: SearchInputProps) => {
-  const { control } = useForm<FormValues>({
+  const { control, reset } = useForm<FormValues>({
     defaultValues: {
       search: searchQuery
     }
   })
 
   const [isFocused, setIsFocused] = useState(false)
+
+  const handleResetSearchQuery = () => {
+    reset({ search: '' })
+    onSearchChange('')
+  }
 
   return (
     <View style={styles.container}>
@@ -45,6 +49,13 @@ export const SearchInput = ({ searchQuery, onSearchChange }: SearchInputProps) =
           )}
         />
       </View>
+      <MaterialIcons
+        onPress={handleResetSearchQuery}
+        name="close"
+        size={24}
+        color="gray"
+        style={[styles.icon, { marginRight: 5 }]}
+      />
     </View>
   )
 }

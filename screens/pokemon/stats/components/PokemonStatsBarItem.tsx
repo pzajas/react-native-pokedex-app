@@ -35,7 +35,8 @@ export const PokemonStatsBarItem = ({ label, value, maxValue, min, max, backgrou
 
 const styles = StyleSheet.create({
   statItem: {
-    marginBottom: 10
+    marginBottom: 10,
+    padding: 6
   },
   statRow: {
     flexDirection: 'row',

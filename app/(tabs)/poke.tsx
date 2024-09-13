@@ -1,30 +1,39 @@
 import { SmallRoundButton } from '@/components/buttons/SmallRoundButton'
-import { PokemoneCard } from '@/components/cards/pokemonCard'
+import { PokemonCard } from '@/components/cards/PokemonCard'
 import palette from '@/constants/palette'
 import { useFilteredPokemonData } from '@/hooks/useFilteredPokemonData'
 import { SearchInput } from '@/screens/pokemons/SearchInput'
 import { usePokemonData } from '@/services/api/fetchPokemonData'
-import { PokemonData } from '@/typescript/types/pokemonTypes'
 import { useRouter } from 'expo-router'
 import { useCallback, useRef, useState } from 'react'
 import { ActivityIndicator, FlatList, NativeScrollEvent, NativeSyntheticEvent, StyleSheet, View } from 'react-native'
+interface PokemonData {
+  pokemonName: string
+  pokemonNameCapitalized: string
+  url: string
+  id: number
+  pokemonExtendedId: string
+  pokemonSimpleId: number
+  artworkUrl: string
+  pokemonBackgroundColor: string
+  pokemonChipColor: string
+  types: {
+    type: string
+    chipColor: string
+    backgroundColor: string
+  }[]
+}
 
 export default function PokeScreen() {
   const router = useRouter()
+
   const flatListRef = useRef<FlatList<PokemonData>>(null)
   const [searchQuery, setSearchQuery] = useState('')
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = usePokemonData()
 
-  const pokemonData = data?.pages.flatMap((page) => page.pokemonDetails) || []
+  const pokemonData = data?.pages.flatMap((page) => page.data) || []
   const filteredData = useFilteredPokemonData(searchQuery, pokemonData)
-
-  const handleNavigatePokemon = (item: PokemonData) => {
-    router.push({
-      pathname: `/(pages)/pokemon/[id]`,
-      params: { id: item.name }
-    })
-  }
 
   const handleLoadMore = useCallback(() => {
     if (hasNextPage) {
@@ -43,17 +52,29 @@ export default function PokeScreen() {
     flatListRef.current?.scrollToOffset({ offset: 0, animated: true })
   }
 
+  const handleNavigatePokemon = (item: PokemonData) => {
+    router.push({
+      pathname: '/pokemon/[name]',
+      params: {
+        name: item.pokemonName,
+        artwork: item.artworkUrl,
+        backgroundColor: item.backgroundColors[0] || 'defaultBackgroundColor', // Provide a default value
+        chip: item.chipColors[0] || 'defaultChipColor' // Provide a default value
+      }
+    })
+  }
+  const renderItem = ({ item }: { item: PokemonData }) => (
+    <View style={styles.itemContainer}>
+      <PokemonCard pokemon={item} handleNavigatePokemon={handleNavigatePokemon} />
+    </View>
+  )
+
   return (
     <View style={styles.container}>
       <FlatList
         ref={flatListRef}
         data={filteredData}
-        renderItem={({ item }) => (
-          <View style={styles.itemContainer}>
-            <PokemoneCard item={item} handleNavigatePokemon={handleNavigatePokemon} />
-          </View>
-        )}
-        keyExtractor={(item) => item.id.toString()}
+        renderItem={renderItem}
         contentContainerStyle={styles.listContent}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}

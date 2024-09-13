@@ -18,15 +18,6 @@ export type PokemonType =
   | 'fairy'
   | 'default'
 
-export interface PokemonData {
-  id: number
-  image: string
-  name: string
-  stats: PokemonStats
-  types: string[]
-  species: PokemonSpecies[]
-}
-
 export type PokemonSpecies = { name: string }
 
 export interface PokemonTypeDetail {

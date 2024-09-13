@@ -5,7 +5,7 @@ export default function PagesLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen
-        name="pokemon/[id]"
+        name="pokemon/[name]"
         options={{
           title: 'Pokemon'
         }}
