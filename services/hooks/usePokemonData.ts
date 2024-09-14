@@ -1,26 +1,30 @@
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 
+// Updated PokemonData interface with stats, moves, and forms
 interface PokemonData {
   weight: number
   height: number
   abilities: Array<{ ability: { name: string } }>
-}
-
-interface PokemonSpeciesData {
-  flavor_text_entries: Array<{ flavor_text: string; language: { name: string } }>
-  genera: Array<{ genus: string; language: { name: string } }>
   stats: Array<{ base_stat: number; stat: { name: string } }>
   moves: Array<{ move: { name: string } }>
   forms: Array<{ name: string }>
+}
+
+// Updated PokemonSpeciesData interface
+interface PokemonSpeciesData {
+  flavor_text_entries: Array<{ flavor_text: string; language: { name: string } }>
+  genera: Array<{ genus: string; language: { name: string } }>
   gender_rate: number
 }
 
+// Function to fetch basic Pokemon data
 const fetchPokemonByName = async (name: string): Promise<PokemonData> => {
   const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`)
   return response.data
 }
 
+// Function to fetch Pokemon species data
 const fetchPokemonSpeciesByName = async (name: string): Promise<PokemonSpeciesData> => {
   try {
     const response = await axios.get(`https://pokeapi.co/api/v2/pokemon-species/${name}`)
@@ -31,6 +35,7 @@ const fetchPokemonSpeciesByName = async (name: string): Promise<PokemonSpeciesDa
   }
 }
 
+// Custom hook to manage Pokemon and species data
 export const usePokemonData = (name: string) => {
   const pokemonQuery = useQuery({
     queryKey: ['pokemon', name],
@@ -50,10 +55,12 @@ export const usePokemonData = (name: string) => {
     }
   })
 
+  // Utility function to sanitize text
   const sanitizeText = (text: string) => {
-    return text.replace(/♀/g, '') // Remove special characters
+    return text.replace(/♀/g, '') // Removes any special characters like ♀
   }
 
+  // Fetches the first English flavor text entry
   const getEnglishEntry = (entries: Array<{ flavor_text: string; language: { name: string } }>) => {
     const englishEntry = entries.find((entry) => entry.language.name === 'en')
     if (englishEntry) {
@@ -62,6 +69,7 @@ export const usePokemonData = (name: string) => {
     return ''
   }
 
+  // Processes Pokemon data if available
   const pokemonData = pokemonQuery.data
     ? {
         weight: pokemonQuery.data.weight,
@@ -77,14 +85,16 @@ export const usePokemonData = (name: string) => {
       }
     : null
 
+  // Processes species data if available
   const speciesData = speciesQuery.data
     ? {
-        description: speciesQuery.data.flavor_text_entries,
-        genera: speciesQuery.data.genera.filter((g) => g.language.name === 'en').map((g) => g.genus) || [],
+        description: getEnglishEntry(speciesQuery.data.flavor_text_entries), // Get English description
+        genera: speciesQuery.data.genera?.filter((g) => g.language.name === 'en').map((g) => g.genus) || [],
         genderRate: speciesQuery.data.gender_rate
       }
     : null
 
+  // Return final structured data, loading, and error state
   return {
     pokemon: pokemonData,
     species: speciesData,

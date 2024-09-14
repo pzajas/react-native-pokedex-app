@@ -1,7 +1,12 @@
-import { CustomText } from '@/components/typography/customText'
 import { StyleSheet, View } from 'react-native'
+
+import { CustomText } from '@/components/typography/customText'
+
 import { PokemonStatsBar } from './PokemonStatsBar'
-interface StatProps {
+
+import palette from '@/constants/palette'
+
+interface IPokemonStatsBarItem {
   label: string
   value: number
   maxValue: number
@@ -10,7 +15,9 @@ interface StatProps {
   max: number
 }
 
-export const PokemonStatsBarItem = ({ label, value, maxValue, min, max, backgroundColor }: StatProps) => {
+export const PokemonStatsBarItem = ({ label, value, maxValue, min, max, backgroundColor }: IPokemonStatsBarItem) => {
+  const totalLabel = 'Total'
+
   return (
     <View style={styles.statItem}>
       <View style={styles.statRow}>
@@ -19,7 +26,7 @@ export const PokemonStatsBarItem = ({ label, value, maxValue, min, max, backgrou
           <CustomText style={styles.statValue}>{value}</CustomText>
         </View>
 
-        {label !== 'Total' && (
+        {label !== totalLabel && (
           <>
             <PokemonStatsBar value={value} maxValue={maxValue} backgroundColor={backgroundColor} />
             <View style={styles.rangeContainer}>
@@ -47,21 +54,21 @@ const styles = StyleSheet.create({
   labelContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: 110,
-    alignItems: 'center'
+    alignItems: 'center',
+    width: 110
   },
   statLabel: {
     fontSize: 16,
-    color: 'gray'
+    color: palette.colors.grey.medium
   },
   statValue: {
     fontSize: 14
   },
   rangeContainer: {
     flexDirection: 'row',
-    width: 60,
-    gap: 5,
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    width: 60,
+    gap: 5
   }
 })

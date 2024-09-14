@@ -1,13 +1,16 @@
-import { View } from '@/components/Themed'
 import { StyleSheet } from 'react-native'
 
-interface StatProps {
+import { View } from '@/components/Themed'
+
+import palette from '@/constants/palette'
+
+interface IPokemonStatsBar {
   value: number
   maxValue: number
   backgroundColor: string
 }
 
-export const PokemonStatsBar = ({ value, maxValue, backgroundColor }: StatProps) => {
+export const PokemonStatsBar = ({ value, maxValue, backgroundColor }: IPokemonStatsBar) => {
   const progress = (value / maxValue) * 100
 
   return (
@@ -19,11 +22,11 @@ export const PokemonStatsBar = ({ value, maxValue, backgroundColor }: StatProps)
 
 const styles = StyleSheet.create({
   progressBarContainer: {
+    overflow: 'hidden',
     flex: 1,
     height: 6,
-    backgroundColor: '#e0e0e0',
     borderRadius: 5,
-    overflow: 'hidden'
+    backgroundColor: palette.colors.grey.light
   },
   progressBarFill: {
     height: '100%',

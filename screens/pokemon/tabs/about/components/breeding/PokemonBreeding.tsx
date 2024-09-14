@@ -1,7 +1,9 @@
+import { StyleSheet, View } from 'react-native'
+
 import { GenderIcon } from '@/assets/icons/GenderIcon'
 import { GenderBalanceBar } from '@/components/bars/GenderBalanceBar'
 import { CustomText } from '@/components/typography/customText'
-import { StyleSheet, View } from 'react-native'
+import { typography } from '@/constants/typography'
 
 interface BreedingProps {
   malePercentage: number
@@ -12,11 +14,11 @@ export const Breeding = ({ malePercentage, femalePercentage }: BreedingProps) =>
   return (
     <View style={styles.title}>
       <CustomText weight="semibold" style={styles.title}>
-        Breeding
+        {typography.breeding}
       </CustomText>
       <View style={styles.row}>
         <GenderIcon gender="male" />
-        <CustomText style={[styles.info, { fontSize: 12 }]}>Gender</CustomText>
+        <CustomText style={[styles.info, styles.text]}>{typography.gender}</CustomText>
         <GenderIcon gender="female" />
       </View>
       <GenderBalanceBar malePercentage={malePercentage} femalePercentage={femalePercentage} />
@@ -28,6 +30,9 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between'
+  },
+  text: {
+    fontSize: 12
   },
   info: {
     fontSize: 16

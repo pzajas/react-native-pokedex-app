@@ -4,9 +4,29 @@ const tintColorDark = '#fff'
 export default {
   colors: {
     white: '#FFFFFF',
-    grey: '#333333',
-    red: '#FF0000',
-    black: '#000000'
+
+    black: '#000000',
+    transparent: 'rgba(0, 0, 0, 0)',
+    grey: {
+      light: '#D3D3D3', // Light Grey
+      medium: '#808080', // Medium Grey
+      dark: '#333333' // Dark Grey
+    },
+    yellow: {
+      light: '#FFFFE0',
+      medium: '#FFFF00',
+      dark: '#FFD700'
+    },
+    red: {
+      light: '#FFCCCC',
+      medium: '#FF0000',
+      dark: '#8B0000'
+    },
+    orange: {
+      light: '#FFE5B4',
+      medium: '#FFA500',
+      dark: '#FF8C00'
+    }
   },
   light: {
     text: '#000',

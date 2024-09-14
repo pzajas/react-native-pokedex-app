@@ -45,10 +45,10 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 18,
-    color: palette.colors.grey
+    color: palette.colors.grey.medium
   },
   errorText: {
     fontSize: 18,
-    color: palette.colors.red
+    color: palette.colors.red.dark
   }
 })

@@ -1,19 +1,24 @@
-import { Header } from '@/screens/pokemon/main/Header'
-import { PokeTabs } from '@/screens/pokemon/tab/PokeTabs'
-import { usePokemonData } from '@/services/hooks/usePokemonData'
 import { useLocalSearchParams } from 'expo-router'
 import { Image, StyleSheet, View } from 'react-native'
 
+import { Header } from '@/screens/pokemon/header/Header'
+import { PokeTabs } from '@/screens/pokemon/tabs/PokeTabs'
+
+import palette from '@/constants/palette'
+
 export default function PokemonScreen() {
-  const { name, artwork, backgroundColor } = useLocalSearchParams()
-  const { pokemon, species } = usePokemonData(name)
+  const { artwork, backgroundColor } = useLocalSearchParams()
+  const pokeballImage = require('../../../assets/images/pokeball.png')
+
+  const pokemonTypeColor = (backgroundColor as string) || ''
+  const pokemonImageUri = (artwork as string) || ''
 
   return (
-    <View style={[styles.outerContainer, { backgroundColor }]}>
-      <Header name={name} />
+    <View style={[styles.outerContainer, { backgroundColor: pokemonTypeColor }]}>
+      <Header />
       <View style={styles.tabContainer}>
-        <Image source={require('../../../assets/images/pokeball.png')} style={styles.pokeballImage} />
-        <Image source={{ uri: artwork }} style={styles.pokemonImage} />
+        <Image source={pokeballImage} style={styles.pokeballImage} />
+        <Image source={{ uri: pokemonImageUri }} style={styles.pokemonImage} />
         <PokeTabs />
       </View>
     </View>
@@ -22,32 +27,32 @@ export default function PokemonScreen() {
 
 const styles = StyleSheet.create({
   outerContainer: {
-    flex: 1,
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    flex: 1
   },
   tabContainer: {
     justifyContent: 'flex-end',
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
+    position: 'relative',
     height: '60%',
-    position: 'relative' // Ensure the tabContainer can position its children absolutely
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16
   },
   pokemonImage: {
+    position: 'absolute',
+    alignSelf: 'center',
     width: 250,
     height: 250,
-    position: 'absolute',
     top: -200,
-    alignSelf: 'center',
-    zIndex: 100 // Ensure the Pokémon image is on top
+    zIndex: 100
   },
   pokeballImage: {
-    width: 450, // Adjust the size as needed
-    height: 450, // Adjust the size as needed
     position: 'absolute',
-    top: -275, // Adjust the position to fit behind the Pokémon image
     alignSelf: 'center',
-    zIndex: 50, // Ensure the Pokéball image is behind the Pokémon image,
+    width: 450,
+    height: 450,
+    top: -275,
+    zIndex: 50,
     opacity: 0.1,
-    tintColor: 'white'
+    tintColor: palette.colors.white
   }
 })

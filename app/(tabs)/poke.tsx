@@ -10,8 +10,8 @@ import { useScrollToTopButton } from '@/hooks/useScrollToTop'
 import { PokemonData, usePokemonData } from '@/services/api/fetchPokemonData'
 
 import palette from '@/constants/palette'
+import { PokemonsHeader } from '@/screens/pokemons/components/header/PokemonsHeader'
 import { SearchInput } from '@/screens/pokemons/components/search/SearchInput'
-import { PokemonsHeader } from '@/screens/pokemons/components/search/header/PokemonsHeader'
 
 export default function PokeScreen() {
   const router = useRouter()
@@ -36,6 +36,7 @@ export default function PokeScreen() {
       pathname: '/pokemon/[name]',
       params: {
         name: item.pokemonName,
+        capitalizedName: item.pokemonNameCapitalized,
         artwork: item.artworkUrl,
         backgroundColor: item.backgroundColors[0] || 'defaultBackgroundColor',
         chip: item.chipColors[0] || 'defaultChipColor'

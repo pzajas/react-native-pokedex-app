@@ -4,7 +4,7 @@ import { pokemonTypeIcons } from '@/utils/icons/pokemonTypeIcons'
 import { useLocalSearchParams } from 'expo-router'
 import { capitalize } from 'lodash'
 import { ActivityIndicator, FlatList, Image, StyleSheet, View } from 'react-native'
-import movesData from '../../../services/data/moves.json'
+import movesData from '../../../../services/data/moves.json'
 
 const normalizeMoveName = (name: string) => {
   return name
