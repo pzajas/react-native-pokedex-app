@@ -1,21 +1,19 @@
 import { StyleSheet, View } from 'react-native'
 
 import { CustomText } from '@/components/typography/customText'
+import { typography } from '@/constants/typography'
 
 import palette from '@/constants/palette'
-import { typography } from '@/constants/typography'
-import { formatPokemonDescription } from '@/utils/formatters/formatPokemonDescription'
+import { formatText } from '@/utils/formatters/formatTextString'
 
 export const PokemonDescription = ({ description }: { description: string }) => {
-  console.log(description)
-
   return (
     <View>
       <CustomText weight="semibold" style={styles.title}>
         {typography.description}
       </CustomText>
       <CustomText style={styles.descriptionText} numberOfLines={3}>
-        {formatPokemonDescription(description)}
+        {formatText(description)}
       </CustomText>
     </View>
   )

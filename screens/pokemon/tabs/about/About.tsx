@@ -12,8 +12,8 @@ import { PokemonDescription } from './components/description/PokemonDescription'
 import { Information } from './components/information/PokemonInformation'
 
 export const About = () => {
-  const { name } = useLocalSearchParams()
-  const { species, isLoading, isError } = usePokemonData(name as string)
+  const { name }: { name: string } = useLocalSearchParams()
+  const { species, isLoading, isError } = usePokemonData(name)
 
   const { description, genderRate } = species ?? {}
   const { malePercentage, femalePercentage } = getGenderRate(genderRate)

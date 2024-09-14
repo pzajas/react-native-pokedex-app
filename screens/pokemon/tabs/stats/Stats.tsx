@@ -11,8 +11,8 @@ import { statsLabels, statsValues } from './PokeStatsConfig'
 import { random } from 'lodash'
 
 export const Stats = () => {
-  const { name } = useLocalSearchParams()
-  const { pokemon } = usePokemonData(name as string)
+  const { name }: { name: string } = useLocalSearchParams()
+  const { pokemon } = usePokemonData(name)
   const { stats } = pokemon ?? {}
 
   return (

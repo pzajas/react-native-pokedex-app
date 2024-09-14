@@ -9,8 +9,8 @@ import { InfoRow } from './PokemonInformationRow'
 import { InfoSection } from './PokemonInformationSection'
 
 export const Information = () => {
-  const { name } = useLocalSearchParams()
-  const { pokemon, species } = usePokemonData(name as string)
+  const { name }: { name: string } = useLocalSearchParams()
+  const { pokemon, species } = usePokemonData(name)
 
   const { weight, height, abilities } = pokemon ?? {}
   const { genera } = species ?? {}

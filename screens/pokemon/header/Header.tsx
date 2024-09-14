@@ -8,7 +8,8 @@ import { useNavigateBack } from '@/utils/navigation/useNavigateBack'
 import palette from '@/constants/palette'
 
 export const Header = () => {
-  const { backgroundColor, capitalizedName } = useLocalSearchParams()
+  const { backgroundColor, capitalizedName }: { backgroundColor: string; capitalizedName: string } =
+    useLocalSearchParams()
   const navigateBack = useNavigateBack()
 
   return (
@@ -19,7 +20,7 @@ export const Header = () => {
           justifyContent: 'space-between',
           alignItems: 'center',
           padding: 16,
-          backgroundColor: backgroundColor as string
+          backgroundColor: backgroundColor
         }}
       >
         <IconButton name={'chevron-left'} size={32} color={palette.colors.white} onPress={navigateBack} />

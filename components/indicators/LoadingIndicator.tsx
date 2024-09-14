@@ -1,5 +1,4 @@
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
-
 interface ILoadingIndicator {
   size?: 'small' | 'large'
   color?: string
@@ -19,14 +18,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5'
+    alignItems: 'center'
   },
   spinner: {
     marginBottom: 20
   },
   text: {
-    fontSize: 18,
-    color: '#333'
+    fontSize: 18
   }
 })

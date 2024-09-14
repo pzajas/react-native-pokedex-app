@@ -1,4 +1,26 @@
-export const pokemonTypeIcons = {
+import { ImageSourcePropType } from 'react-native'
+
+type PokemonType =
+  | 'fire'
+  | 'water'
+  | 'grass'
+  | 'electric'
+  | 'ice'
+  | 'fighting'
+  | 'poison'
+  | 'ground'
+  | 'flying'
+  | 'psychic'
+  | 'bug'
+  | 'rock'
+  | 'ghost'
+  | 'dragon'
+  | 'dark'
+  | 'steel'
+  | 'fairy'
+  | 'normal'
+
+export const pokemonTypeIcons: Record<PokemonType, ImageSourcePropType> = {
   fire: require('../../assets/icons/FireIcon.png'),
   water: require('../../assets/icons/WaterIcon.png'),
   grass: require('../../assets/icons/GrassIcon.png'),
@@ -16,5 +38,5 @@ export const pokemonTypeIcons = {
   dark: require('../../assets/icons/DarkIcon.png'),
   steel: require('../../assets/icons/SteelIcon.png'),
   fairy: require('../../assets/icons/FairyIcon.png'),
-  default: require('../../assets/icons/NormalIcon.png')
+  normal: require('../../assets/icons/NormalIcon.png')
 }
