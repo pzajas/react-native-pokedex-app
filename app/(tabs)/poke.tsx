@@ -3,7 +3,6 @@ import { useCallback, useRef, useState } from 'react'
 import { FlatList, StyleSheet, View } from 'react-native'
 
 import { SmallRoundButton } from '@/components/buttons/SmallRoundButton'
-import { PokemonCard } from '@/components/cards/PokemonCard'
 import { LoadingIndicator } from '@/components/indicators/LoadingIndicator'
 import { useFilteredPokemonData } from '@/hooks/useFilteredPokemonData'
 import { useScrollToTopButton } from '@/hooks/useScrollToTop'
@@ -11,6 +10,7 @@ import { PokemonsHeader } from '@/screens/pokemons/components/header/PokemonsHea
 import { SearchInput } from '@/screens/pokemons/components/search/SearchInput'
 import { PokemonData, usePokemonData } from '@/services/api/fetchPokemonData'
 
+import { PokemonCard } from '@/components/cards/pokemonCard'
 import palette from '@/constants/palette'
 
 export default function PokeScreen() {
