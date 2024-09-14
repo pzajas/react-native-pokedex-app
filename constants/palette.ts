@@ -2,6 +2,32 @@ const tintColorLight = '#2f95dc'
 const tintColorDark = '#fff'
 
 export default {
+  colors: {
+    white: '#FFFFFF',
+
+    black: '#000000',
+    transparent: 'rgba(0, 0, 0, 0)',
+    grey: {
+      light: '#D3D3D3', // Light Grey
+      medium: '#808080', // Medium Grey
+      dark: '#333333' // Dark Grey
+    },
+    yellow: {
+      light: '#FFFFE0',
+      medium: '#FFFF00',
+      dark: '#FFD700'
+    },
+    red: {
+      light: '#FFCCCC',
+      medium: '#FF0000',
+      dark: '#8B0000'
+    },
+    orange: {
+      light: '#FFE5B4',
+      medium: '#FFA500',
+      dark: '#FF8C00'
+    }
+  },
   light: {
     text: '#000',
     textLight: '#fff',
@@ -36,7 +62,7 @@ export default {
     steel: '#5599a5',
     fairy: '#ee92e6',
     default: '#9b9ea1'
-  },
+  } as { [key: string]: string },
   chipColors: {
     fire: '#e28c3f',
     water: '#4e98c4',
@@ -56,7 +82,7 @@ export default {
     steel: '#467d89',
     fairy: '#cc7cc2',
     default: '#7f8183'
-  },
+  } as { [key: string]: string },
   gender: {
     female: '#ff66b9',
     male: '#369fff'

@@ -1,38 +1,25 @@
-import constants from '@/constants/constants'
 import palette from '@/constants/palette'
-import { PokemonType } from '@/typescript/types/pokemonTypes'
-import { formatPokemonId } from '@/utils/formatters/formatPokemonId'
-import { capitalize } from 'lodash'
-import { Image, Pressable, StyleSheet, View } from 'react-native'
-import { TypeChip } from '../chips/typeChip'
-import { CustomText } from '../typography/customText'
+import { PokemonData } from '@/services/api/fetchPokemonData'
+import { Pressable, StyleSheet, View } from 'react-native'
+import { PokemonCardImage } from './PokemonCardImage'
+import { PokemonCardInfo } from './PokemonCardInfo'
 
-const ARTWORK_API_URL = constants.api.ARTWORK_API_URL
-
-export const PokemoneCard = ({ item, handleNavigatePokemon }: { item: any; handleNavigatePokemon: any }) => {
-  const capitalizedName = capitalize(item.name)
-  const formattedId = formatPokemonId(item.id)
-  const artworkUrl = `${ARTWORK_API_URL}/${item.id.toString().replace(/^0+/, '')}.png`
-
-  const primaryType: PokemonType = item.types[0] || 'default'
-  const backgroundColor = palette.typeColors[primaryType] || palette.typeColors.default
+export const PokemonCard = ({
+  pokemon,
+  handleNavigatePokemon
+}: {
+  pokemon: PokemonData
+  handleNavigatePokemon: any
+}) => {
+  const { backgroundColors } = pokemon
 
   return (
-    <Pressable onPress={() => handleNavigatePokemon(item)}>
-      <View style={[styles.wrapper, { backgroundColor }]}>
-        <View style={styles.textContainer}>
-          <CustomText style={{ color: palette.light.textLight }}>#{formattedId}</CustomText>
-          <CustomText style={styles.nameText}>{capitalizedName}</CustomText>
-          <CustomText>
-            {item?.types.map((type: PokemonType, index: number) => (
-              <TypeChip type={type} key={`${item.id}-${index}`} />
-            ))}
-          </CustomText>
+    <Pressable onPress={() => handleNavigatePokemon && handleNavigatePokemon(pokemon)}>
+      <View style={[styles.wrapper, { backgroundColor: backgroundColors[0] || palette.typeColors.default }]}>
+        <View style={styles.infoContainer}>
+          <PokemonCardInfo pokemon={pokemon} />
         </View>
-
-        <View style={styles.imageContainer}>
-          <Image source={{ uri: artworkUrl }} style={styles.image} />
-        </View>
+        <PokemonCardImage pokemon={pokemon} />
       </View>
     </Pressable>
   )
@@ -46,6 +33,7 @@ const styles = StyleSheet.create({
     padding: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     position: 'relative',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -53,25 +41,8 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5
   },
-  textContainer: {
-    justifyContent: 'space-between'
-  },
-  nameText: {
-    fontSize: 25,
-    color: palette.light.textLight
-  },
-  imageContainer: {
-    position: 'relative',
-    width: 140,
-    height: 140
-  },
-  image: {
-    width: 140,
-    height: 140,
-    resizeMode: 'contain',
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    zIndex: 1
+  infoContainer: {
+    flex: 1,
+    justifyContent: 'center'
   }
 })

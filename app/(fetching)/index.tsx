@@ -1,40 +1,37 @@
-import { fetchPokemonData } from '@/services/api/fetchPokemonData'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'expo-router'
 import { useEffect } from 'react'
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
+
+import { LoadingIndicator } from '@/components/indicators/LoadingIndicator'
+import { usePokemonData } from '@/services/api/fetchPokemonData'
+
+import palette from '@/constants/palette'
+import { typography } from '@/constants/typography'
 
 export default function FetchingScreen() {
   const router = useRouter()
-  const queryClient = useQueryClient()
+  const { isFetching, isFetched, error } = usePokemonData()
 
   useEffect(() => {
-    console.log('fetching...')
-
-    setTimeout(() => {
-      queryClient.prefetchQuery({
-        queryKey: ['pokemonData'],
-        queryFn: fetchPokemonData
-      })
-    }, 3000)
-  }, [queryClient])
-
-  const { isFetched: pokemonsFetched } = useQuery({
-    queryKey: ['pokemonData'],
-    queryFn: fetchPokemonData,
-    staleTime: 1000 * 60 * 5
-  })
-
-  useEffect(() => {
-    if (pokemonsFetched) {
+    if (!isFetching && isFetched) {
       router.replace('/(tabs)/')
     }
-  }, [pokemonsFetched, router])
+  }, [isFetching, isFetched, router])
+
+  if (error) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.errorText}>
+          {typography.somethingWentWrong} {error.message}
+        </Text>
+      </View>
+    )
+  }
 
   return (
     <View style={styles.container}>
-      <ActivityIndicator size="large" color="#6200ee" style={styles.spinner} />
-      <Text style={styles.text}>Fetching data...</Text>
+      <LoadingIndicator />
+      <Text style={styles.text}>{typography.loadingData}</Text>
     </View>
   )
 }
@@ -44,13 +41,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5'
-  },
-  spinner: {
-    marginBottom: 20
+    backgroundColor: palette.colors.white
   },
   text: {
     fontSize: 18,
-    color: '#333'
+    color: palette.colors.grey.medium
+  },
+  errorText: {
+    fontSize: 18,
+    color: palette.colors.red.dark
   }
 })

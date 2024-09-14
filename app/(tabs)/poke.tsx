@@ -1,30 +1,29 @@
-import { SmallRoundButton } from '@/components/buttons/SmallRoundButton'
-import { PokemoneCard } from '@/components/cards/pokemonCard'
-import palette from '@/constants/palette'
-import { useFilteredPokemonData } from '@/hooks/useFilteredPokemonData'
-import { SearchInput } from '@/screens/pokemons/SearchInput'
-import { usePokemonData } from '@/services/api/fetchPokemonData'
-import { PokemonData } from '@/typescript/types/pokemonTypes'
 import { useRouter } from 'expo-router'
 import { useCallback, useRef, useState } from 'react'
-import { ActivityIndicator, FlatList, NativeScrollEvent, NativeSyntheticEvent, StyleSheet, View } from 'react-native'
+import { FlatList, StyleSheet, View } from 'react-native'
+
+import { SmallRoundButton } from '@/components/buttons/SmallRoundButton'
+import { PokemonCard } from '@/components/cards/PokemonCard'
+import { LoadingIndicator } from '@/components/indicators/LoadingIndicator'
+import { useFilteredPokemonData } from '@/hooks/useFilteredPokemonData'
+import { useScrollToTopButton } from '@/hooks/useScrollToTop'
+import { PokemonsHeader } from '@/screens/pokemons/components/header/PokemonsHeader'
+import { SearchInput } from '@/screens/pokemons/components/search/SearchInput'
+import { PokemonData, usePokemonData } from '@/services/api/fetchPokemonData'
+
+import palette from '@/constants/palette'
 
 export default function PokeScreen() {
   const router = useRouter()
   const flatListRef = useRef<FlatList<PokemonData>>(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [isFocused, setIsFocused] = useState(false)
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = usePokemonData()
+  const { showScrollToTop, handleScroll, scrollToTop } = useScrollToTopButton(flatListRef)
 
-  const pokemonData = data?.pages.flatMap((page) => page.pokemonDetails) || []
+  const pokemonData = data?.pages.flatMap((page) => page.data) || []
   const filteredData = useFilteredPokemonData(searchQuery, pokemonData)
-
-  const handleNavigatePokemon = (item: PokemonData) => {
-    router.push({
-      pathname: `/(pages)/pokemon/[id]`,
-      params: { id: item.name }
-    })
-  }
 
   const handleLoadMore = useCallback(() => {
     if (hasNextPage) {
@@ -32,34 +31,47 @@ export default function PokeScreen() {
     }
   }, [fetchNextPage, hasNextPage])
 
-  const [showScrollToTop, setShowScrollToTop] = useState(false)
-
-  const handleScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const offsetY = event.nativeEvent.contentOffset.y
-    setShowScrollToTop(offsetY > 100)
-  }, [])
-
-  const scrollToTop = () => {
-    flatListRef.current?.scrollToOffset({ offset: 0, animated: true })
+  const handleNavigatePokemon = (item: PokemonData) => {
+    router.push({
+      pathname: '/pokemon/[name]',
+      params: {
+        name: item.pokemonName,
+        capitalizedName: item.pokemonNameCapitalized,
+        artwork: item.artworkUrl,
+        backgroundColor: item.backgroundColors[0] || 'defaultBackgroundColor',
+        chip: item.chipColors[0] || 'defaultChipColor'
+      }
+    })
   }
+
+  const renderItem = ({ item }: { item: PokemonData }) => (
+    <View style={styles.itemContainer}>
+      <PokemonCard pokemon={item} handleNavigatePokemon={handleNavigatePokemon} />
+    </View>
+  )
 
   return (
     <View style={styles.container}>
       <FlatList
         ref={flatListRef}
         data={filteredData}
-        renderItem={({ item }) => (
-          <View style={styles.itemContainer}>
-            <PokemoneCard item={item} handleNavigatePokemon={handleNavigatePokemon} />
-          </View>
-        )}
-        keyExtractor={(item) => item.id.toString()}
+        renderItem={renderItem}
         contentContainerStyle={styles.listContent}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
         onScroll={handleScroll}
-        ListFooterComponent={isFetchingNextPage ? <ActivityIndicator size="large" /> : null}
-        ListHeaderComponent={<SearchInput searchQuery={searchQuery} onSearchChange={setSearchQuery} />}
+        ListFooterComponent={isFetchingNextPage ? <LoadingIndicator /> : null}
+        ListHeaderComponent={
+          <>
+            <PokemonsHeader />
+            <SearchInput
+              isFocused={isFocused}
+              setIsFocused={setIsFocused}
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+            />
+          </>
+        }
       />
       {showScrollToTop && <SmallRoundButton onPress={scrollToTop} iconName="arrow-upward" />}
     </View>
@@ -78,10 +90,5 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     paddingVertical: 6
-  },
-  loader: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
   }
 })
