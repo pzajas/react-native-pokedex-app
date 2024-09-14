@@ -2,7 +2,8 @@
 import palette from '@/constants/palette'
 import { PokemonData } from '@/services/api/fetchPokemonData'
 import { StyleSheet, View } from 'react-native'
-import { TypeChip } from '../chips/TypeChip'
+
+import { TypeChip } from '../chips/typeChip'
 import { CustomText } from '../typography/customText'
 
 export const PokemonCardInfo = ({ pokemon }: { pokemon: PokemonData }) => {

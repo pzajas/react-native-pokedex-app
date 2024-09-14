@@ -5,7 +5,6 @@ import { SearchTextInput } from './SearchTextInput'
 
 import palette from '@/constants/palette'
 import { useForm } from 'react-hook-form'
-
 interface SearchInputProps {
   searchQuery: string
   isFocused: boolean
