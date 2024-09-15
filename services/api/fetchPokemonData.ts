@@ -1,15 +1,14 @@
-import palette from '@/constants/palette'
 import { useInfiniteQuery } from '@tanstack/react-query'
+
+import palette from '@/constants/palette'
 import axios from 'axios'
-import { capitalize } from 'lodash'
 import typesData from '../data/types.json'
 export interface PokemonData {
-  pokemonName: string
   pokemonNameCapitalized: string
   url: string
   id: number
-  pokemonExtendedId: string
-  pokemonSimpleId: number
+  extendedId: string
+  shortenedId: number
   artworkUrl: string
   pokemonBackgroundColor: string
   pokemonChipColor: string
@@ -32,9 +31,6 @@ export interface PokemonData {
   }
 }
 
-const ARTWORK_API_URL =
-  'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork'
-
 const typesMap = new Map<string, string[]>(typesData.map((pokemon) => [pokemon.name.toUpperCase(), pokemon.typeList]))
 
 const getTypeColor = (type: string, colorSet: 'background' | 'chip') => {
@@ -49,7 +45,7 @@ const transformPokemonData = (pokemon: PokemonData) => {
   const pokemonSimpleId = Number(pokemonId)
   const pokemonExtendedId = pokemonSimpleId.toString().padStart(3, '0')
   const pokemonName = pokemon.name
-  const pokemonNameCapitalized = capitalize(pokemonName)
+  const pokemonUrl = pokemon.url
   const types = typesMap.get(pokemonName.toUpperCase()) || []
 
   const chipColors: string[] = []
@@ -60,18 +56,14 @@ const transformPokemonData = (pokemon: PokemonData) => {
     backgroundColors.push(getTypeColor(type, 'background'))
   })
 
-  const artworkUrl = `${ARTWORK_API_URL}/${pokemonSimpleId}.png`
-
   return {
-    pokemonName,
-    pokemonNameCapitalized,
-    pokemonSimpleId,
-    pokemonExtendedId,
-    url: pokemon.url,
+    name: pokemonName,
+    shortenedId: pokemonSimpleId,
+    extendedId: pokemonExtendedId,
+    url: pokemonUrl,
     types,
     chipColors,
-    backgroundColors,
-    artworkUrl
+    backgroundColors
   }
 }
 

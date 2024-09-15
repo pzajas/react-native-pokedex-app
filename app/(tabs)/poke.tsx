@@ -1,4 +1,3 @@
-import { useRouter } from 'expo-router'
 import { useCallback, useRef, useState } from 'react'
 import { FlatList, StyleSheet, View } from 'react-native'
 
@@ -12,9 +11,9 @@ import { PokemonData, usePokemonData } from '@/services/api/fetchPokemonData'
 
 import { PokemonCard } from '@/components/cards/pokemonCard'
 import palette from '@/constants/palette'
+import { useRouter } from 'expo-router'
 
 export default function PokeScreen() {
-  const router = useRouter()
   const flatListRef = useRef<FlatList<PokemonData>>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [isFocused, setIsFocused] = useState(false)
@@ -31,11 +30,14 @@ export default function PokeScreen() {
     }
   }, [fetchNextPage, hasNextPage])
 
+  const router = useRouter()
+
   const handleNavigatePokemon = (item: PokemonData) => {
     router.push({
       pathname: '/pokemon/[name]',
       params: {
-        name: item.pokemonName,
+        id: item.shortenedId,
+        name: item.name,
         capitalizedName: item.pokemonNameCapitalized,
         artwork: item.artworkUrl,
         backgroundColor: item.backgroundColors[0] || 'defaultBackgroundColor',

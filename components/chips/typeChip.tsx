@@ -6,8 +6,8 @@ import { CustomText } from '../typography/customText'
 export const TypeChip = ({ type }: { type: string }) => {
   const cleanType = type.replace(' Type', '').toLowerCase() as keyof typeof pokemonTypeIcons
 
-  const backgroundColor = palette.chipColors[cleanType] || palette.chipColors.default
-  const icon = pokemonTypeIcons[cleanType] || pokemonTypeIcons['default']
+  const backgroundColor = palette.chipColors[cleanType] || palette.chipColors.normal
+  const icon = pokemonTypeIcons[cleanType] || pokemonTypeIcons['normal']
 
   return (
     <View style={[styles.wrapper, { backgroundColor }]}>

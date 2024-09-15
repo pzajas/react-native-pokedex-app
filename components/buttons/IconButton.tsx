@@ -8,7 +8,7 @@ interface IconButtonProps {
 
 export const IconButton = ({ name, press }: IconButtonProps) => {
   return (
-    <Pressable onPress={press}>
+    <Pressable onPress={press} style={{ padding: 10 }}>
       <AntDesign name={name} size={24} color="white" />
     </Pressable>
   )

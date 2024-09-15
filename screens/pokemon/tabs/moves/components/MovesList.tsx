@@ -4,12 +4,10 @@ import { LoadingIndicator } from '@/components/indicators/LoadingIndicator'
 import { formatMoveName } from '@/utils/formatters/formatMoveName'
 
 import { MoveItem } from './MoveItem'
-
 interface MoveDetail {
   ename: string
   type: string
 }
-
 interface MovesListProps {
   moves: string[]
   movesMap: Map<string, MoveDetail>

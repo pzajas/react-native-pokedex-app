@@ -3,7 +3,6 @@ import { StyleSheet, TextInput, View } from 'react-native'
 
 import { CustomText } from '@/components/typography/customText'
 import { typography } from '@/constants/typography'
-
 interface SearchTextInputProps {
   searchQuery: string
   isFocused: boolean

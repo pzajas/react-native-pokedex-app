@@ -1,12 +1,15 @@
-import { PokemonData } from '@/services/api/fetchPokemonData'
 import { Image, StyleSheet, View } from 'react-native'
 
+import { PokemonData } from '@/services/api/fetchPokemonData'
+
+import constants from '@/constants/constants'
+
 export const PokemonCardImage = ({ pokemon }: { pokemon: PokemonData }) => {
-  const { artworkUrl } = pokemon
+  const artworkUrl = constants.api.ARTWORK_API_URL
 
   return (
     <View style={styles.imageContainer}>
-      <Image source={{ uri: artworkUrl }} style={styles.image} />
+      <Image source={{ uri: `${artworkUrl}/${pokemon.shortenedId}.png` }} style={styles.image} />
     </View>
   )
 }

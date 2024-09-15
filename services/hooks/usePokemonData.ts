@@ -16,6 +16,28 @@ interface PokemonSpeciesData {
   flavor_text_entries: Array<{ flavor_text: string; language: { name: string } }>
   genera: Array<{ genus: string; language: { name: string } }>
   gender_rate: number
+  evolution_chain: {
+    url: string
+  }
+}
+
+// EvolutionChain interface
+interface EvolutionChainData {
+  id: number
+  baby_trigger_item: any
+  chain: {
+    species: {
+      name: string
+      url: string
+    }
+    evolves_to: Array<{
+      species: {
+        name: string
+        url: string
+      }
+      evolves_to: Array<any>
+    }>
+  }
 }
 
 // Function to fetch basic Pokemon data
@@ -35,7 +57,18 @@ const fetchPokemonSpeciesByName = async (name: string): Promise<PokemonSpeciesDa
   }
 }
 
-// Custom hook to manage Pokemon and species data
+// Function to fetch evolution chain data
+const fetchEvolutionChainByUrl = async (url: string): Promise<EvolutionChainData> => {
+  try {
+    const response = await axios.get(url)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching evolution chain data:', error)
+    throw error
+  }
+}
+
+// Custom hook to manage Pokemon, species, and evolution data
 export const usePokemonData = (name: string) => {
   const pokemonQuery = useQuery({
     queryKey: ['pokemon', name],
@@ -52,6 +85,22 @@ export const usePokemonData = (name: string) => {
     enabled: !!name,
     onError: (error) => {
       console.error('Error fetching Pokemon species data:', error)
+    }
+  })
+
+  const evolutionChainQuery = useQuery({
+    queryKey: ['evolutionChain', name],
+    queryFn: async () => {
+      const speciesData = await speciesQuery.refetch()
+      const evolutionChainUrl = speciesData.data?.evolution_chain.url
+      if (evolutionChainUrl) {
+        return fetchEvolutionChainByUrl(evolutionChainUrl)
+      }
+      return null
+    },
+    enabled: !!name && speciesQuery.isSuccess,
+    onError: (error) => {
+      console.error('Error fetching evolution chain data:', error)
     }
   })
 
@@ -94,11 +143,19 @@ export const usePokemonData = (name: string) => {
       }
     : null
 
+  // Process evolution chain data
+  const evolutionChainData = evolutionChainQuery.data
+    ? {
+        chain: evolutionChainQuery.data.chain
+      }
+    : null
+
   // Return final structured data, loading, and error state
   return {
     pokemon: pokemonData,
     species: speciesData,
-    isLoading: pokemonQuery.isLoading || speciesQuery.isLoading,
-    isError: pokemonQuery.isError || speciesQuery.isError
+    evolutions: evolutionChainData,
+    isLoading: pokemonQuery.isLoading || speciesQuery.isLoading || evolutionChainQuery.isLoading,
+    isError: pokemonQuery.isError || speciesQuery.isError || evolutionChainQuery.isError
   }
 }

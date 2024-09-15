@@ -4,8 +4,8 @@ export interface PokemonListCardProps {
     pokemonNameCapitalized: string
     url: string
     id: number
-    pokemonExtendedId: string
-    pokemonSimpleId: number
+    extendedId: string
+    shortenedId: number
     artworkUrl: string
     pokemonBackgroundColor: string
     pokemonChipColor: string

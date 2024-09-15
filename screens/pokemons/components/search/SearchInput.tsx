@@ -1,10 +1,10 @@
+import { useForm } from 'react-hook-form'
 import { StyleSheet, View } from 'react-native'
 
 import { IconButton } from './SearchBarButton'
 import { SearchTextInput } from './SearchTextInput'
 
 import palette from '@/constants/palette'
-import { useForm } from 'react-hook-form'
 interface SearchInputProps {
   searchQuery: string
   isFocused: boolean

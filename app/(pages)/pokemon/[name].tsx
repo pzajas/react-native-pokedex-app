@@ -4,15 +4,17 @@ import { Image, StyleSheet, View } from 'react-native'
 import { Header } from '@/screens/pokemon/header/Header'
 import { PokeTabs } from '@/screens/pokemon/tabs/PokeTabs'
 
+import constants from '@/constants/constants'
 import palette from '@/constants/palette'
 
 export default function PokemonScreen() {
-  const { artwork, backgroundColor } = useLocalSearchParams()
-  const params = useLocalSearchParams()
-  const pokeballImage = require('../../../assets/images/pokeball.png')
+  const { backgroundColor, id } = useLocalSearchParams()
+  const pokeballImage = require('../../../assets/images/pokeball.png') || ''
+
+  console.log(id)
 
   const pokemonTypeColor = (backgroundColor as string) || ''
-  const pokemonImageUri = (artwork as string) || ''
+  const pokemonImageUri = `${constants.api.ARTWORK_API_URL}/${id}.png` || ''
 
   return (
     <View style={[styles.outerContainer, { backgroundColor: pokemonTypeColor }]}>
