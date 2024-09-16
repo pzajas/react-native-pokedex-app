@@ -1,57 +1,45 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
-import { Link, Tabs, useRouter } from 'expo-router'
-import { Pressable } from 'react-native'
-
 import { useClientOnlyValue } from '@/components/useClientOnlyValue'
-import { useColorScheme } from '@/components/useColorScheme'
 import palette from '@/constants/palette'
-
-function TabBarIcon(props: { name: React.ComponentProps<typeof FontAwesome>['name']; color: string }) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />
-}
+import { IconButton } from '@/screens/pokemons/components/search/SearchBarButton'
+import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { Tabs, useRouter } from 'expo-router'
+import { Platform, Pressable } from 'react-native'
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme()
   const router = useRouter()
+  const android = Platform.OS === 'android'
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: palette[colorScheme ?? 'light'].tint,
-        headerShown: useClientOnlyValue(false, true)
+        tabBarActiveTintColor: palette.colors.red.medium,
+        headerShown: useClientOnlyValue(false, true),
+        tabBarStyle: {
+          height: android ? 70 : 80,
+          paddingBottom: 10
+        }
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={palette[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
+          title: 'Home',
+          tabBarIcon: ({ color }) => (
+            <IconButton name={'square'} color={color} onPress={() => router.push('/(tabs)/')} />
           )
         }}
       />
       <Tabs.Screen
         name="poke"
         options={{
-          title: 'Pokemon List',
+          title: 'Pokedex',
           headerStyle: {
             backgroundColor: 'crimson'
           },
           headerTintColor: 'white',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <IconButton name={'list'} color={color} onPress={() => router.push('/(tabs)/poke')} />
+          ),
           headerLeft: () => (
             <Pressable
               onPress={() => {
@@ -68,7 +56,9 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: 'Profile',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />
+          tabBarIcon: ({ color }) => (
+            <IconButton name={'user'} color={color} onPress={() => router.push('/(tabs)/profile')} />
+          )
         }}
       />
     </Tabs>

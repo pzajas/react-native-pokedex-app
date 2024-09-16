@@ -32,7 +32,7 @@ export const SearchInput = ({ isFocused, setIsFocused, searchQuery, onSearchChan
         setIsFocused={setIsFocused}
         control={control}
       />
-      <IconButton name="close" onPress={handleResetSearchQuery} />
+      <IconButton name="x" onPress={handleResetSearchQuery} />
     </View>
   )
 }
