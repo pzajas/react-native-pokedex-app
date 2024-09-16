@@ -43,7 +43,7 @@ export const PokemonStatsBarItem = ({ label, value, maxValue, min, max, backgrou
 const styles = StyleSheet.create({
   statItem: {
     marginBottom: 10,
-    padding: 6
+    paddingVertical: 4
   },
   statRow: {
     flexDirection: 'row',
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     width: 110
   },
   statLabel: {
-    fontSize: 16,
+    fontSize: 14,
     color: palette.colors.grey.medium
   },
   statValue: {

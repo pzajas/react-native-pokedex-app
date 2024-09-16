@@ -1,4 +1,4 @@
-import { PokemonData } from '@/services/api/fetchPokemonData'
+import { PokemonData } from '@/typescript/types/pokemonTypes'
 import { useMemo } from 'react'
 
 export const useFilteredPokemonData = (searchQuery: string, pokemonData: PokemonData[]) => {

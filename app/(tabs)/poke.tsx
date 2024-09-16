@@ -2,26 +2,27 @@ import { useCallback, useRef, useState } from 'react'
 import { FlatList, StyleSheet, View } from 'react-native'
 
 import { SmallRoundButton } from '@/components/buttons/SmallRoundButton'
+import { PokemonCard } from '@/components/cards/pokemonCard'
 import { LoadingIndicator } from '@/components/indicators/LoadingIndicator'
 import { useFilteredPokemonData } from '@/hooks/useFilteredPokemonData'
 import { useScrollToTopButton } from '@/hooks/useScrollToTop'
 import { PokemonsHeader } from '@/screens/pokemons/components/header/PokemonsHeader'
 import { SearchInput } from '@/screens/pokemons/components/search/SearchInput'
-import { PokemonData, usePokemonData } from '@/services/api/fetchPokemonData'
+import { usePokemonData } from '@/services/api/fetchPokemonData'
+import { useNavigatePokemon } from '@/utils/navigation/useNavigatePokemon'
 
-import { PokemonCard } from '@/components/cards/pokemonCard'
 import palette from '@/constants/palette'
-import { useRouter } from 'expo-router'
+import { PokemonData } from '@/typescript/types/pokemonTypes'
 
 export default function PokeScreen() {
   const flatListRef = useRef<FlatList<PokemonData>>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [isFocused, setIsFocused] = useState(false)
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = usePokemonData()
+  const { data: pokemonData, fetchNextPage, hasNextPage, isFetchingNextPage } = usePokemonData()
   const { showScrollToTop, handleScroll, scrollToTop } = useScrollToTopButton(flatListRef)
 
-  const pokemonData = data?.pages.flatMap((page) => page.data) || []
+  const navigatePokemon = useNavigatePokemon()
   const filteredData = useFilteredPokemonData(searchQuery, pokemonData)
 
   const handleLoadMore = useCallback(() => {
@@ -30,25 +31,9 @@ export default function PokeScreen() {
     }
   }, [fetchNextPage, hasNextPage])
 
-  const router = useRouter()
-
-  const handleNavigatePokemon = (item: PokemonData) => {
-    router.push({
-      pathname: '/pokemon/[name]',
-      params: {
-        id: item.shortenedId,
-        name: item.name,
-        capitalizedName: item.pokemonNameCapitalized,
-        artwork: item.artworkUrl,
-        backgroundColor: item.backgroundColors[0] || 'defaultBackgroundColor',
-        chip: item.chipColors[0] || 'defaultChipColor'
-      }
-    })
-  }
-
   const renderItem = ({ item }: { item: PokemonData }) => (
     <View style={styles.itemContainer}>
-      <PokemonCard pokemon={item} handleNavigatePokemon={handleNavigatePokemon} />
+      <PokemonCard pokemon={item} handleNavigatePokemon={navigatePokemon} />
     </View>
   )
 

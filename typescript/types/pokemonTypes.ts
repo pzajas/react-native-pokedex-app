@@ -1,3 +1,31 @@
+export interface PokemonData {
+  pokemonNameCapitalized: string
+  url: string
+  id: number
+  extendedId: string
+  shortenedId: number
+  artworkUrl: string
+  pokemonBackgroundColor: string
+  pokemonChipColor: string
+  types: string[]
+  chipColors: string[]
+  backgroundColors: string[]
+  image: string
+  name: string
+  stats: {
+    hp: number
+    attack: number
+    defense: number
+    specialAttack: number
+    specialDefense: number
+    speed: number
+  }
+  species: {
+    name: string
+    url: string
+  }
+}
+
 export type PokemonType =
   | 'fire'
   | 'water'

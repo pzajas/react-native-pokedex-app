@@ -1,7 +1,7 @@
 // Information.tsx
 import { StyleSheet, View } from 'react-native'
 
-import { PokemonData } from '@/services/api/fetchPokemonData'
+import { PokemonData } from '@/typescript/types/pokemonTypes'
 
 import { TypeChip } from '../chips/typeChip'
 import { CustomText } from '../typography/customText'

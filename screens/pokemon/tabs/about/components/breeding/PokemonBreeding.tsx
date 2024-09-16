@@ -2,24 +2,29 @@ import { StyleSheet, View } from 'react-native'
 
 import { GenderIcon } from '@/assets/icons/GenderIcon'
 import { GenderBalanceBar } from '@/components/bars/GenderBalanceBar'
+import { TabSectionHeader } from '@/components/headers/TabSectionHeader'
 import { CustomText } from '@/components/typography/customText'
 import { typography } from '@/constants/typography'
-
 interface BreedingProps {
   malePercentage: number
   femalePercentage: number
 }
 
 export const Breeding = ({ malePercentage, femalePercentage }: BreedingProps) => {
+  const male = 'male'
+  const female = 'female'
+
   return (
     <View style={styles.title}>
-      <CustomText weight="semibold" style={styles.title}>
-        {typography.breeding}
-      </CustomText>
+      <TabSectionHeader title={typography.tabs.breeding} />
       <View style={styles.row}>
-        <GenderIcon gender="male" />
-        <CustomText style={[styles.info, styles.text]}>{typography.gender}</CustomText>
-        <GenderIcon gender="female" />
+        <GenderIcon gender={male} />
+        <CustomText style={[styles.info, styles.text]}>{malePercentage}</CustomText>
+
+        <CustomText style={[styles.info, styles.text]}>{typography.tabs.gender}</CustomText>
+        <CustomText style={[styles.info, styles.text]}>{femalePercentage}</CustomText>
+
+        <GenderIcon gender={female} />
       </View>
       <GenderBalanceBar malePercentage={malePercentage} femalePercentage={femalePercentage} />
     </View>
@@ -32,10 +37,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   text: {
-    fontSize: 12
+    fontSize: 14
   },
   info: {
-    fontSize: 16
+    fontSize: 14
   },
   title: {
     marginBottom: 10

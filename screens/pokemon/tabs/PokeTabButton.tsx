@@ -4,7 +4,6 @@ import { CustomText } from '@/components/typography/customText'
 import { typography } from '@/constants/typography'
 
 import palette from '@/constants/palette'
-
 interface TabButtonProps {
   label: string
   isActive: boolean
@@ -48,6 +47,6 @@ const styles = StyleSheet.create({
   },
   activeTabText: {
     color: palette.colors.black,
-    fontFamily: typography.PoppinsSemiBold
+    fontFamily: typography.poppinsSemiBold
   }
 })

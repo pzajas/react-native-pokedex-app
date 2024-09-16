@@ -3,6 +3,9 @@ import { StyleSheet, TextInput, View } from 'react-native'
 
 import { CustomText } from '@/components/typography/customText'
 import { typography } from '@/constants/typography'
+
+import palette from '@/constants/palette'
+
 interface SearchTextInputProps {
   searchQuery: string
   isFocused: boolean
@@ -27,7 +30,7 @@ export const SearchTextInput = ({
         render={({ field: { onChange, value } }) => (
           <TextInput
             style={styles.input}
-            placeholderTextColor="transparent"
+            placeholderTextColor={palette.colors.transparent}
             onChangeText={(text) => {
               onChange(text)
               onSearchChange(text)
@@ -52,14 +55,14 @@ const styles = StyleSheet.create({
     flex: 1,
     height: '100%',
     paddingHorizontal: 8,
-    color: 'black',
-    fontFamily: 'PoppinsMedium'
+    color: palette.colors.black,
+    fontFamily: typography.poppinsMedium
   },
   placeholder: {
     position: 'absolute',
     left: 8,
-    color: 'gray',
     fontSize: 16,
-    fontFamily: 'PoppinsMedium'
+    color: palette.colors.black,
+    fontFamily: typography.poppinsMedium
   }
 })

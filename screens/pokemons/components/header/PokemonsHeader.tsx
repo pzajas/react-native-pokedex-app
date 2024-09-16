@@ -3,12 +3,13 @@ import { StyleSheet, View } from 'react-native'
 import { CustomText } from '@/components/typography/customText'
 
 export const PokemonsHeader = () => {
+  const pokedex = 'Pokedex'
+  const pokedexDescription =
+    'Here is the Pokedex. You can search the poke you want to see, just provide its name or id.'
   return (
     <View style={styles.container}>
-      <CustomText style={styles.text}>Pokedex</CustomText>
-      <CustomText>
-        Here is the Pokedex. You can search the poke you want to see, just provide its name or id.
-      </CustomText>
+      <CustomText style={styles.text}>{pokedex}</CustomText>
+      <CustomText>{pokedexDescription}</CustomText>
     </View>
   )
 }

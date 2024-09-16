@@ -9,10 +9,8 @@ import palette from '@/constants/palette'
 
 export default function PokemonScreen() {
   const { backgroundColor, id } = useLocalSearchParams()
+
   const pokeballImage = require('../../../assets/images/pokeball.png') || ''
-
-  console.log(id)
-
   const pokemonTypeColor = (backgroundColor as string) || ''
   const pokemonImageUri = `${constants.api.ARTWORK_API_URL}/${id}.png` || ''
 

@@ -1,6 +1,5 @@
 import { AntDesign } from '@expo/vector-icons'
 import { GestureResponderEvent, Pressable } from 'react-native'
-
 interface IconButtonProps {
   name: keyof typeof AntDesign.glyphMap
   press: (event: GestureResponderEvent) => void

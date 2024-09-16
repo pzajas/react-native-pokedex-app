@@ -1,6 +1,6 @@
 import { Image, StyleSheet, View } from 'react-native'
 
-import { PokemonData } from '@/services/api/fetchPokemonData'
+import { PokemonData } from '@/typescript/types/pokemonTypes'
 
 import constants from '@/constants/constants'
 

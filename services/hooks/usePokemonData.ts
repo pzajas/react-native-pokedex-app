@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 
-// Updated PokemonData interface with stats, moves, and forms
 interface PokemonData {
   weight: number
   height: number
@@ -11,7 +10,6 @@ interface PokemonData {
   forms: Array<{ name: string }>
 }
 
-// Updated PokemonSpeciesData interface
 interface PokemonSpeciesData {
   flavor_text_entries: Array<{ flavor_text: string; language: { name: string } }>
   genera: Array<{ genus: string; language: { name: string } }>
@@ -19,9 +17,10 @@ interface PokemonSpeciesData {
   evolution_chain: {
     url: string
   }
+  habitat: { url: string }
+  shape: { url: string }
 }
 
-// EvolutionChain interface
 interface EvolutionChainData {
   id: number
   baby_trigger_item: any
@@ -40,52 +39,52 @@ interface EvolutionChainData {
   }
 }
 
-// Function to fetch basic Pokemon data
+interface PokemonHabitatData {
+  name: string
+  url: string
+}
+
+interface PokemonShapeData {
+  name: string
+  url: string
+}
+
 const fetchPokemonByName = async (name: string): Promise<PokemonData> => {
   const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`)
   return response.data
 }
 
-// Function to fetch Pokemon species data
 const fetchPokemonSpeciesByName = async (name: string): Promise<PokemonSpeciesData> => {
-  try {
-    const response = await axios.get(`https://pokeapi.co/api/v2/pokemon-species/${name}`)
-    return response.data
-  } catch (error) {
-    console.error('Error fetching Pokemon species data:', error)
-    throw error
-  }
+  const response = await axios.get(`https://pokeapi.co/api/v2/pokemon-species/${name}`)
+  return response.data
 }
 
-// Function to fetch evolution chain data
 const fetchEvolutionChainByUrl = async (url: string): Promise<EvolutionChainData> => {
-  try {
-    const response = await axios.get(url)
-    return response.data
-  } catch (error) {
-    console.error('Error fetching evolution chain data:', error)
-    throw error
-  }
+  const response = await axios.get(url)
+  return response.data
 }
 
-// Custom hook to manage Pokemon, species, and evolution data
+const fetchPokemonHabitatByUrl = async (url: string): Promise<PokemonHabitatData> => {
+  const response = await axios.get(url)
+  return response.data
+}
+
+const fetchPokemonShapeByUrl = async (url: string): Promise<PokemonShapeData> => {
+  const response = await axios.get(url)
+  return response.data
+}
+
 export const usePokemonData = (name: string) => {
   const pokemonQuery = useQuery({
     queryKey: ['pokemon', name],
     queryFn: () => fetchPokemonByName(name),
-    enabled: !!name,
-    onError: (error) => {
-      console.error('Error fetching Pokemon data:', error)
-    }
+    enabled: !!name
   })
 
   const speciesQuery = useQuery({
     queryKey: ['pokemonSpecies', name],
     queryFn: () => fetchPokemonSpeciesByName(name),
-    enabled: !!name,
-    onError: (error) => {
-      console.error('Error fetching Pokemon species data:', error)
-    }
+    enabled: !!name
   })
 
   const evolutionChainQuery = useQuery({
@@ -98,27 +97,47 @@ export const usePokemonData = (name: string) => {
       }
       return null
     },
-    enabled: !!name && speciesQuery.isSuccess,
-    onError: (error) => {
-      console.error('Error fetching evolution chain data:', error)
-    }
+    enabled: !!name && speciesQuery.isSuccess
   })
 
-  // Utility function to sanitize text
+  const habitatQuery = useQuery({
+    queryKey: ['pokemonHabitat', name],
+    queryFn: async () => {
+      const speciesData = await speciesQuery.refetch()
+      const habitatUrl = speciesData.data?.habitat?.url
+      if (habitatUrl) {
+        return fetchPokemonHabitatByUrl(habitatUrl)
+      }
+      return null
+    },
+    enabled: !!name && speciesQuery.isSuccess
+  })
+
+  const shapeQuery = useQuery({
+    queryKey: ['pokemonShape', name],
+    queryFn: async () => {
+      const speciesData = await speciesQuery.refetch()
+      const shapeUrl = speciesData.data?.shape?.url
+      if (shapeUrl) {
+        return fetchPokemonShapeByUrl(shapeUrl)
+      }
+      return null
+    },
+    enabled: !!name && speciesQuery.isSuccess
+  })
+
   const sanitizeText = (text: string) => {
-    return text.replace(/♀/g, '') // Removes any special characters like ♀
+    return text.replace(/♀/g, '')
   }
 
-  // Fetches the first English flavor text entry
   const getEnglishEntry = (entries: Array<{ flavor_text: string; language: { name: string } }>) => {
     const englishEntry = entries.find((entry) => entry.language.name === 'en')
     if (englishEntry) {
-      return sanitizeText(englishEntry.flavor_text) // Sanitize the text
+      return sanitizeText(englishEntry.flavor_text)
     }
     return ''
   }
 
-  // Processes Pokemon data if available
   const pokemonData = pokemonQuery.data
     ? {
         weight: pokemonQuery.data.weight,
@@ -134,7 +153,6 @@ export const usePokemonData = (name: string) => {
       }
     : null
 
-  // Processes species data if available
   const speciesData = speciesQuery.data
     ? {
         description: getEnglishEntry(speciesQuery.data.flavor_text_entries), // Get English description
@@ -143,19 +161,47 @@ export const usePokemonData = (name: string) => {
       }
     : null
 
-  // Process evolution chain data
   const evolutionChainData = evolutionChainQuery.data
     ? {
         chain: evolutionChainQuery.data.chain
       }
     : null
 
-  // Return final structured data, loading, and error state
+  const habitatData = habitatQuery.data
+    ? {
+        habitatName: habitatQuery.data.name
+      }
+    : null
+
+  const shapeData = shapeQuery.data
+    ? {
+        shapeName: shapeQuery.data.name
+      }
+    : null
+
   return {
-    pokemon: pokemonData,
-    species: speciesData,
+    weight: pokemonData?.weight,
+    height: pokemonData?.height,
+    abilities: pokemonData?.abilities,
+    moves: pokemonData?.moves,
+    stats: pokemonData?.stats || [],
+    genera: speciesData?.genera || [],
+    description: speciesData?.description || '',
+    genderRate: speciesData?.genderRate || 0,
     evolutions: evolutionChainData,
-    isLoading: pokemonQuery.isLoading || speciesQuery.isLoading || evolutionChainQuery.isLoading,
-    isError: pokemonQuery.isError || speciesQuery.isError || evolutionChainQuery.isError
+    habitat: habitatData?.habitatName || '',
+    shape: shapeData?.shapeName || '',
+    isLoading:
+      pokemonQuery.isLoading ||
+      speciesQuery.isLoading ||
+      evolutionChainQuery.isLoading ||
+      habitatQuery.isLoading ||
+      shapeQuery.isLoading,
+    isError:
+      pokemonQuery.isError ||
+      speciesQuery.isError ||
+      evolutionChainQuery.isError ||
+      habitatQuery.isError ||
+      shapeQuery.isError
   }
 }

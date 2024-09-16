@@ -1,35 +1,9 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 
 import palette from '@/constants/palette'
+import { PokemonData } from '@/typescript/types/pokemonTypes'
 import axios from 'axios'
 import typesData from '../data/types.json'
-export interface PokemonData {
-  pokemonNameCapitalized: string
-  url: string
-  id: number
-  extendedId: string
-  shortenedId: number
-  artworkUrl: string
-  pokemonBackgroundColor: string
-  pokemonChipColor: string
-  types: string[]
-  chipColors: string[]
-  backgroundColors: string[]
-  image: string
-  name: string
-  stats: {
-    hp: number
-    attack: number
-    defense: number
-    specialAttack: number
-    specialDefense: number
-    speed: number
-  }
-  species: {
-    name: string
-    url: string
-  }
-}
 
 const typesMap = new Map<string, string[]>(typesData.map((pokemon) => [pokemon.name.toUpperCase(), pokemon.typeList]))
 
@@ -99,11 +73,13 @@ export const usePokemonData = () => {
     initialPageParam: 0
   })
 
+  const pokemonData = query.data?.pages.flatMap((page) => page.data) || []
+
   return {
     isFetching: query.isFetching,
     isFetched: query.isFetched,
     error: query.error,
-    data: query.data,
+    data: pokemonData,
     fetchNextPage: query.fetchNextPage,
     hasNextPage: query.hasNextPage,
     isFetchingNextPage: query.isFetchingNextPage
