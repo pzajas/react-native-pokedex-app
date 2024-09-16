@@ -12,16 +12,22 @@ export const typography = {
   //POKEMON SCREEN
 
   //About
-  description: 'Description',
-  breeding: 'Breeding',
-  gender: 'Gender',
-
-  male: 'male',
-  female: 'female',
+  tabs: {
+    description: 'Description',
+    information: 'Information',
+    stats: 'Stats',
+    breeding: 'Breeding',
+    gender: 'Gender',
+    moves: 'Moves',
+    evolutions: 'Evolutions',
+    male: 'male',
+    female: 'female'
+  },
 
   //Fonts
 
-  PoppinsSemiBold: 'PoppinsSemiBold',
+  poppinsSemiBold: 'PoppinsSemiBold',
+  poppinsMedium: 'PoppinsMediuim',
 
   //Languages
 

@@ -1,8 +1,11 @@
-import palette from '@/constants/palette'
-import { PokemonData } from '@/services/api/fetchPokemonData'
 import { Pressable, StyleSheet, View } from 'react-native'
+
+import { PokemonData } from '@/typescript/types/pokemonTypes'
+
 import { PokemonCardImage } from './PokemonCardImage'
 import { PokemonCardInfo } from './PokemonCardInfo'
+
+import palette from '@/constants/palette'
 
 export const PokemonCard = ({
   pokemon,

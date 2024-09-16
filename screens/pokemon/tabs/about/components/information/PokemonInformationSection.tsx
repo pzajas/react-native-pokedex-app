@@ -2,7 +2,6 @@ import { StyleSheet, View } from 'react-native'
 
 import { CustomText } from '@/components/typography/customText'
 import { typography } from '@/constants/typography'
-
 interface InfoSectionProps {
   title: string
   children: React.ReactNode
@@ -24,6 +23,6 @@ const styles = StyleSheet.create({
   title: {
     marginBottom: 10,
     fontSize: 18,
-    fontFamily: typography.PoppinsSemiBold
+    fontFamily: typography.poppinsSemiBold
   }
 })

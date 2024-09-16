@@ -6,10 +6,10 @@ import { IconButton } from '@/screens/pokemons/components/search/SearchBarButton
 import { useNavigateBack } from '@/utils/navigation/useNavigateBack'
 
 import palette from '@/constants/palette'
+import { capitalize } from 'lodash'
 
 export const Header = () => {
-  const { backgroundColor, capitalizedName }: { backgroundColor: string; capitalizedName: string } =
-    useLocalSearchParams()
+  const { backgroundColor, name }: { backgroundColor: string; name: string } = useLocalSearchParams()
   const navigateBack = useNavigateBack()
 
   return (
@@ -24,7 +24,7 @@ export const Header = () => {
         }}
       >
         <IconButton name={'chevron-left'} size={32} color={palette.colors.white} onPress={navigateBack} />
-        <CustomText style={styles.text}>{capitalizedName}</CustomText>
+        <CustomText style={styles.text}>{capitalize(name)}</CustomText>
         <IconButton
           name={'favorite-border'}
           size={26}

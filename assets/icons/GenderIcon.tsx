@@ -1,6 +1,8 @@
-import palette from '@/constants/palette'
-import { Foundation } from '@expo/vector-icons'
 import { StyleSheet, View } from 'react-native'
+
+import { Foundation } from '@expo/vector-icons'
+
+import palette from '@/constants/palette'
 
 interface IGenderIcon {
   gender: 'male' | 'female'
@@ -12,7 +14,7 @@ export const GenderIcon = ({ gender }: IGenderIcon) => {
 
   return (
     <View style={styles.container}>
-      <Foundation name={genderIcon} size={20} color={genderColor} />
+      <Foundation name={genderIcon} size={24} color={genderColor} />
     </View>
   )
 }

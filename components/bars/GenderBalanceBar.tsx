@@ -1,5 +1,6 @@
-import palette from '@/constants/palette'
 import { StyleSheet, View } from 'react-native'
+
+import palette from '@/constants/palette'
 
 export const GenderBalanceBar = ({
   malePercentage,

@@ -47,13 +47,13 @@ const styles = StyleSheet.create({
   moveItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 10,
+    paddingVertical: 4,
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(180, 180, 180, 0.05)'
   },
   icon: {
-    width: 30,
-    height: 30,
+    width: 26,
+    height: 26,
     marginRight: 10
   },
   textContainer: {
@@ -63,11 +63,11 @@ const styles = StyleSheet.create({
     flex: 1
   },
   moveText: {
-    fontSize: 16,
+    fontSize: 14,
     flex: 1
   },
   moveTypeText: {
-    fontSize: 16,
+    fontSize: 14,
     marginRight: 20,
     color: palette.colors.grey.light
   }

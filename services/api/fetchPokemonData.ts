@@ -1,39 +1,9 @@
-import palette from '@/constants/palette'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import axios from 'axios'
-import { capitalize } from 'lodash'
-import typesData from '../data/types.json'
-export interface PokemonData {
-  pokemonName: string
-  pokemonNameCapitalized: string
-  url: string
-  id: number
-  pokemonExtendedId: string
-  pokemonSimpleId: number
-  artworkUrl: string
-  pokemonBackgroundColor: string
-  pokemonChipColor: string
-  types: string[]
-  chipColors: string[]
-  backgroundColors: string[]
-  image: string
-  name: string
-  stats: {
-    hp: number
-    attack: number
-    defense: number
-    specialAttack: number
-    specialDefense: number
-    speed: number
-  }
-  species: {
-    name: string
-    url: string
-  }
-}
 
-const ARTWORK_API_URL =
-  'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork'
+import palette from '@/constants/palette'
+import { PokemonData } from '@/typescript/types/pokemonTypes'
+import axios from 'axios'
+import typesData from '../data/types.json'
 
 const typesMap = new Map<string, string[]>(typesData.map((pokemon) => [pokemon.name.toUpperCase(), pokemon.typeList]))
 
@@ -49,7 +19,7 @@ const transformPokemonData = (pokemon: PokemonData) => {
   const pokemonSimpleId = Number(pokemonId)
   const pokemonExtendedId = pokemonSimpleId.toString().padStart(3, '0')
   const pokemonName = pokemon.name
-  const pokemonNameCapitalized = capitalize(pokemonName)
+  const pokemonUrl = pokemon.url
   const types = typesMap.get(pokemonName.toUpperCase()) || []
 
   const chipColors: string[] = []
@@ -60,18 +30,14 @@ const transformPokemonData = (pokemon: PokemonData) => {
     backgroundColors.push(getTypeColor(type, 'background'))
   })
 
-  const artworkUrl = `${ARTWORK_API_URL}/${pokemonSimpleId}.png`
-
   return {
-    pokemonName,
-    pokemonNameCapitalized,
-    pokemonSimpleId,
-    pokemonExtendedId,
-    url: pokemon.url,
+    name: pokemonName,
+    shortenedId: pokemonSimpleId,
+    extendedId: pokemonExtendedId,
+    url: pokemonUrl,
     types,
     chipColors,
-    backgroundColors,
-    artworkUrl
+    backgroundColors
   }
 }
 
@@ -107,11 +73,13 @@ export const usePokemonData = () => {
     initialPageParam: 0
   })
 
+  const pokemonData = query.data?.pages.flatMap((page) => page.data) || []
+
   return {
     isFetching: query.isFetching,
     isFetched: query.isFetched,
     error: query.error,
-    data: query.data,
+    data: pokemonData,
     fetchNextPage: query.fetchNextPage,
     hasNextPage: query.hasNextPage,
     isFetchingNextPage: query.isFetchingNextPage
