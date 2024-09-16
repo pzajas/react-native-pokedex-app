@@ -26,6 +26,7 @@ export const MovesList: React.FC<MovesListProps> = ({ moves, movesMap }) => {
       data={moves}
       renderItem={renderMove}
       keyExtractor={(item) => item}
+      showsVerticalScrollIndicator={false}
       ListEmptyComponent={() => <LoadingIndicator />}
     />
   )

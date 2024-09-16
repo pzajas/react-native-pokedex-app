@@ -1,6 +1,4 @@
-// src/hooks/useNavigatePokemon.ts
 import { useLocalSearchParams, useRouter } from 'expo-router'
-
 interface NavigatePokemonParams {
   name: string
   id: number
