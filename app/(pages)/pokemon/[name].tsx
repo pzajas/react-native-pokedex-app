@@ -6,6 +6,7 @@ import { PokeTabs } from '@/screens/pokemon/tabs/PokeTabs'
 
 import constants from '@/constants/constants'
 import palette from '@/constants/palette'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function PokemonScreen() {
   const { backgroundColor, id } = useLocalSearchParams()
@@ -15,14 +16,14 @@ export default function PokemonScreen() {
   const pokemonImageUri = `${constants.api.ARTWORK_API_URL}/${id}.png` || ''
 
   return (
-    <View style={[styles.outerContainer, { backgroundColor: pokemonTypeColor }]}>
+    <SafeAreaView style={[styles.outerContainer, { backgroundColor: pokemonTypeColor }]} edges={['top']}>
       <Header />
       <View style={styles.tabContainer}>
         <Image source={pokeballImage} style={styles.pokeballImage} />
         <Image source={{ uri: pokemonImageUri }} style={styles.pokemonImage} />
         <PokeTabs />
       </View>
-    </View>
+    </SafeAreaView>
   )
 }
 

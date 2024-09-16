@@ -34,14 +34,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 3,
     height: 180
   },
   currentPokemonCard: {
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 3,
     height: 180,
     opacity: 0.2
   },

@@ -42,7 +42,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
-    elevation: 4,
     backgroundColor: palette.colors.white
   },
   tabHeader: {

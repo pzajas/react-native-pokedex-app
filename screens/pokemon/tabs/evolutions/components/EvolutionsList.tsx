@@ -18,6 +18,7 @@ export const EvolutionsList: React.FC<EvolutionsListProps> = ({ evolutionList })
         data={evolutionList}
         numColumns={numColumns}
         keyExtractor={(item) => item.id.toString()}
+        showsVerticalScrollIndicator={false}
         renderItem={({ item }) => <EvolutionsItem item={item} name={name} />}
         columnWrapperStyle={styles.row}
       />

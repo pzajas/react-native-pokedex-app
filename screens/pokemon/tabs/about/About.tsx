@@ -15,7 +15,7 @@ export const About = () => {
   const { malePercentage, femalePercentage } = getGenderRate(genderRate)
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainerStyle}>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <PokemonDescription description={description} />
       <Information />
       <Breeding malePercentage={malePercentage} femalePercentage={femalePercentage} />
@@ -31,9 +31,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 8
   },
-  contentContainerStyle: {
-    flex: 1
-  },
+
   loaderContainer: {
     justifyContent: 'center',
     alignItems: 'center',
