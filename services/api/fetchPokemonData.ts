@@ -46,8 +46,9 @@ const fetchPokemonData = async ({
 }: {
   pageParam?: number
 }): Promise<{ data: PokemonData[]; nextOffset: number | undefined; hasMore: boolean }> => {
-  const limit = 25
+  const limit = 10 // Number of Pokémon to fetch per request
   const offset = pageParam * limit
+  const maxLength = 151 // Maximum number of Pokémon to fetch
 
   const response = await axios.get('https://pokeapi.co/api/v2/pokemon', {
     params: {
@@ -58,10 +59,12 @@ const fetchPokemonData = async ({
 
   const dataWithIds = response.data.results.map(transformPokemonData)
 
+  const hasMore = dataWithIds.length === limit && offset + limit < maxLength
+
   return {
     data: dataWithIds,
-    nextOffset: response.data.next ? pageParam + 1 : undefined,
-    hasMore: !!response.data.next
+    nextOffset: hasMore ? pageParam + 1 : undefined,
+    hasMore
   }
 }
 
@@ -79,7 +82,7 @@ export const usePokemonData = () => {
     isFetching: query.isFetching,
     isFetched: query.isFetched,
     error: query.error,
-    data: pokemonData,
+    data: pokemonData.slice(0, 151),
     fetchNextPage: query.fetchNextPage,
     hasNextPage: query.hasNextPage,
     isFetchingNextPage: query.isFetchingNextPage
