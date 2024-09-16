@@ -81,7 +81,7 @@ export default {
     dark: '#6d707c',
     steel: '#467d89',
     fairy: '#cc7cc2',
-    default: '#7f8183'
+    normal: '#7f8183'
   } as { [key: string]: string },
   gender: {
     female: '#ff66b9',

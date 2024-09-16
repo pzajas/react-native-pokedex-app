@@ -1,15 +1,28 @@
-import { Image, StyleSheet, View } from 'react-native'
-
-import { PokemonData } from '@/typescript/types/pokemonTypes'
-
 import constants from '@/constants/constants'
+import { PokemonData } from '@/typescript/types/pokemonTypes'
+import React, { useState } from 'react'
+import { Image, StyleSheet, Text, View } from 'react-native'
 
 export const PokemonCardImage = ({ pokemon }: { pokemon: PokemonData }) => {
   const artworkUrl = constants.api.ARTWORK_API_URL
+  const imageUrl = `${artworkUrl}/${pokemon.shortenedId}.png`
+
+  const [imageError, setImageError] = useState(false)
 
   return (
     <View style={styles.imageContainer}>
-      <Image source={{ uri: `${artworkUrl}/${pokemon.shortenedId}.png` }} style={styles.image} />
+      {imageError ? (
+        <Text>Image failed to load</Text> // Placeholder if the image fails to load
+      ) : (
+        <Image
+          source={{ uri: imageUrl }}
+          style={styles.image}
+          onError={(error) => {
+            console.error('Image failed to load:', error.nativeEvent.error)
+            setImageError(true)
+          }}
+        />
+      )}
     </View>
   )
 }
@@ -24,7 +37,6 @@ const styles = StyleSheet.create({
   image: {
     resizeMode: 'contain',
     width: 140,
-    height: 140,
-    zIndex: 100
+    height: 140
   }
 })

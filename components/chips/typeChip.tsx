@@ -1,7 +1,10 @@
-import palette from '@/constants/palette'
-import { pokemonTypeIcons } from '@/utils/icons/pokemonTypeIcons'
 import { Image, StyleSheet, View } from 'react-native'
+
+import { pokemonTypeIcons } from '@/utils/icons/pokemonTypeIcons'
+
 import { CustomText } from '../typography/customText'
+
+import palette from '@/constants/palette'
 
 export const TypeChip = ({ type }: { type: string }) => {
   const cleanType = type.replace(' Type', '').toLowerCase() as keyof typeof pokemonTypeIcons
@@ -29,7 +32,7 @@ const styles = StyleSheet.create({
     gap: 4
   },
   text: {
-    color: palette.light.textLight
+    color: palette.colors.white
   },
   icon: {
     width: 20,

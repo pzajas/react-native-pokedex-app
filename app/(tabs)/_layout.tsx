@@ -1,4 +1,3 @@
-import { useClientOnlyValue } from '@/components/useClientOnlyValue'
 import palette from '@/constants/palette'
 import { IconButton } from '@/screens/pokemons/components/search/SearchBarButton'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
@@ -13,7 +12,7 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: palette.colors.red.medium,
-        headerShown: useClientOnlyValue(false, true),
+        headerShown: false,
         tabBarStyle: {
           height: android ? 70 : 80,
           paddingBottom: 10
@@ -33,10 +32,6 @@ export default function TabLayout() {
         name="poke"
         options={{
           title: 'Pokedex',
-          headerStyle: {
-            backgroundColor: 'crimson'
-          },
-          headerTintColor: 'white',
           tabBarIcon: ({ color }) => (
             <IconButton name={'list'} color={color} onPress={() => router.push('/(tabs)/poke')} />
           ),
@@ -47,7 +42,7 @@ export default function TabLayout() {
               }}
               style={{ marginLeft: 15 }}
             >
-              <MaterialIcons name="arrow-back" size={24} color="white" />
+              <MaterialIcons name="chevron-left" size={24} color="white" />
             </Pressable>
           )
         }}

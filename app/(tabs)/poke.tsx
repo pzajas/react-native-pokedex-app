@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 import { FlatList, StyleSheet, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { SmallRoundButton } from '@/components/buttons/SmallRoundButton'
 import { PokemonCard } from '@/components/cards/pokemonCard'
@@ -38,7 +39,7 @@ export default function PokeScreen() {
   )
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
       <FlatList
         ref={flatListRef}
         data={filteredData}
@@ -49,7 +50,7 @@ export default function PokeScreen() {
         onScroll={handleScroll}
         ListFooterComponent={isFetchingNextPage ? <LoadingIndicator /> : null}
         ListHeaderComponent={
-          <>
+          <View style={{ backgroundColor: 'white' }}>
             <PokemonsHeader />
             <SearchInput
               isFocused={isFocused}
@@ -57,22 +58,21 @@ export default function PokeScreen() {
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}
             />
-          </>
+          </View>
         }
       />
       {showScrollToTop && <SmallRoundButton onPress={scrollToTop} iconName="arrow-upward" />}
-    </View>
+    </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: palette.light.background
+    backgroundColor: palette.colors.white
   },
   listContent: {
     paddingHorizontal: 16,
-    paddingVertical: 16,
     gap: 10
   },
   itemContainer: {
