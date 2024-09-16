@@ -3,7 +3,7 @@ import { auth } from '@/services/firebase/firebase'
 import { queryClient } from '@/services/tanstack/queryClient'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
+import { DefaultTheme, ThemeProvider } from '@react-navigation/native'
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import { useFonts } from 'expo-font'
@@ -74,7 +74,7 @@ function RootLayoutNav({ isLoggedIn }: { isLoggedIn: boolean }) {
 
   return (
     <PersistQueryClientProvider client={queryClient} persistOptions={{ persister }}>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <ThemeProvider value={colorScheme === 'dark' ? DefaultTheme : DefaultTheme}>
         {isLoggedIn ? (
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name={'(fetching)'} />

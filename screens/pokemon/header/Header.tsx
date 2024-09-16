@@ -25,12 +25,7 @@ export const Header = () => {
       >
         <IconButton name={'chevron-left'} size={32} color={palette.colors.white} onPress={navigateBack} />
         <CustomText style={styles.text}>{capitalize(name)}</CustomText>
-        <IconButton
-          name={'favorite-border'}
-          size={26}
-          color={palette.colors.white}
-          onPress={() => console.log('favo')}
-        />
+        <IconButton name={'heart'} size={26} color={palette.colors.white} onPress={() => console.log('favo')} />
       </View>
     </SafeAreaView>
   )
