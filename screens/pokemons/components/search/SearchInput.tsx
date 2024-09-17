@@ -10,9 +10,16 @@ interface SearchInputProps {
   isFocused: boolean
   onSearchChange: (query: string) => void
   setIsFocused: (focused: boolean) => void
+  onFilterPress?: () => void
 }
 
-export const SearchInput = ({ isFocused, setIsFocused, searchQuery, onSearchChange }: SearchInputProps) => {
+export const SearchInput = ({
+  isFocused,
+  setIsFocused,
+  searchQuery,
+  onSearchChange,
+  onFilterPress
+}: SearchInputProps) => {
   const { control, reset } = useForm<{ search: string }>({
     defaultValues: { search: searchQuery }
   })
@@ -24,7 +31,7 @@ export const SearchInput = ({ isFocused, setIsFocused, searchQuery, onSearchChan
 
   return (
     <View style={styles.container}>
-      <IconButton name="search" />
+      <IconButton name="search" size={20} />
       <SearchTextInput
         searchQuery={searchQuery}
         onSearchChange={onSearchChange}
@@ -33,6 +40,7 @@ export const SearchInput = ({ isFocused, setIsFocused, searchQuery, onSearchChan
         control={control}
       />
       <IconButton name="x" onPress={handleResetSearchQuery} />
+      <IconButton name="filter" onPress={onFilterPress} size={18} />
     </View>
   )
 }
