@@ -2,7 +2,7 @@ import { Image, StyleSheet, View } from 'react-native'
 
 import { pokemonTypeIcons } from '@/utils/icons/pokemonTypeIcons'
 
-import { CustomText } from '../typography/customText'
+import { CustomText } from '../../../../components/typography/customText'
 
 import palette from '@/constants/palette'
 

@@ -1,12 +1,11 @@
 // Information.tsx
+import { capitalize } from 'lodash'
 import { StyleSheet, View } from 'react-native'
 
 import { PokemonData } from '@/typescript/types/pokemonTypes'
 
-import { TypeChip } from '../chips/typeChip'
-import { CustomText } from '../typography/customText'
-
-import { capitalize } from 'lodash'
+import { CustomText } from '../../../../components/typography/customText'
+import { TypeChip } from '../chip/typeChip'
 
 import palette from '@/constants/palette'
 

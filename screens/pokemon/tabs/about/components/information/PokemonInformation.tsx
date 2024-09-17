@@ -2,11 +2,11 @@ import { useLocalSearchParams } from 'expo-router'
 import { capitalize } from 'lodash'
 import { StyleSheet, View } from 'react-native'
 
+import { typography } from '@/constants/typography'
 import { usePokemonData } from '@/services/hooks/usePokemonData'
 import { getFirstWord } from '@/utils/strings/getFirstWordFromString'
 
-import { TabSectionHeader } from '@/components/headers/TabSectionHeader'
-import { typography } from '@/constants/typography'
+import { PokeTabSectionHeader } from '../../../PokeTabSectionHeader'
 import { InfoRow } from './PokemonInformationRow'
 
 export const Information = () => {
@@ -20,7 +20,7 @@ export const Information = () => {
 
   return (
     <>
-      <TabSectionHeader title={typography.tabs.information} />
+      <PokeTabSectionHeader title={typography.tabs.information} />
       <View style={styles.column}>
         <View style={styles.row}>
           <View style={styles.columnItem}>

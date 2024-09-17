@@ -1,10 +1,11 @@
 import { StyleSheet, View } from 'react-native'
 
 import { GenderIcon } from '@/assets/icons/GenderIcon'
-import { GenderBalanceBar } from '@/components/bars/GenderBalanceBar'
-import { TabSectionHeader } from '@/components/headers/TabSectionHeader'
 import { CustomText } from '@/components/typography/customText'
 import { typography } from '@/constants/typography'
+import { PokeTabSectionHeader } from '@/screens/pokemon/tabs/PokeTabSectionHeader'
+
+import { GenderBalanceBar } from './GenderBalanceBar'
 interface BreedingProps {
   malePercentage: number
   femalePercentage: number
@@ -16,7 +17,7 @@ export const Breeding = ({ malePercentage, femalePercentage }: BreedingProps) =>
 
   return (
     <View style={styles.title}>
-      <TabSectionHeader title={typography.tabs.breeding} />
+      <PokeTabSectionHeader title={typography.tabs.breeding} />
       <View style={styles.row}>
         <GenderIcon gender={male} />
         <CustomText style={[styles.info, styles.text]}>{malePercentage}</CustomText>

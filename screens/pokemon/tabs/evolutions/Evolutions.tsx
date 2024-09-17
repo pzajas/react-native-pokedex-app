@@ -1,10 +1,10 @@
 import { useLocalSearchParams } from 'expo-router'
 
+import { typography } from '@/constants/typography'
 import { usePokemonData } from '@/services/hooks/usePokemonData'
 import { getEvolutions } from '@/utils/pokemon/getEvolutions'
 
-import { TabSectionHeader } from '@/components/headers/TabSectionHeader'
-import { typography } from '@/constants/typography'
+import { PokeTabSectionHeader } from '../PokeTabSectionHeader'
 import { EvolutionsList } from './components/EvolutionsList'
 
 export const Evolutions = () => {
@@ -15,7 +15,7 @@ export const Evolutions = () => {
 
   return (
     <>
-      <TabSectionHeader title={typography.tabs.evolutions} />
+      <PokeTabSectionHeader title={typography.tabs.evolutions} />
       <EvolutionsList evolutionList={evolutionList} />
     </>
   )

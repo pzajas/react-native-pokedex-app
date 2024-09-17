@@ -1,14 +1,13 @@
 import { useLocalSearchParams } from 'expo-router'
+import { random } from 'lodash'
 
+import { typography } from '@/constants/typography'
 import { usePokemonData } from '@/services/hooks/usePokemonData'
 import { getBackgroundColor } from '@/utils/colors/getPokemonStatColor'
 
+import { PokeTabSectionHeader } from '../PokeTabSectionHeader'
 import { PokemonStatsBarItem } from './components/PokemonStatsBarItem'
 import { statsLabels, statsValues } from './PokeStatsConfig'
-
-import { TabSectionHeader } from '@/components/headers/TabSectionHeader'
-import { typography } from '@/constants/typography'
-import { random } from 'lodash'
 
 export const Stats = () => {
   const { name }: { name: string } = useLocalSearchParams()
@@ -16,8 +15,7 @@ export const Stats = () => {
 
   return (
     <>
-      <TabSectionHeader title={typography.tabs.stats} />
-
+      <PokeTabSectionHeader title={typography.tabs.stats} />
       {stats?.map((stat) => (
         <PokemonStatsBarItem
           key={stat.name}
