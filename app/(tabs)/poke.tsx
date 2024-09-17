@@ -1,16 +1,17 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { FlatList, StyleSheet, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { SmallRoundButton } from '@/components/buttons/SmallRoundButton'
 import { LoadingIndicator } from '@/components/indicators/LoadingIndicator'
-import { FilterPokemonsModal } from '@/components/modals/filterPokemons/FilterPokemonsModal' // Adjust the import path
+import { FilterPokemonsModal } from '@/components/modals/filterPokemons/FilterPokemonsModal'
 import { useFilteredPokemonData } from '@/hooks/useFilteredPokemonData'
 import { useScrollToTopButton } from '@/hooks/useScrollToTop'
 import { PokemonCard } from '@/screens/pokemons/components/card/pokemonCard'
 import { PokemonsHeader } from '@/screens/pokemons/components/header/PokemonsHeader'
 import { SearchInput } from '@/screens/pokemons/components/search/SearchInput'
 import { usePokemonData } from '@/services/api/fetchPokemonData'
+import { fetchFavoritePokemons } from '@/services/firebase/firebaseFunctions'
 import { useNavigatePokemon } from '@/utils/navigation/useNavigatePokemon'
 
 import palette from '@/constants/palette'
@@ -22,6 +23,7 @@ export default function PokeScreen() {
   const [isFocused, setIsFocused] = useState(false)
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [activeFilters, setActiveFilters] = useState<string[]>([])
+  const [favoritePokemons, setFavoritePokemons] = useState<PokemonData[]>([])
 
   const { data: pokemonData, fetchNextPage, hasNextPage, isFetchingNextPage } = usePokemonData()
   const { showScrollToTop, handleScroll, scrollToTop } = useScrollToTopButton(flatListRef)
@@ -43,17 +45,28 @@ export default function PokeScreen() {
     setActiveFilters(filters)
   }
 
+  const fetchFavorites = async () => {
+    const favorites = await fetchFavoritePokemons()
+    setFavoritePokemons(favorites)
+  }
+
+  useEffect(() => {
+    fetchFavorites()
+  }, [])
+
   const renderItem = ({ item }: { item: PokemonData }) => (
     <View style={styles.itemContainer}>
       <PokemonCard pokemon={item} handleNavigatePokemon={navigatePokemon} />
     </View>
   )
 
+  console.log(favoritePokemons)
+
   return (
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
       <FlatList
         ref={flatListRef}
-        data={filteredData}
+        data={filteredData.length > 0 ? filteredData : favoritePokemons}
         renderItem={renderItem}
         contentContainerStyle={styles.listContent}
         onEndReached={handleLoadMore}

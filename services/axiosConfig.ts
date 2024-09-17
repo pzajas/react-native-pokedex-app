@@ -1,4 +1,3 @@
-// src/services/axiosConfig.ts
 import constants from '@/constants/constants'
 import axios from 'axios'
 

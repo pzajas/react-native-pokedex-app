@@ -13,7 +13,8 @@ export const useNavigatePokemon = () => {
         capitalizedName: item.pokemonNameCapitalized,
         artwork: item.artworkUrl,
         backgroundColor: item.backgroundColors[0] || 'defaultBackgroundColor',
-        chip: item.chipColors[0] || 'defaultChipColor'
+        chip: item.chipColors[0] || 'defaultChipColor',
+        types: item.types
       }
     })
   }

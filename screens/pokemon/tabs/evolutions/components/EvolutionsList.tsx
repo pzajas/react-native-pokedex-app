@@ -1,4 +1,3 @@
-// EvolutionsList.tsx
 import { useLocalSearchParams } from 'expo-router'
 import { FlatList, StyleSheet, View } from 'react-native'
 

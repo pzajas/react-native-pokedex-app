@@ -1,4 +1,3 @@
-// Information.tsx
 import { capitalize } from 'lodash'
 import { StyleSheet, View } from 'react-native'
 
