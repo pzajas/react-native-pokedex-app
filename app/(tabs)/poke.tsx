@@ -3,11 +3,11 @@ import { FlatList, StyleSheet, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { SmallRoundButton } from '@/components/buttons/SmallRoundButton'
-import { PokemonCard } from '@/components/cards/pokemonCard'
 import { LoadingIndicator } from '@/components/indicators/LoadingIndicator'
 import { FilterPokemonsModal } from '@/components/modals/filterPokemons/FilterPokemonsModal' // Adjust the import path
 import { useFilteredPokemonData } from '@/hooks/useFilteredPokemonData'
 import { useScrollToTopButton } from '@/hooks/useScrollToTop'
+import { PokemonCard } from '@/screens/pokemons/components/card/pokemonCard'
 import { PokemonsHeader } from '@/screens/pokemons/components/header/PokemonsHeader'
 import { SearchInput } from '@/screens/pokemons/components/search/SearchInput'
 import { usePokemonData } from '@/services/api/fetchPokemonData'

@@ -1,12 +1,12 @@
 import { useLocalSearchParams } from 'expo-router'
 
+import { typography } from '@/constants/typography'
 import { usePokemonData } from '@/services/hooks/usePokemonData'
 import { formatMoveName } from '@/utils/formatters/formatMoveName'
 
+import { PokeTabSectionHeader } from '../PokeTabSectionHeader'
 import { MovesList } from './components/MovesList'
 
-import { TabSectionHeader } from '@/components/headers/TabSectionHeader'
-import { typography } from '@/constants/typography'
 import movesData from '../../../../services/data/moves.json'
 interface MoveDetail {
   ename: string
@@ -21,7 +21,7 @@ export const Moves = () => {
 
   return (
     <>
-      <TabSectionHeader title={typography.tabs.moves} />
+      <PokeTabSectionHeader title={typography.tabs.moves} />
       <MovesList moves={moves || []} movesMap={movesMap} />
     </>
   )

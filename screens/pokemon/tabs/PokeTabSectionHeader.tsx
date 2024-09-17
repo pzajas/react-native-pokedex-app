@@ -1,9 +1,9 @@
 import { StyleSheet } from 'react-native'
 
 import palette from '@/constants/palette'
-import { CustomText } from '../typography/customText'
+import { CustomText } from '../../../components/typography/customText'
 
-export const TabSectionHeader = ({ title }: { title: string }) => {
+export const PokeTabSectionHeader = ({ title }: { title: string }) => {
   return (
     <CustomText weight="semibold" style={styles.title}>
       {title}
