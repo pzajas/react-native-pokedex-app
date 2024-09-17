@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { SmallRoundButton } from '@/components/buttons/SmallRoundButton'
 import { LoadingIndicator } from '@/components/indicators/LoadingIndicator'
 import { FilterPokemonsModal } from '@/components/modals/filterPokemons/FilterPokemonsModal'
+import palette from '@/constants/palette'
 import { useFilteredPokemonData } from '@/hooks/useFilteredPokemonData'
 import { useScrollToTopButton } from '@/hooks/useScrollToTop'
 import { PokemonCard } from '@/screens/pokemons/components/card/pokemonCard'
@@ -12,10 +13,8 @@ import { PokemonsHeader } from '@/screens/pokemons/components/header/PokemonsHea
 import { SearchInput } from '@/screens/pokemons/components/search/SearchInput'
 import { usePokemonData } from '@/services/api/fetchPokemonData'
 import { fetchFavoritePokemons } from '@/services/firebase/firebaseFunctions'
-import { useNavigatePokemon } from '@/utils/navigation/useNavigatePokemon'
-
-import palette from '@/constants/palette'
 import { PokemonData } from '@/typescript/types/pokemonTypes'
+import { useNavigatePokemon } from '@/utils/navigation/useNavigatePokemon'
 
 export default function PokeScreen() {
   const flatListRef = useRef<FlatList<PokemonData>>(null)
@@ -24,12 +23,27 @@ export default function PokeScreen() {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [activeFilters, setActiveFilters] = useState<string[]>([])
   const [favoritePokemons, setFavoritePokemons] = useState<PokemonData[]>([])
+  const [showFavorites, setShowFavorites] = useState(false) // Toggle for showing favorites
 
   const { data: pokemonData, fetchNextPage, hasNextPage, isFetchingNextPage } = usePokemonData()
   const { showScrollToTop, handleScroll, scrollToTop } = useScrollToTopButton(flatListRef)
 
   const navigatePokemon = useNavigatePokemon()
+
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      const favorites = await fetchFavoritePokemons()
+      setFavoritePokemons(favorites)
+    }
+    fetchFavorites()
+  }, [])
+
+  // Check if 'Favorites' is in the filters
+  const hasFavoritesFilter = activeFilters.includes('Favorites')
+
+  // Determine the data to display
   const filteredData = useFilteredPokemonData(searchQuery, pokemonData, activeFilters)
+  const displayData = hasFavoritesFilter ? favoritePokemons : showFavorites ? favoritePokemons : filteredData
 
   const handleLoadMore = useCallback(() => {
     if (hasNextPage) {
@@ -43,16 +57,12 @@ export default function PokeScreen() {
 
   const handleApplyFilters = (filters: string[]) => {
     setActiveFilters(filters)
+    setShowFavorites(false) // Reset to show all pokemons when filters are applied
   }
 
-  const fetchFavorites = async () => {
-    const favorites = await fetchFavoritePokemons()
-    setFavoritePokemons(favorites)
+  const toggleFavoriteView = () => {
+    setShowFavorites(!showFavorites)
   }
-
-  useEffect(() => {
-    fetchFavorites()
-  }, [])
 
   const renderItem = ({ item }: { item: PokemonData }) => (
     <View style={styles.itemContainer}>
@@ -60,13 +70,11 @@ export default function PokeScreen() {
     </View>
   )
 
-  console.log(favoritePokemons)
-
   return (
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
       <FlatList
         ref={flatListRef}
-        data={filteredData.length > 0 ? filteredData : favoritePokemons}
+        data={displayData}
         renderItem={renderItem}
         contentContainerStyle={styles.listContent}
         onEndReached={handleLoadMore}
