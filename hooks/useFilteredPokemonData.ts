@@ -17,6 +17,6 @@ export const useFilteredPokemonData = (searchQuery: string, pokemonData: Pokemon
       filteredData = filteredData.filter((pokemon) => pokemon.name.toLowerCase().includes(searchQuery.toLowerCase()))
     }
 
-    return filteredData
+    return filteredData.sort((a: PokemonData, b: PokemonData) => Number(a.extendedId) - Number(b.extendedId))
   }, [searchQuery, pokemonData, activeFilters])
 }

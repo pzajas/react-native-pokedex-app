@@ -7,7 +7,6 @@ import palette from '@/constants/palette'
 import { pokemonTypes } from '@/constants/pokemons'
 import Modal from 'react-native-modal'
 import { FilterRow } from './FilterRow'
-
 interface FilterPokemonsModalProps {
   isVisible: boolean
   onClose: () => void
@@ -27,7 +26,6 @@ export const FilterPokemonsModal = ({ isVisible, onClose, onApplyFilter }: Filte
 
   const availableFilters = 'Available Filters'
   const resetFilters = 'Reset Filters'
-
   const numberOfRowItems = 6
 
   const filterOptions = [...pokemonTypes, { id: 'favorites', type: 'Favorites' }]

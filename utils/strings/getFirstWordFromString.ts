@@ -1,3 +1,3 @@
-export const getFirstWord = (text: string): string => {
-  return text.split(' ')[0]
+export const getFirstWord = (text?: string | null): string => {
+  return text?.split(' ')[0] ?? ''
 }

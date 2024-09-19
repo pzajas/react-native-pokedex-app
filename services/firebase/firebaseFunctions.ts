@@ -154,22 +154,24 @@ export const fetchFavoritePokemons = async (): Promise<PokemonData[]> => {
     if (!user) {
       throw new Error('User is not authenticated')
     }
-    console.log('asdjhhgsdgfsdgfkdsgfksdfgkjfhgkjsdhfksdjfhjksdhsdkfhskdjfhsdjkfh')
 
     const favoritesRef = collection(firestore, 'pokemons', user.uid, 'favorites')
     const snapshot = await getDocs(favoritesRef)
 
     const favoritePokemons: PokemonData[] = snapshot.docs.map((doc) => {
-      const data = doc.data() as PokemonData
+      const data = doc.data()
 
       return {
+        id: data.id,
         backgroundColors: data.backgroundColors || [],
         chipColors: data.chipColors || [],
         extendedId: data.extendedId || '',
         name: data.name || '',
         shortenedId: data.shortenedId || '',
         types: data.types || [],
-        url: data.url || ''
+        url: data.url || '',
+        species: data.species || [],
+        stats: data.stats || []
       }
     })
 

@@ -1,24 +1,5 @@
+import { PokemonType } from '@/typescript/types/pokemonTypes'
 import { ImageSourcePropType } from 'react-native'
-
-type PokemonType =
-  | 'fire'
-  | 'water'
-  | 'grass'
-  | 'electric'
-  | 'ice'
-  | 'fighting'
-  | 'poison'
-  | 'ground'
-  | 'flying'
-  | 'psychic'
-  | 'bug'
-  | 'rock'
-  | 'ghost'
-  | 'dragon'
-  | 'dark'
-  | 'steel'
-  | 'fairy'
-  | 'normal'
 
 export const pokemonTypeIcons: Record<PokemonType, ImageSourcePropType> = {
   fire: require('../../assets/icons/FireIcon.png'),

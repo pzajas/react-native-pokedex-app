@@ -1,22 +1,30 @@
-import palette from '@/constants/palette'
+import { useEffect, useState } from 'react'
+
 import { PokemonData } from '@/typescript/types/pokemonTypes'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import axios from 'axios'
-import { useEffect, useState } from 'react'
 import { fetchFavoritePokemons } from '../firebase/firebaseFunctions'
 
-const typesData = require('../data/types.json') // Adjust path if necessary
-const typesMap = new Map<string, string[]>(typesData.map((pokemon) => [pokemon.name.toUpperCase(), pokemon.typeList]))
+import palette from '@/constants/palette'
+import axios from 'axios'
+export interface IMatchedPokemon {
+  id: number
+  name: string
+  typeList: string[]
+}
+
+const typesData = require('../data/types.json')
+const typesMap = new Map<string, string[]>(
+  typesData.map((pokemon: IMatchedPokemon) => [pokemon.name.toUpperCase(), pokemon.typeList])
+)
 
 const getTypeColor = (type: string, colorSet: 'background' | 'chip') => {
-  // Assuming palette is imported or defined elsewhere
   const typeColors = colorSet === 'background' ? palette.typeColors : palette.chipColors
   const colorKey = type.toLowerCase() as keyof typeof typeColors
   return typeColors[colorKey] || typeColors.default
 }
 
 const transformPokemonData = (pokemon: any): PokemonData => {
-  const pokemonId = pokemon.url.split('/').filter(Boolean).pop() as string
+  const pokemonId = pokemon.url.split('/').filter(Boolean).pop()
   const pokemonSimpleId = Number(pokemonId)
   const pokemonExtendedId = pokemonSimpleId.toString().padStart(3, '0')
   const pokemonName = pokemon.name
@@ -32,14 +40,17 @@ const transformPokemonData = (pokemon: any): PokemonData => {
   })
 
   return {
+    id: pokemon.id,
     name: pokemonName,
     shortenedId: pokemonSimpleId,
     extendedId: pokemonExtendedId,
     url: pokemonUrl,
-    types,
     chipColors,
     backgroundColors,
-    isFavorite: false // Default value
+    isFavorite: false,
+    types,
+    species: pokemon.species,
+    stats: pokemon.stats
   }
 }
 
@@ -85,7 +96,6 @@ export const usePokemonData = () => {
 
   const pokemonData = query.data?.pages.flatMap((page) => page.data) || []
 
-  // Integrate favorite data with API data
   const integratedData = pokemonData.map((pokemon) => ({
     ...pokemon,
     isFavorite: favoritePokemons.some((fav) => fav.extendedId === pokemon.extendedId)

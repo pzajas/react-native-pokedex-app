@@ -1,7 +1,6 @@
 import { formatText } from '../formatters/formatTextString'
 
 import _ from 'lodash'
-
 interface Description {
   flavor_text: string
 }

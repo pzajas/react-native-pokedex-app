@@ -1,6 +1,5 @@
 import { Pressable, StyleSheet } from 'react-native'
 import { CustomText } from '../../typography/customText'
-
 interface FilterOptionProps {
   type: string
   selected: boolean

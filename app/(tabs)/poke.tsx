@@ -1,3 +1,7 @@
+import { useRef, useState } from 'react'
+import { FlatList, StyleSheet, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+
 import { SmallRoundButton } from '@/components/buttons/SmallRoundButton'
 import { LoadingIndicator } from '@/components/indicators/LoadingIndicator'
 import { FilterPokemonsModal } from '@/components/modals/filterPokemons/FilterPokemonsModal'
@@ -10,23 +14,20 @@ import { SearchInput } from '@/screens/pokemons/components/search/SearchInput'
 import { usePokemonData } from '@/services/api/fetchPokemonData'
 import { PokemonData } from '@/typescript/types/pokemonTypes'
 import { useNavigatePokemon } from '@/utils/navigation/useNavigatePokemon'
-import { useCallback, useRef, useState } from 'react'
-import { FlatList, StyleSheet, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
 
 import palette from '@/constants/palette'
+import { useLoadMorePoekmons } from '@/hooks/useLoadMorePokemons'
 
 export default function PokeScreen() {
   const [searchQuery, setSearchQuery] = useState('')
   const [isFocused, setIsFocused] = useState(false)
   const [activeFilters, setActiveFilters] = useState<string[]>([])
-
   const flatListRef = useRef<FlatList<PokemonData>>(null)
 
   const { data: pokemonData, fetchNextPage, hasNextPage, isFetchingNextPage } = usePokemonData()
   const { showScrollToTop, handleScroll, scrollToTop } = useScrollToTopButton(flatListRef)
+  const handleLoadMore = useLoadMorePoekmons(fetchNextPage, hasNextPage)
   const navigatePokemon = useNavigatePokemon()
-
   const { isModalVisible, handleFilterPress, handleApplyFilters, setIsModalVisible } = useFilterHandler(
     [],
     (filters) => {
@@ -35,12 +36,6 @@ export default function PokeScreen() {
   )
 
   const filteredData = useFilteredPokemonData(searchQuery, pokemonData, activeFilters)
-
-  const handleLoadMore = useCallback(() => {
-    if (hasNextPage) {
-      fetchNextPage()
-    }
-  }, [fetchNextPage, hasNextPage])
 
   const renderItem = ({ item }: { item: PokemonData }) => (
     <View style={styles.itemContainer}>
@@ -52,7 +47,7 @@ export default function PokeScreen() {
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
       <FlatList
         ref={flatListRef}
-        data={filteredData?.sort((a, b) => a.extendedId - b.extendedId)}
+        data={filteredData}
         renderItem={renderItem}
         contentContainerStyle={styles.listContent}
         onEndReached={handleLoadMore}

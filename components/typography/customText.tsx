@@ -1,10 +1,9 @@
 import { Text as DefaultText, TextProps } from 'react-native'
-
 interface CustomTextProps extends TextProps {
   weight?: 'light' | 'regular' | 'medium' | 'semibold' | 'bold'
 }
 
-export const CustomText: React.FC<CustomTextProps> = ({ style, weight = 'medium', ...props }) => {
+export const CustomText = ({ style, weight = 'medium', ...props }: CustomTextProps) => {
   const getFontFamily = () => {
     switch (weight) {
       case 'light':

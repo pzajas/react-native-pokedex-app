@@ -4,20 +4,16 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { Header } from '@/screens/pokemon/header/Header'
 import { PokeTabs } from '@/screens/pokemon/tabs/PokeTabs'
-import { useAddFavoritePokemon } from '@/services/hooks/useAddFavouritePokemon'
 
 import constants from '@/constants/constants'
 import palette from '@/constants/palette'
 
 export default function PokemonScreen() {
-  const { backgroundColor, id, name, chip, types } = useLocalSearchParams()
-  const typesArray = typeof types === 'string' ? types.split(',').map((type) => type.trim()) : []
-
-  const { mutate: addFavoritePokemon } = useAddFavoritePokemon()
+  const { backgroundColor, id } = useLocalSearchParams()
 
   const pokeballImage = require('../../../assets/images/pokeball.png') || ''
   const pokemonImageUri = `${constants.api.ARTWORK_API_URL}/${id}.png` || ''
-  const pokemonTypeColor = backgroundColor || ''
+  const pokemonTypeColor = Array.isArray(backgroundColor) ? backgroundColor[0] : backgroundColor || ''
 
   return (
     <SafeAreaView style={[styles.outerContainer, { backgroundColor: pokemonTypeColor }]} edges={['top']}>
