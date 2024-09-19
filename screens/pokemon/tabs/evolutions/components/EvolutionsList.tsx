@@ -7,7 +7,7 @@ interface EvolutionsListProps {
   evolutionList: { name: string; id: number }[]
 }
 
-export const EvolutionsList: React.FC<EvolutionsListProps> = ({ evolutionList }) => {
+export const EvolutionsList = ({ evolutionList }: EvolutionsListProps) => {
   const { name }: { name: string } = useLocalSearchParams()
   const numColumns = 2
 

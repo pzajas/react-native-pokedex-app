@@ -12,7 +12,7 @@ export const PokemonCardImage = ({ pokemon }: { pokemon: PokemonData }) => {
   return (
     <View style={styles.imageContainer}>
       {imageError ? (
-        <Text>Image failed to load</Text> // Placeholder if the image fails to load
+        <Text>Image failed to load</Text>
       ) : (
         <Image
           source={{ uri: imageUrl }}

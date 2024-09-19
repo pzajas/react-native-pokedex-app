@@ -89,13 +89,15 @@ const getFavoritesRef = () => {
 }
 
 export const addFavoritePokemon = async (pokemon: PokemonData) => {
+  console.log(pokemon, 'pokemon from add to fav')
+
   try {
     const user = auth.currentUser
     if (!user) {
       throw new Error('User is not authenticated')
     }
 
-    const pokemonRef = doc(firestore, 'pokemons', user.uid, 'favorites', pokemon.shortenedId.toString())
+    const pokemonRef = doc(firestore, 'pokemons', user.uid, 'favorites', pokemon.name)
     await setDoc(pokemonRef, {
       backgroundColors: pokemon.backgroundColors,
       chipColors: pokemon.chipColors,
@@ -115,8 +117,16 @@ export const addFavoritePokemon = async (pokemon: PokemonData) => {
 export const removeFavoritePokemon = async (pokemonName: string) => {
   try {
     const docRef = doc(getFavoritesRef(), pokemonName)
-    await deleteDoc(docRef)
-    console.log(`${pokemonName} has been removed from favorites.`)
+    console.log('Document reference:', docRef.path)
+
+    const docSnapshot = await getDoc(docRef)
+    if (docSnapshot.exists()) {
+      console.log('Document exists, proceeding to delete.')
+      await deleteDoc(docRef)
+      console.log(`${pokemonName} has been removed from favorites.`)
+    } else {
+      console.log('Document does not exist, cannot delete.')
+    }
   } catch (error) {
     console.error('Error removing favorite Pokémon:', error)
   }
@@ -124,11 +134,16 @@ export const removeFavoritePokemon = async (pokemonName: string) => {
 
 export const isFavoritePokemon = async (pokemonName: string): Promise<boolean> => {
   try {
-    const docRef = doc(getFavoritesRef(), pokemonName)
-    const docSnap = await getDoc(docRef)
+    const user = auth.currentUser
+    if (!user) {
+      throw new Error('User is not authenticated')
+    }
+
+    const pokemonRef = doc(getFavoritesRef(), pokemonName)
+    const docSnap = await getDoc(pokemonRef)
     return docSnap.exists()
   } catch (error) {
-    console.error('Error checking if Pokémon is a favorite:', error)
+    console.error('Error checking favorite Pokémon status:', error)
     return false
   }
 }

@@ -5,45 +5,41 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { SmallRoundButton } from '@/components/buttons/SmallRoundButton'
 import { LoadingIndicator } from '@/components/indicators/LoadingIndicator'
 import { FilterPokemonsModal } from '@/components/modals/filterPokemons/FilterPokemonsModal'
-import palette from '@/constants/palette'
 import { useFilteredPokemonData } from '@/hooks/useFilteredPokemonData'
+import { useFilterHandler } from '@/hooks/useFilterHandler'
 import { useScrollToTopButton } from '@/hooks/useScrollToTop'
 import { PokemonCard } from '@/screens/pokemons/components/card/pokemonCard'
 import { PokemonsHeader } from '@/screens/pokemons/components/header/PokemonsHeader'
 import { SearchInput } from '@/screens/pokemons/components/search/SearchInput'
 import { usePokemonData } from '@/services/api/fetchPokemonData'
-import { fetchFavoritePokemons } from '@/services/firebase/firebaseFunctions'
+import { useFavoritePokemons } from '@/services/hooks/useFavouritePokemons'
 import { PokemonData } from '@/typescript/types/pokemonTypes'
 import { useNavigatePokemon } from '@/utils/navigation/useNavigatePokemon'
 
+import palette from '@/constants/palette'
+
 export default function PokeScreen() {
-  const flatListRef = useRef<FlatList<PokemonData>>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [isFocused, setIsFocused] = useState(false)
-  const [isModalVisible, setIsModalVisible] = useState(false)
   const [activeFilters, setActiveFilters] = useState<string[]>([])
-  const [favoritePokemons, setFavoritePokemons] = useState<PokemonData[]>([])
-  const [showFavorites, setShowFavorites] = useState(false) // Toggle for showing favorites
+
+  const flatListRef = useRef<FlatList<PokemonData>>(null)
+  const isFavoritesFilterActive = activeFilters.includes('Favorites')
 
   const { data: pokemonData, fetchNextPage, hasNextPage, isFetchingNextPage } = usePokemonData()
   const { showScrollToTop, handleScroll, scrollToTop } = useScrollToTopButton(flatListRef)
-
   const navigatePokemon = useNavigatePokemon()
 
+  const { data: favoritePokemons, refetch } = useFavoritePokemons(isFavoritesFilterActive)
+
   useEffect(() => {
-    const fetchFavorites = async () => {
-      const favorites = await fetchFavoritePokemons()
-      setFavoritePokemons(favorites)
+    if (isFavoritesFilterActive) {
+      refetch()
     }
-    fetchFavorites()
-  }, [])
+  }, [isFavoritesFilterActive])
 
-  // Check if 'Favorites' is in the filters
-  const hasFavoritesFilter = activeFilters.includes('Favorites')
-
-  // Determine the data to display
   const filteredData = useFilteredPokemonData(searchQuery, pokemonData, activeFilters)
-  const displayData = hasFavoritesFilter ? favoritePokemons : showFavorites ? favoritePokemons : filteredData
+  const displayData = isFavoritesFilterActive ? favoritePokemons || [] : filteredData
 
   const handleLoadMore = useCallback(() => {
     if (hasNextPage) {
@@ -51,18 +47,12 @@ export default function PokeScreen() {
     }
   }, [fetchNextPage, hasNextPage])
 
-  const handleFilterPress = () => {
-    setIsModalVisible(true)
-  }
-
-  const handleApplyFilters = (filters: string[]) => {
-    setActiveFilters(filters)
-    setShowFavorites(false) // Reset to show all pokemons when filters are applied
-  }
-
-  const toggleFavoriteView = () => {
-    setShowFavorites(!showFavorites)
-  }
+  const { isModalVisible, handleFilterPress, handleApplyFilters, setIsModalVisible } = useFilterHandler(
+    [],
+    (filters) => {
+      setActiveFilters(filters)
+    }
+  )
 
   const renderItem = ({ item }: { item: PokemonData }) => (
     <View style={styles.itemContainer}>
@@ -74,7 +64,7 @@ export default function PokeScreen() {
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
       <FlatList
         ref={flatListRef}
-        data={displayData}
+        data={displayData?.sort((a, b) => a.extendedId - b.extendedId)}
         renderItem={renderItem}
         contentContainerStyle={styles.listContent}
         onEndReached={handleLoadMore}

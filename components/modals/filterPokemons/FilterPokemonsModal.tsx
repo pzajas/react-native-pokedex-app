@@ -30,7 +30,6 @@ export const FilterPokemonsModal = ({ isVisible, onClose, onApplyFilter }: Filte
 
   const numberOfRowItems = 6
 
-  // Add "Favorites" option to the filter list
   const filterOptions = [...pokemonTypes, { id: 'favorites', type: 'Favorites' }]
 
   const toggleFilter = (type: string) => {

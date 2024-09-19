@@ -36,7 +36,6 @@ export default function RootLayout() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log('User ID:', user?.uid)
       if (user) {
         setIsLoggedIn(true)
         setIsEmailVerified(user.emailVerified)

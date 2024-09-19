@@ -155,7 +155,7 @@ export const usePokemonData = (name: string) => {
 
   const speciesData = speciesQuery.data
     ? {
-        description: getEnglishEntry(speciesQuery.data.flavor_text_entries), // Get English description
+        description: getEnglishEntry(speciesQuery.data.flavor_text_entries),
         genera: speciesQuery.data.genera?.filter((g) => g.language.name === 'en').map((g) => g.genus) || [],
         genderRate: speciesQuery.data.gender_rate
       }

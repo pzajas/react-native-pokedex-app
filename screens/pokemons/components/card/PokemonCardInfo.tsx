@@ -4,9 +4,9 @@ import { StyleSheet, View } from 'react-native'
 import { PokemonData } from '@/typescript/types/pokemonTypes'
 
 import { CustomText } from '../../../../components/typography/customText'
-import { TypeChip } from '../chip/typeChip'
 
 import palette from '@/constants/palette'
+import { TypeChip } from '../chip/typeChip'
 
 export const PokemonCardInfo = ({ pokemon }: { pokemon: PokemonData }) => {
   const { name, extendedId, types } = pokemon
@@ -15,11 +15,7 @@ export const PokemonCardInfo = ({ pokemon }: { pokemon: PokemonData }) => {
     <View style={styles.textContainer}>
       <CustomText style={styles.idText}>#{extendedId}</CustomText>
       <CustomText style={styles.nameText}>{capitalize(name)}</CustomText>
-      <View style={styles.chipContainer}>
-        {types.map((type, index) => (
-          <TypeChip type={type} key={index} />
-        ))}
-      </View>
+      <View style={styles.chipContainer}>{types?.map((type, index) => <TypeChip type={type} key={index} />)}</View>
     </View>
   )
 }
