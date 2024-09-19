@@ -154,6 +154,7 @@ export const fetchFavoritePokemons = async (): Promise<PokemonData[]> => {
     if (!user) {
       throw new Error('User is not authenticated')
     }
+    console.log('asdjhhgsdgfsdgfkdsgfksdfgkjfhgkjsdhfksdjfhjksdhsdkfhskdjfhsdjkfh')
 
     const favoritesRef = collection(firestore, 'pokemons', user.uid, 'favorites')
     const snapshot = await getDocs(favoritesRef)

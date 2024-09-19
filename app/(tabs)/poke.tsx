@@ -1,7 +1,3 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { FlatList, StyleSheet, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-
 import { SmallRoundButton } from '@/components/buttons/SmallRoundButton'
 import { LoadingIndicator } from '@/components/indicators/LoadingIndicator'
 import { FilterPokemonsModal } from '@/components/modals/filterPokemons/FilterPokemonsModal'
@@ -12,9 +8,11 @@ import { PokemonCard } from '@/screens/pokemons/components/card/pokemonCard'
 import { PokemonsHeader } from '@/screens/pokemons/components/header/PokemonsHeader'
 import { SearchInput } from '@/screens/pokemons/components/search/SearchInput'
 import { usePokemonData } from '@/services/api/fetchPokemonData'
-import { useFavoritePokemons } from '@/services/hooks/useFavouritePokemons'
 import { PokemonData } from '@/typescript/types/pokemonTypes'
 import { useNavigatePokemon } from '@/utils/navigation/useNavigatePokemon'
+import { useCallback, useRef, useState } from 'react'
+import { FlatList, StyleSheet, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 import palette from '@/constants/palette'
 
@@ -24,28 +22,10 @@ export default function PokeScreen() {
   const [activeFilters, setActiveFilters] = useState<string[]>([])
 
   const flatListRef = useRef<FlatList<PokemonData>>(null)
-  const isFavoritesFilterActive = activeFilters.includes('Favorites')
 
   const { data: pokemonData, fetchNextPage, hasNextPage, isFetchingNextPage } = usePokemonData()
   const { showScrollToTop, handleScroll, scrollToTop } = useScrollToTopButton(flatListRef)
   const navigatePokemon = useNavigatePokemon()
-
-  const { data: favoritePokemons, refetch } = useFavoritePokemons(isFavoritesFilterActive)
-
-  useEffect(() => {
-    if (isFavoritesFilterActive) {
-      refetch()
-    }
-  }, [isFavoritesFilterActive])
-
-  const filteredData = useFilteredPokemonData(searchQuery, pokemonData, activeFilters)
-  const displayData = isFavoritesFilterActive ? favoritePokemons || [] : filteredData
-
-  const handleLoadMore = useCallback(() => {
-    if (hasNextPage) {
-      fetchNextPage()
-    }
-  }, [fetchNextPage, hasNextPage])
 
   const { isModalVisible, handleFilterPress, handleApplyFilters, setIsModalVisible } = useFilterHandler(
     [],
@@ -53,6 +33,14 @@ export default function PokeScreen() {
       setActiveFilters(filters)
     }
   )
+
+  const filteredData = useFilteredPokemonData(searchQuery, pokemonData, activeFilters)
+
+  const handleLoadMore = useCallback(() => {
+    if (hasNextPage) {
+      fetchNextPage()
+    }
+  }, [fetchNextPage, hasNextPage])
 
   const renderItem = ({ item }: { item: PokemonData }) => (
     <View style={styles.itemContainer}>
@@ -64,7 +52,7 @@ export default function PokeScreen() {
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
       <FlatList
         ref={flatListRef}
-        data={displayData?.sort((a, b) => a.extendedId - b.extendedId)}
+        data={filteredData?.sort((a, b) => a.extendedId - b.extendedId)}
         renderItem={renderItem}
         contentContainerStyle={styles.listContent}
         onEndReached={handleLoadMore}
@@ -101,9 +89,9 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingHorizontal: 16,
-    gap: 10
+    paddingBottom: 80
   },
   itemContainer: {
-    paddingVertical: 6
+    marginBottom: 16
   }
 })
