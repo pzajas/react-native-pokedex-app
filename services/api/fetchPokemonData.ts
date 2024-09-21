@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { PokemonData } from '@/typescript/types/pokemonTypes'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { fetchFavoritePokemons } from '../firebase/firebaseFunctions'
+import { addFavoritePokemon, fetchFavoritePokemons } from '../firebase/firebaseFunctions'
 
 import palette from '@/constants/palette'
 import axios from 'axios'
@@ -80,6 +80,49 @@ const fetchPokemonData = async ({
   }
 }
 
+// export const usePokemonData = () => {
+//   const [favoritePokemons, setFavoritePokemons] = useState<PokemonData[]>([])
+
+//   const query = useInfiniteQuery({
+//     queryKey: ['pokemonData'],
+//     queryFn: fetchPokemonData,
+//     getNextPageParam: (lastPage) => (lastPage.hasMore ? lastPage.nextOffset : undefined),
+//     initialPageParam: 0
+//   })
+
+//   useEffect(() => {
+//     fetchFavoritePokemons().then(setFavoritePokemons)
+//   }, [])
+
+//   const toggleFavorite = (pokemonToToggle: PokemonData) => {
+//     setFavoritePokemons((prevFavorites) => {
+//       const isFavorite = prevFavorites.some((fav) => fav.extendedId === pokemonToToggle.extendedId)
+//       if (isFavorite) {
+//         return prevFavorites.filter((fav) => fav.extendedId !== pokemonToToggle.extendedId)
+//       } else {
+//         return [...prevFavorites, pokemonToToggle]
+//       }
+//     })
+//   }
+
+//   const pokemonData = query.data?.pages.flatMap((page) => page.data) || []
+//   const integratedData = pokemonData.map((pokemon) => ({
+//     ...pokemon,
+//     isFavorite: favoritePokemons.some((fav) => fav.extendedId === pokemon.extendedId)
+//   }))
+
+//   return {
+//     isFetching: query.isFetching,
+//     isFetched: query.isFetched,
+//     error: query.error,
+//     data: integratedData.slice(0, 151),
+//     fetchNextPage: query.fetchNextPage,
+//     hasNextPage: query.hasNextPage,
+//     isFetchingNextPage: query.isFetchingNextPage,
+//     toggleFavorite // <-- Expose the toggle function
+//   }
+// }
+
 export const usePokemonData = () => {
   const [favoritePokemons, setFavoritePokemons] = useState<PokemonData[]>([])
 
@@ -94,11 +137,27 @@ export const usePokemonData = () => {
     fetchFavoritePokemons().then(setFavoritePokemons)
   }, [])
 
-  const pokemonData = query.data?.pages.flatMap((page) => page.data) || []
+  const toggleFavorite = async (pokemonToToggle: PokemonData) => {
+    console.log(pokemonToToggle, 'toggle poke')
 
+    setFavoritePokemons((prevFavorites) => {
+      const isFavorite = prevFavorites.some((fav) => fav.name === pokemonToToggle.name)
+
+      if (isFavorite) {
+        return prevFavorites.filter((fav) => fav.name !== pokemonToToggle.name)
+      } else {
+        addFavoritePokemon(pokemonToToggle).catch((error) => {
+          console.error('Failed to add Pokémon to favorites:', error)
+        })
+        return [...prevFavorites, pokemonToToggle]
+      }
+    })
+  }
+
+  const pokemonData = query.data?.pages.flatMap((page) => page.data) || []
   const integratedData = pokemonData.map((pokemon) => ({
     ...pokemon,
-    isFavorite: favoritePokemons.some((fav) => fav.extendedId === pokemon.extendedId)
+    isFavorite: favoritePokemons.some((fav) => fav.name === pokemon.name)
   }))
 
   return {
@@ -108,6 +167,7 @@ export const usePokemonData = () => {
     data: integratedData.slice(0, 151),
     fetchNextPage: query.fetchNextPage,
     hasNextPage: query.hasNextPage,
-    isFetchingNextPage: query.isFetchingNextPage
+    isFetchingNextPage: query.isFetchingNextPage,
+    toggleFavorite
   }
 }

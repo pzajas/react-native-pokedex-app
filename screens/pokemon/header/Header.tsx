@@ -1,73 +1,48 @@
 import { CustomText } from '@/components/typography/customText'
-import constants from '@/constants/constants'
 import palette from '@/constants/palette'
 import { IconButton } from '@/screens/pokemons/components/search/SearchBarButton'
-import { addFavoritePokemon, isFavoritePokemon, removeFavoritePokemon } from '@/services/firebase/firebaseFunctions'
-import { formatPokemonId } from '@/utils/formatters/formatPokemonId'
+import { usePokemonData } from '@/services/api/fetchPokemonData'
+import { PokemonData } from '@/typescript/types/pokemonTypes'
 import { useNavigateBack } from '@/utils/navigation/useNavigateBack'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useLocalSearchParams } from 'expo-router'
 import { capitalize } from 'lodash'
 import { SafeAreaView, StyleSheet, View } from 'react-native'
 
 export const Header = () => {
-  const { backgroundColor, name, id, types }: { backgroundColor: string; name: string; id: string; types: string[] } =
-    useLocalSearchParams()
+  const { toggleFavorite } = usePokemonData()
+  // const {
+  //   backgroundColor,
+  //   name,
+  //   isFavorite
+  // }: { backgroundColor: string; name: string; id: string; types: string[]; isFavorite: any } = useLocalSearchParams()
   const navigateBack = useNavigateBack()
-  const queryClient = useQueryClient()
 
-  const { data: isCurrentPokemonFavourite } = useQuery({
-    queryKey: ['favoritePokemon', name],
-    queryFn: () => {
-      return isFavoritePokemon(name)
-    },
-    enabled: !!name
-  })
+  const params = useLocalSearchParams()
+  const {
+    backgroundColors,
+    backgroundColor,
+    name,
+    shortenedId, // You might need to adjust this to the correct parameter names
+    extendedId,
+    types,
+    isFavorite
+  } = params
+  const isFavoritePokemon = isFavorite === 'true' || (Array.isArray(isFavorite) && isFavorite.includes('true'))
 
-  const typesArray = Array.isArray(types) ? types : types?.split(',').map((type) => type.trim())
+  console.log(params)
 
-  const toggleFavoriteMutation = useMutation({
-    mutationFn: async () => {
-      if (isCurrentPokemonFavourite) {
-        return removeFavoritePokemon(name)
-      } else {
-        const pokemonDetails = {
-          id,
-          backgroundColors: [backgroundColor],
-          chipColors: [],
-          extendedId: formatPokemonId(id),
-          name: name,
-          shortenedId: id,
-          types: typesArray,
-          url: `${constants.api.ARTWORK_API_URL}/${id}.png`
-        }
+  const butterfree: PokemonData = {
+    name: 'butterfree',
+    shortenedId: 12, // Butterfree's ID
+    extendedId: '012', // Butterfree's extended ID as string
+    backgroundColors: ['#aac634', '#95addf'], // Background colors for Butterfree
+    chipColors: ['#8f9f2c', '#7890bf'], // Chip colors for Butterfree
+    types: ['Bug', 'Flying'], // Types for Butterfree
+    url: 'https://pokeapi.co/api/v2/pokemon/12/', // URL for Butterfree's details
+    isFavorite: false // Defaulting to false (or set to true if it's a favorite)
+  }
 
-        return addFavoritePokemon(pokemonDetails)
-      }
-    },
-    onMutate: async () => {
-      console.log('Optimistically updating favorite status for:', name)
-      await queryClient.cancelQueries(['favoritePokemon', name])
-
-      const previousFavoriteStatus = queryClient.getQueryData(['favoritePokemon', name])
-      console.log('Previous favorite status:', previousFavoriteStatus)
-
-      queryClient.setQueryData(['favoritePokemon', name], !isCurrentPokemonFavourite)
-
-      return { previousFavoriteStatus }
-    },
-    onError: (err, variables, context) => {
-      console.error('Error toggling favorite status:', err)
-      if (context?.previousFavoriteStatus) {
-        console.log('Reverting to previous favorite status:', context.previousFavoriteStatus)
-        queryClient.setQueryData(['favoritePokemon', name], context.previousFavoriteStatus)
-      }
-    },
-    onSettled: () => {
-      console.log('Mutation settled, refetching favorite status for:', name)
-      queryClient.invalidateQueries(['favoritePokemon', name])
-    }
-  })
+  console.log(isFavoritePokemon)
 
   return (
     <SafeAreaView>
@@ -83,13 +58,10 @@ export const Header = () => {
         <IconButton name={'chevron-left'} size={32} color={palette.colors.white} onPress={navigateBack} />
         <CustomText style={styles.text}>{capitalize(name)}</CustomText>
         <IconButton
-          name={isCurrentPokemonFavourite ? 'cards-heart' : 'cards-heart-outline'}
+          name={isFavoritePokemon ? 'cards-heart' : 'cards-heart-outline'}
           size={28}
-          color={isCurrentPokemonFavourite ? palette.colors.red.light : palette.colors.white}
-          onPress={() => {
-            console.log('Heart button pressed, toggling favorite status for:', name)
-            toggleFavoriteMutation.mutate()
-          }}
+          color={isFavoritePokemon === true ? palette.colors.red.medium : palette.colors.white}
+          onPress={() => toggleFavorite(butterfree)}
         />
       </View>
     </SafeAreaView>

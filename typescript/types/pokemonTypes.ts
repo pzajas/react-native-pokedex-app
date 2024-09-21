@@ -12,7 +12,7 @@ export interface PokemonData {
   backgroundColors: string[]
   // image: string
   name: string
-  isFavorite?: boolean
+  isFavorite: boolean
   stats: {
     hp: number
     attack: number

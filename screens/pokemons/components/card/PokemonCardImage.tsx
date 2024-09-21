@@ -32,11 +32,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: 140,
-    height: 140
+    height: 140,
+    zIndex: 1
   },
   image: {
     resizeMode: 'contain',
     width: 140,
-    height: 140
+    height: 140,
+    zIndex: 1
   }
 })

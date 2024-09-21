@@ -24,7 +24,7 @@ export default function PokeScreen() {
   const [activeFilters, setActiveFilters] = useState<string[]>([])
   const flatListRef = useRef<FlatList<PokemonData>>(null)
 
-  const { data: pokemonData, fetchNextPage, hasNextPage, isFetchingNextPage } = usePokemonData()
+  const { data: pokemonData, fetchNextPage, hasNextPage, isFetchingNextPage, toggleFavorite } = usePokemonData()
   const { showScrollToTop, handleScroll, scrollToTop } = useScrollToTopButton(flatListRef)
   const handleLoadMore = useLoadMorePoekmons(fetchNextPage, hasNextPage)
   const navigatePokemon = useNavigatePokemon()
@@ -37,11 +37,18 @@ export default function PokeScreen() {
 
   const filteredData = useFilteredPokemonData(searchQuery, pokemonData, activeFilters)
 
-  const renderItem = ({ item }: { item: PokemonData }) => (
-    <View style={styles.itemContainer}>
-      <PokemonCard pokemon={item} handleNavigatePokemon={navigatePokemon} />
-    </View>
-  )
+  const renderItem = ({ item }: { item: PokemonData }) => {
+    return (
+      <View style={styles.itemContainer}>
+        <PokemonCard
+          pokemon={item}
+          handleNavigatePokemon={navigatePokemon}
+          onToggleFavorite={() => toggleFavorite(item)} // <-- Pass the toggle function
+          isFavorite={item.isFavorite} // <-- Pass favorite status
+        />
+      </View>
+    )
+  }
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
