@@ -1,20 +1,15 @@
 import palette from '@/constants/palette'
 import { PokemonData } from '@/typescript/types/pokemonTypes'
 import { Pressable, StyleSheet, View } from 'react-native'
-import { IconButton } from '../search/SearchBarButton'
 import { PokemonCardImage } from './PokemonCardImage'
 import { PokemonCardInfo } from './PokemonCardInfo'
 
 export const PokemonCard = ({
   pokemon,
-  handleNavigatePokemon,
-  onToggleFavorite,
-  isFavorite
+  handleNavigatePokemon
 }: {
   pokemon: PokemonData
   handleNavigatePokemon: any
-  onToggleFavorite: any
-  isFavorite: boolean
 }) => {
   const { backgroundColors } = pokemon
 
@@ -26,14 +21,6 @@ export const PokemonCard = ({
         </View>
         <View style={styles.imageContainer}>
           <PokemonCardImage pokemon={pokemon} />
-          <View style={styles.favoriteButton}>
-            <IconButton
-              name={isFavorite ? 'cards-heart' : 'cards-heart-outline'}
-              size={20}
-              color={isFavorite ? palette.colors.red.medium : palette.colors.white}
-              onPress={onToggleFavorite}
-            />
-          </View>
         </View>
       </View>
     </Pressable>
@@ -61,18 +48,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   imageContainer: {
-    position: 'relative', // Keep it relative for absolute positioning of the favorite button
+    position: 'relative',
     width: 140,
     height: 140
-  },
-  favoriteButton: {
-    position: 'absolute',
-    top: 10, // Adjust to place it on the image
-    right: -5, // Adjust to place it on the image
-    zIndex: 200
-  },
-  favoriteText: {
-    fontSize: 30, // Adjust size if needed
-    zIndex: 200
   }
 })
