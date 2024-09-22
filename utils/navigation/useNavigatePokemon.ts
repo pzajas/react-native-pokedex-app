@@ -27,13 +27,3 @@ export const useNavigatePokemon = () => {
 
   return handleNavigatePokemon
 }
-
-// shortenedId: item.shortenedId,
-// extendedId: item.extendedId,
-// name: item.name,
-// // backgroundColor: item.backgroundColors[0] || 'defaultBackgroundColor',
-// chip: item.chipColors[0] || 'defaultChipColor',
-// // types: item.types,
-// isFavorite: item.isFavorite,
-// backgroundColors: item.backgroundColors,
-// types: item.types

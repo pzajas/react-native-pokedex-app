@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { SmallRoundButton } from '@/components/buttons/SmallRoundButton'
 import { LoadingIndicator } from '@/components/indicators/LoadingIndicator'
 import { FilterPokemonsModal } from '@/components/modals/filterPokemons/FilterPokemonsModal'
-import { useFilteredPokemonData } from '@/hooks/useFilteredPokemonData'
+import { useFavoritePokemonsQuery, useFilteredPokemonData } from '@/hooks/useFilteredPokemonData'
 import { useFilterHandler } from '@/hooks/useFilterHandler'
 import { useScrollToTopButton } from '@/hooks/useScrollToTop'
 import { PokemonCard } from '@/screens/pokemons/components/card/pokemonCard'
@@ -24,7 +24,7 @@ export default function PokeScreen() {
   const [activeFilters, setActiveFilters] = useState<string[]>([])
   const flatListRef = useRef<FlatList<PokemonData>>(null)
 
-  const { data: pokemonData, fetchNextPage, hasNextPage, isFetchingNextPage, toggleFavorite } = usePokemonData()
+  const { data: pokemonData, favoritePokemons, fetchNextPage, hasNextPage, isFetchingNextPage } = usePokemonData()
   const { showScrollToTop, handleScroll, scrollToTop } = useScrollToTopButton(flatListRef)
   const handleLoadMore = useLoadMorePoekmons(fetchNextPage, hasNextPage)
   const navigatePokemon = useNavigatePokemon()
@@ -34,18 +34,15 @@ export default function PokeScreen() {
       setActiveFilters(filters)
     }
   )
-
-  const filteredData = useFilteredPokemonData(searchQuery, pokemonData, activeFilters)
+  const { data: favourites = [], refetch: refetchFavorites } = useFavoritePokemonsQuery(
+    activeFilters.includes('Favorites')
+  )
+  const filteredData = useFilteredPokemonData(searchQuery, pokemonData, activeFilters, favourites, refetchFavorites)
 
   const renderItem = ({ item }: { item: PokemonData }) => {
     return (
       <View style={styles.itemContainer}>
-        <PokemonCard
-          pokemon={item}
-          handleNavigatePokemon={navigatePokemon}
-          onToggleFavorite={() => toggleFavorite(item)} // <-- Pass the toggle function
-          isFavorite={item.isFavorite} // <-- Pass favorite status
-        />
+        <PokemonCard pokemon={item} handleNavigatePokemon={navigatePokemon} />
       </View>
     )
   }

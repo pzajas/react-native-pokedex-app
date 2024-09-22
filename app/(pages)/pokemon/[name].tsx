@@ -10,8 +10,6 @@ import palette from '@/constants/palette'
 export default function PokemonScreen() {
   const { backgroundColors, url } = useLocalSearchParams()
 
-  console.log(url)
-
   const pokeballImage = require('../../../assets/images/pokeball.png') || ''
   const pokemonTypeColor = typeof backgroundColors === 'string' ? backgroundColors.split(',')[0] : ''
 

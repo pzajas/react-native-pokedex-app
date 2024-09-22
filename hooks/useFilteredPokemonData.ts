@@ -1,12 +1,35 @@
+import { fetchFavoritePokemons } from '@/services/firebase/firebaseFunctions'
 import { PokemonData } from '@/typescript/types/pokemonTypes'
-import { useMemo } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { useEffect, useMemo } from 'react'
 
-export const useFilteredPokemonData = (searchQuery: string, pokemonData: PokemonData[], activeFilters: string[]) => {
+export const useFavoritePokemonsQuery = (isFavoritesFilterActive: boolean) => {
+  return useQuery({
+    queryKey: ['favoritePokemons'],
+    queryFn: fetchFavoritePokemons,
+    enabled: isFavoritesFilterActive,
+    staleTime: 1000 * 60 * 5
+  })
+}
+
+export const useFilteredPokemonData = (
+  searchQuery: string,
+  pokemonData: PokemonData[],
+  activeFilters: string[],
+  favoritePokemons: PokemonData[],
+  refetchFavorites: () => void
+) => {
+  useEffect(() => {
+    if (activeFilters.includes('Favorites')) {
+      refetchFavorites()
+    }
+  }, [activeFilters, refetchFavorites])
+
   return useMemo(() => {
     let filteredData = pokemonData || []
 
     if (activeFilters.includes('Favorites')) {
-      filteredData = filteredData.filter((pokemon) => pokemon.isFavorite)
+      filteredData = favoritePokemons
     }
 
     if (activeFilters.some((filter) => filter !== 'Favorites')) {
@@ -18,5 +41,5 @@ export const useFilteredPokemonData = (searchQuery: string, pokemonData: Pokemon
     }
 
     return filteredData.sort((a: PokemonData, b: PokemonData) => Number(a.extendedId) - Number(b.extendedId))
-  }, [searchQuery, pokemonData, activeFilters])
+  }, [searchQuery, pokemonData, activeFilters, favoritePokemons])
 }
