@@ -11,7 +11,7 @@ import { SafeAreaView, StyleSheet, View } from 'react-native'
 
 export const Header = () => {
   const navigateBack = useNavigateBack()
-  const { name, backgroundColor, shortenedId, extendedId, url } = useLocalSearchParams()
+  const { name, backgroundColor, shortenedId, extendedId, url, types, chip, backgroundColors } = useLocalSearchParams()
   const [isFavorite, setIsFavorite] = useState(false)
 
   const checkIfFavorite = async () => {
@@ -22,6 +22,11 @@ export const Header = () => {
     const querySnapshot = await getDocs(q)
     setIsFavorite(!querySnapshot.empty)
   }
+
+  const backgroundColorsArray = backgroundColors?.split(',').map((color: string) => color.trim())
+  const typesArray = types?.split(',').map((color: string) => color.trim())
+  const chipColorsArray = chip?.split(',').map((color: string) => color.trim())
+  console.log(typesArray, 'missed data')
 
   const addFavoritePokemon = async () => {
     const userId = auth.currentUser?.uid
@@ -35,9 +40,9 @@ export const Header = () => {
         name,
         shortenedId,
         extendedId,
-        backgroundColors: ['#aac634', '#95addf'],
-        chipColors: ['#8f9f2c', '#7890bf'],
-        types: ['Bug', 'Flying'],
+        backgroundColors: backgroundColorsArray,
+        chipColors: chipColorsArray,
+        types: typesArray,
         url
       })
       setIsFavorite(true)
