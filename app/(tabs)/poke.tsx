@@ -1,53 +1,52 @@
-import { useCallback, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { FlatList, StyleSheet, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { SmallRoundButton } from '@/components/buttons/SmallRoundButton'
 import { LoadingIndicator } from '@/components/indicators/LoadingIndicator'
-import { FilterPokemonsModal } from '@/components/modals/filterPokemons/FilterPokemonsModal' // Adjust the import path
+import { FilterPokemonsModal } from '@/components/modals/filterPokemons/FilterPokemonsModal'
 import { useFilteredPokemonData } from '@/hooks/useFilteredPokemonData'
+import { useFilterHandler } from '@/hooks/useFilterHandler'
+import { useLoadMorePoekmons } from '@/hooks/useLoadMorePokemons'
 import { useScrollToTopButton } from '@/hooks/useScrollToTop'
 import { PokemonCard } from '@/screens/pokemons/components/card/pokemonCard'
 import { PokemonsHeader } from '@/screens/pokemons/components/header/PokemonsHeader'
 import { SearchInput } from '@/screens/pokemons/components/search/SearchInput'
 import { usePokemonData } from '@/services/api/fetchPokemonData'
+import { useFavoritePokemonsQuery } from '@/services/tanstack/tanstackFunctions'
+import { PokemonData } from '@/typescript/types/pokemonTypes'
 import { useNavigatePokemon } from '@/utils/navigation/useNavigatePokemon'
 
 import palette from '@/constants/palette'
-import { PokemonData } from '@/typescript/types/pokemonTypes'
 
 export default function PokeScreen() {
-  const flatListRef = useRef<FlatList<PokemonData>>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [isFocused, setIsFocused] = useState(false)
-  const [isModalVisible, setIsModalVisible] = useState(false)
   const [activeFilters, setActiveFilters] = useState<string[]>([])
+  const flatListRef = useRef<FlatList<PokemonData>>(null)
 
   const { data: pokemonData, fetchNextPage, hasNextPage, isFetchingNextPage } = usePokemonData()
   const { showScrollToTop, handleScroll, scrollToTop } = useScrollToTopButton(flatListRef)
-
+  const handleLoadMore = useLoadMorePoekmons(fetchNextPage, hasNextPage)
   const navigatePokemon = useNavigatePokemon()
-  const filteredData = useFilteredPokemonData(searchQuery, pokemonData, activeFilters)
-
-  const handleLoadMore = useCallback(() => {
-    if (hasNextPage) {
-      fetchNextPage()
+  const { isModalVisible, handleFilterPress, handleApplyFilters, setIsModalVisible } = useFilterHandler(
+    [],
+    (filters) => {
+      setActiveFilters(filters)
     }
-  }, [fetchNextPage, hasNextPage])
-
-  const handleFilterPress = () => {
-    setIsModalVisible(true)
-  }
-
-  const handleApplyFilters = (filters: string[]) => {
-    setActiveFilters(filters)
-  }
-
-  const renderItem = ({ item }: { item: PokemonData }) => (
-    <View style={styles.itemContainer}>
-      <PokemonCard pokemon={item} handleNavigatePokemon={navigatePokemon} />
-    </View>
   )
+  const { data: favourites = [], refetch: refetchFavorites } = useFavoritePokemonsQuery(
+    activeFilters.includes('Favorites')
+  )
+  const filteredData = useFilteredPokemonData(searchQuery, pokemonData, activeFilters, favourites, refetchFavorites)
+
+  const renderItem = ({ item }: { item: PokemonData }) => {
+    return (
+      <View style={styles.itemContainer}>
+        <PokemonCard pokemon={item} handleNavigatePokemon={navigatePokemon} />
+      </View>
+    )
+  }
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
@@ -90,9 +89,9 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingHorizontal: 16,
-    gap: 10
+    paddingBottom: 80
   },
   itemContainer: {
-    paddingVertical: 6
+    marginBottom: 16
   }
 })

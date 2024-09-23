@@ -1,17 +1,12 @@
 export interface PokemonData {
-  pokemonNameCapitalized: string
-  url: string
-  id: number
+  name: string
   extendedId: string
   shortenedId: number
-  artworkUrl: string
-  pokemonBackgroundColor: string
-  pokemonChipColor: string
+  url: string
+  isFavorite: boolean
   types: string[]
   chipColors: string[]
   backgroundColors: string[]
-  image: string
-  name: string
   stats: {
     hp: number
     attack: number
@@ -44,7 +39,7 @@ export type PokemonType =
   | 'dark'
   | 'steel'
   | 'fairy'
-  | 'default'
+  | 'normal'
 
 export type PokemonSpecies = { name: string }
 
@@ -60,7 +55,6 @@ export interface PokemonStats {
   }
   base_stat: number
 }
-
 export interface PokemonDetails {
   id: number
   name: string

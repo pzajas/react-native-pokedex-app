@@ -1,6 +1,5 @@
 import typesData from '../../services/data/types.json'
-
-interface IMatchedPokemon {
+export interface IMatchedPokemon {
   id: number
   name: string
   typeList: string[]

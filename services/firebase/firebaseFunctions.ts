@@ -1,3 +1,4 @@
+import { PokemonData } from '@/typescript/types/pokemonTypes'
 import { FirebaseError } from 'firebase/app'
 import {
   createUserWithEmailAndPassword,
@@ -6,12 +7,22 @@ import {
   signInWithEmailAndPassword,
   signOut
 } from 'firebase/auth'
-import { auth } from '../../services/firebase/firebase'
+import { addDoc, collection, deleteDoc, doc, getDocs, query, where } from 'firebase/firestore'
+import { capitalize } from 'lodash'
+import { auth, firestore } from '../../services/firebase/firebase'
 import { queryClient } from '../tanstack/queryClient'
-
 interface IUserCredentials {
   email: string
   password: string
+}
+interface PokemonFavoriteData {
+  name: string | undefined
+  shortenedId: string | undefined
+  extendedId: string | undefined
+  backgroundColorsArray: string[] | undefined
+  chipColorsArray: string[] | undefined
+  typesArray: string[] | undefined
+  url: string | undefined
 }
 
 export const registerUser = async ({ email, password }: IUserCredentials) => {
@@ -74,5 +85,91 @@ export const logoutUser = async () => {
     console.log('Success', 'You have been logged out.')
   } catch (error) {
     console.log('Error', 'An error occurred while logging out.')
+  }
+}
+
+//POKEMONS
+
+export const fetchFavoritePokemons = async (): Promise<PokemonData[]> => {
+  try {
+    const user = auth.currentUser
+    if (!user) {
+      throw new Error('User is not authenticated')
+    }
+
+    const favoritesRef = collection(firestore, 'users', user.uid, 'favorites')
+    const snapshot = await getDocs(favoritesRef)
+
+    const favoritePokemons: PokemonData[] = snapshot.docs.map((doc) => {
+      const data = doc.data()
+
+      return {
+        id: data.id,
+        backgroundColors: data.backgroundColors || [],
+        chipColors: data.chipColors || [],
+        extendedId: data.extendedId || '',
+        name: data.name || '',
+        shortenedId: data.shortenedId || '',
+        types: data.types || [],
+        url: data.url || '',
+        species: data.species || [],
+        stats: data.stats || [],
+        isFavorite: false
+      }
+    })
+
+    return favoritePokemons
+  } catch (error) {
+    console.error('Error fetching favorite Pokémon:', error)
+    return []
+  }
+}
+
+export const checkIfFavorite = async (shortenedId: string | undefined) => {
+  const userId = auth.currentUser?.uid
+  if (!userId || !shortenedId) return false
+
+  const q = query(collection(firestore, `users/${userId}/favorites`), where('shortenedId', '==', shortenedId))
+  const querySnapshot = await getDocs(q)
+  return !querySnapshot.empty
+}
+
+export const toggleFavoritePokemon = async (
+  pokemonData: PokemonFavoriteData,
+  setIsFavorite: (isFavorite: boolean) => void
+) => {
+  const { name, shortenedId, extendedId, backgroundColorsArray, chipColorsArray, typesArray, url } = pokemonData
+  const userId = auth.currentUser?.uid
+
+  if (!userId) {
+    alert('You must be logged in to add favorites.')
+    return
+  }
+
+  try {
+    const q = query(collection(firestore, `users/${userId}/favorites`), where('shortenedId', '==', shortenedId))
+    const querySnapshot = await getDocs(q)
+
+    if (querySnapshot.empty) {
+      await addDoc(collection(firestore, `users/${userId}/favorites`), {
+        name,
+        shortenedId,
+        extendedId,
+        backgroundColors: backgroundColorsArray,
+        chipColors: chipColorsArray,
+        types: typesArray,
+        url
+      })
+      setIsFavorite(true)
+      alert(`${capitalize(name)} added to favorites!`)
+    } else {
+      const docId = querySnapshot.docs[0].id
+      await deleteDoc(doc(firestore, `users/${userId}/favorites/${docId}`))
+      setIsFavorite(false)
+      alert(`${capitalize(name)} removed from favorites!`)
+    }
+  } catch (error) {
+    console.error('Error toggling favorite: ', error)
+    alert('Failed to toggle favorite status.')
   }
 }

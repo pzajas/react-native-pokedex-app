@@ -8,9 +8,9 @@ export default {
     black: '#000000',
     transparent: 'rgba(0, 0, 0, 0)',
     grey: {
-      light: '#D3D3D3', // Light Grey
-      medium: '#808080', // Medium Grey
-      dark: '#333333' // Dark Grey
+      light: '#D3D3D3',
+      medium: '#808080',
+      dark: '#333333'
     },
     yellow: {
       light: '#FFFFE0',

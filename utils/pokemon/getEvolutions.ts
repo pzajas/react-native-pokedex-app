@@ -8,11 +8,12 @@ export const getEvolutions = (chain: any): { name: string; id: number; evolution
 
       const evolutionDetails = currentChain.evolution_details ? currentChain.evolution_details[0] : {}
 
-      evolutions.push({
-        name: currentChain.species.name,
-        id: id,
-        evolutionDetails: evolutionDetails
-      })
+      id !== null &&
+        evolutions.push({
+          name: currentChain.species.name,
+          id: id,
+          evolutionDetails: evolutionDetails
+        })
 
       currentChain.evolves_to.forEach((nextChain: any) => traverseChain(nextChain))
     }

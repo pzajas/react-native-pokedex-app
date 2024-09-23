@@ -1,23 +1,32 @@
+import { useEffect, useState } from 'react'
+
+import { PokemonData } from '@/typescript/types/pokemonTypes'
 import { useInfiniteQuery } from '@tanstack/react-query'
+import { fetchFavoritePokemons } from '../firebase/firebaseFunctions'
 
 import palette from '@/constants/palette'
-import { PokemonData } from '@/typescript/types/pokemonTypes'
 import axios from 'axios'
-import typesData from '../data/types.json'
+export interface IMatchedPokemon {
+  id: number
+  name: string
+  typeList: string[]
+}
 
-const typesMap = new Map<string, string[]>(typesData.map((pokemon) => [pokemon.name.toUpperCase(), pokemon.typeList]))
+const typesData = require('../data/types.json')
+const typesMap = new Map<string, string[]>(
+  typesData.map((pokemon: IMatchedPokemon) => [pokemon.name.toUpperCase(), pokemon.typeList])
+)
 
 const getTypeColor = (type: string, colorSet: 'background' | 'chip') => {
   const typeColors = colorSet === 'background' ? palette.typeColors : palette.chipColors
-
   const colorKey = type.toLowerCase() as keyof typeof typeColors
   return typeColors[colorKey] || typeColors.default
 }
 
 const transformPokemonData = (pokemon: PokemonData) => {
-  const pokemonId = pokemon.url.split('/').filter(Boolean).pop() as string
-  const pokemonSimpleId = Number(pokemonId)
-  const pokemonExtendedId = pokemonSimpleId.toString().padStart(3, '0')
+  const pokemonId = pokemon.url.split('/').filter(Boolean).pop()
+  const shortenedId = Number(pokemonId)
+  const extendedId = shortenedId.toString().padStart(3, '0')
   const pokemonName = pokemon.name
   const pokemonUrl = pokemon.url
   const types = typesMap.get(pokemonName.toUpperCase()) || []
@@ -32,12 +41,15 @@ const transformPokemonData = (pokemon: PokemonData) => {
 
   return {
     name: pokemonName,
-    shortenedId: pokemonSimpleId,
-    extendedId: pokemonExtendedId,
+    shortenedId,
+    extendedId,
     url: pokemonUrl,
-    types,
     chipColors,
-    backgroundColors
+    backgroundColors,
+    isFavorite: false,
+    types,
+    species: pokemon.species,
+    stats: pokemon.stats
   }
 }
 
@@ -46,9 +58,9 @@ const fetchPokemonData = async ({
 }: {
   pageParam?: number
 }): Promise<{ data: PokemonData[]; nextOffset: number | undefined; hasMore: boolean }> => {
-  const limit = 10 // Number of Pokémon to fetch per request
+  const limit = 10
   const offset = pageParam * limit
-  const maxLength = 151 // Maximum number of Pokémon to fetch
+  const maxLength = 151
 
   const response = await axios.get('https://pokeapi.co/api/v2/pokemon', {
     params: {
@@ -58,7 +70,6 @@ const fetchPokemonData = async ({
   })
 
   const dataWithIds = response.data.results.map(transformPokemonData)
-
   const hasMore = dataWithIds.length === limit && offset + limit < maxLength
 
   return {
@@ -69,6 +80,8 @@ const fetchPokemonData = async ({
 }
 
 export const usePokemonData = () => {
+  const [favoritePokemons, setFavoritePokemons] = useState<PokemonData[]>([])
+
   const query = useInfiniteQuery({
     queryKey: ['pokemonData'],
     queryFn: fetchPokemonData,
@@ -76,13 +89,28 @@ export const usePokemonData = () => {
     initialPageParam: 0
   })
 
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      const favorites = await fetchFavoritePokemons()
+
+      setFavoritePokemons(favorites)
+    }
+
+    fetchFavorites()
+  }, [])
+
   const pokemonData = query.data?.pages.flatMap((page) => page.data) || []
+  const integratedData = pokemonData.map((pokemon) => ({
+    ...pokemon,
+    isFavorite: favoritePokemons.some((fav) => fav.shortenedId === pokemon.shortenedId)
+  }))
 
   return {
     isFetching: query.isFetching,
     isFetched: query.isFetched,
     error: query.error,
-    data: pokemonData.slice(0, 151),
+    data: integratedData.slice(0, 151),
+    favoritePokemons,
     fetchNextPage: query.fetchNextPage,
     hasNextPage: query.hasNextPage,
     isFetchingNextPage: query.isFetchingNextPage

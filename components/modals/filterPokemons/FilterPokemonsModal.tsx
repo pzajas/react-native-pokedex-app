@@ -1,14 +1,12 @@
 import { useState } from 'react'
 import { FlatList, StyleSheet, View } from 'react-native'
 
-import { FilterRow } from './FilterRow'
-
 import { PrimaryButton } from '@/components/buttons/PrimaryButton'
 import { CustomText } from '@/components/typography/customText'
 import palette from '@/constants/palette'
 import { pokemonTypes } from '@/constants/pokemons'
 import Modal from 'react-native-modal'
-
+import { FilterRow } from './FilterRow'
 interface FilterPokemonsModalProps {
   isVisible: boolean
   onClose: () => void
@@ -28,8 +26,9 @@ export const FilterPokemonsModal = ({ isVisible, onClose, onApplyFilter }: Filte
 
   const availableFilters = 'Available Filters'
   const resetFilters = 'Reset Filters'
-
   const numberOfRowItems = 6
+
+  const filterOptions = [...pokemonTypes, { id: 'favorites', type: 'Favorites' }]
 
   const toggleFilter = (type: string) => {
     setSelectedFilters((prevFilters) =>
@@ -57,11 +56,11 @@ export const FilterPokemonsModal = ({ isVisible, onClose, onApplyFilter }: Filte
           {availableFilters}
         </CustomText>
         <FlatList
-          data={chunkArray(pokemonTypes, numberOfRowItems)}
+          data={chunkArray(filterOptions, numberOfRowItems)}
           renderItem={({ item }) => (
             <FilterRow data={item} selectedFilters={selectedFilters} toggleFilter={toggleFilter} />
           )}
-          keyExtractor={(item) => item[0].id}
+          keyExtractor={(item) => item?.id}
         />
         <PrimaryButton title={resetFilters} handlePress={handleResetFilters} />
       </View>

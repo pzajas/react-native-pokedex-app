@@ -1,11 +1,8 @@
-import { Pressable, StyleSheet, View } from 'react-native'
-
+import palette from '@/constants/palette'
 import { PokemonData } from '@/typescript/types/pokemonTypes'
-
+import { Pressable, StyleSheet, View } from 'react-native'
 import { PokemonCardImage } from './PokemonCardImage'
 import { PokemonCardInfo } from './PokemonCardInfo'
-
-import palette from '@/constants/palette'
 
 export const PokemonCard = ({
   pokemon,
@@ -22,7 +19,9 @@ export const PokemonCard = ({
         <View style={styles.infoContainer}>
           <PokemonCardInfo pokemon={pokemon} />
         </View>
-        <PokemonCardImage pokemon={pokemon} />
+        <View style={styles.imageContainer}>
+          <PokemonCardImage pokemon={pokemon} />
+        </View>
       </View>
     </Pressable>
   )
@@ -47,5 +46,10 @@ const styles = StyleSheet.create({
   infoContainer: {
     flex: 1,
     justifyContent: 'center'
+  },
+  imageContainer: {
+    position: 'relative',
+    width: 140,
+    height: 140
   }
 })

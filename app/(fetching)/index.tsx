@@ -3,10 +3,10 @@ import { useEffect } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
 import { LoadingIndicator } from '@/components/indicators/LoadingIndicator'
+import { typography } from '@/constants/typography'
 import { usePokemonData } from '@/services/api/fetchPokemonData'
 
 import palette from '@/constants/palette'
-import { typography } from '@/constants/typography'
 
 export default function FetchingScreen() {
   const router = useRouter()

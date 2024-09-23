@@ -12,7 +12,7 @@ export const PokemonCardImage = ({ pokemon }: { pokemon: PokemonData }) => {
   return (
     <View style={styles.imageContainer}>
       {imageError ? (
-        <Text>Image failed to load</Text> // Placeholder if the image fails to load
+        <Text>Image failed to load</Text>
       ) : (
         <Image
           source={{ uri: imageUrl }}
@@ -32,11 +32,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: 140,
-    height: 140
+    height: 140,
+    zIndex: 1
   },
   image: {
     resizeMode: 'contain',
     width: 140,
-    height: 140
+    height: 140,
+    zIndex: 1
   }
 })
