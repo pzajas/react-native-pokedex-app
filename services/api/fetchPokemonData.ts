@@ -23,10 +23,10 @@ const getTypeColor = (type: string, colorSet: 'background' | 'chip') => {
   return typeColors[colorKey] || typeColors.default
 }
 
-const transformPokemonData = (pokemon: any): PokemonData => {
+const transformPokemonData = (pokemon: PokemonData) => {
   const pokemonId = pokemon.url.split('/').filter(Boolean).pop()
-  const pokemonSimpleId = Number(pokemonId)
-  const pokemonExtendedId = pokemonSimpleId.toString().padStart(3, '0')
+  const shortenedId = Number(pokemonId)
+  const extendedId = shortenedId.toString().padStart(3, '0')
   const pokemonName = pokemon.name
   const pokemonUrl = pokemon.url
   const types = typesMap.get(pokemonName.toUpperCase()) || []
@@ -40,10 +40,9 @@ const transformPokemonData = (pokemon: any): PokemonData => {
   })
 
   return {
-    id: pokemon.id,
     name: pokemonName,
-    shortenedId: pokemonSimpleId,
-    extendedId: pokemonExtendedId,
+    shortenedId,
+    extendedId,
     url: pokemonUrl,
     chipColors,
     backgroundColors,

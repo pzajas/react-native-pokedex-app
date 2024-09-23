@@ -1,16 +1,5 @@
-import { fetchFavoritePokemons } from '@/services/firebase/firebaseFunctions'
 import { PokemonData } from '@/typescript/types/pokemonTypes'
-import { useQuery } from '@tanstack/react-query'
 import { useEffect, useMemo } from 'react'
-
-export const useFavoritePokemonsQuery = (isFavoritesFilterActive: boolean) => {
-  return useQuery({
-    queryKey: ['favoritePokemons'],
-    queryFn: fetchFavoritePokemons,
-    enabled: isFavoritesFilterActive,
-    staleTime: 1000 * 60 * 5
-  })
-}
 
 export const useFilteredPokemonData = (
   searchQuery: string,

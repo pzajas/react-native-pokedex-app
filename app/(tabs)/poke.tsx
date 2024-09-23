@@ -5,18 +5,19 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { SmallRoundButton } from '@/components/buttons/SmallRoundButton'
 import { LoadingIndicator } from '@/components/indicators/LoadingIndicator'
 import { FilterPokemonsModal } from '@/components/modals/filterPokemons/FilterPokemonsModal'
-import { useFavoritePokemonsQuery, useFilteredPokemonData } from '@/hooks/useFilteredPokemonData'
+import { useFilteredPokemonData } from '@/hooks/useFilteredPokemonData'
 import { useFilterHandler } from '@/hooks/useFilterHandler'
+import { useLoadMorePoekmons } from '@/hooks/useLoadMorePokemons'
 import { useScrollToTopButton } from '@/hooks/useScrollToTop'
 import { PokemonCard } from '@/screens/pokemons/components/card/pokemonCard'
 import { PokemonsHeader } from '@/screens/pokemons/components/header/PokemonsHeader'
 import { SearchInput } from '@/screens/pokemons/components/search/SearchInput'
 import { usePokemonData } from '@/services/api/fetchPokemonData'
+import { useFavoritePokemonsQuery } from '@/services/tanstack/tanstackFunctions'
 import { PokemonData } from '@/typescript/types/pokemonTypes'
 import { useNavigatePokemon } from '@/utils/navigation/useNavigatePokemon'
 
 import palette from '@/constants/palette'
-import { useLoadMorePoekmons } from '@/hooks/useLoadMorePokemons'
 
 export default function PokeScreen() {
   const [searchQuery, setSearchQuery] = useState('')
@@ -24,7 +25,7 @@ export default function PokeScreen() {
   const [activeFilters, setActiveFilters] = useState<string[]>([])
   const flatListRef = useRef<FlatList<PokemonData>>(null)
 
-  const { data: pokemonData, favoritePokemons, fetchNextPage, hasNextPage, isFetchingNextPage } = usePokemonData()
+  const { data: pokemonData, fetchNextPage, hasNextPage, isFetchingNextPage } = usePokemonData()
   const { showScrollToTop, handleScroll, scrollToTop } = useScrollToTopButton(flatListRef)
   const handleLoadMore = useLoadMorePoekmons(fetchNextPage, hasNextPage)
   const navigatePokemon = useNavigatePokemon()

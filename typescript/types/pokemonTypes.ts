@@ -1,18 +1,12 @@
 export interface PokemonData {
-  // pokemonNameCapitalized: string
-  url: string
-  id: number
+  name: string
   extendedId: string
   shortenedId: number
-  // artworkUrl: string
-  // pokemonBackgroundColor: string
-  // pokemonChipColor: string
+  url: string
+  isFavorite: boolean
   types: string[]
   chipColors: string[]
   backgroundColors: string[]
-  // image: string
-  name: string
-  isFavorite: boolean
   stats: {
     hp: number
     attack: number
