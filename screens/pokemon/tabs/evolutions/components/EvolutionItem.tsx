@@ -1,29 +1,25 @@
+import { capitalize } from 'lodash'
 import { Image, Pressable, StyleSheet } from 'react-native'
 
 import { CustomText } from '@/components/typography/customText'
-import { useNavigateEvolution } from '@/utils/navigation/useNavigateEvolution'
-
-import { capitalize } from 'lodash'
+import { IEvolutionsItem, useNavigatePokemon } from '@/utils/navigation/useNavigatePokemon'
 
 import constants from '@/constants/constants'
 
-interface IEvolutionsItem {
-  item: { name: string; id: number }
-  name: string
-}
+export const EvolutionsItem = ({ name, item }: IEvolutionsItem) => {
+  const { name: currentPokemonName, id: currentPokemonId } = item
 
-export const EvolutionsItem = ({ item, name }: IEvolutionsItem) => {
   const isCurrentPokemon = name === item.name
   const pokemonImageUri = constants.api.ARTWORK_API_URL
-  const navigatePokemon = useNavigateEvolution()
+  const navigatePokemon = useNavigatePokemon()
 
   return (
     <Pressable
-      onPress={() => !isCurrentPokemon && navigatePokemon(item)}
+      onPress={() => !isCurrentPokemon && navigatePokemon(currentPokemonName, currentPokemonId)}
       style={isCurrentPokemon ? [styles.currentPokemonCard, { opacity: 0.4 }] : styles.card}
       disabled={isCurrentPokemon}
     >
-      <CustomText style={styles.item}>{capitalize(item.name)}</CustomText>
+      <CustomText style={styles.item}>{capitalize(name)}</CustomText>
       <Image source={{ uri: `${pokemonImageUri}/${item.id}.png` }} style={styles.image} />
     </Pressable>
   )

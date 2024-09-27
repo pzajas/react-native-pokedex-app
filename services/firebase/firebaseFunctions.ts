@@ -19,8 +19,7 @@ interface PokemonFavoriteData {
   name: string | undefined
   shortenedId: string | undefined
   extendedId: string | undefined
-  backgroundColorsArray: string[] | undefined
-  chipColorsArray: string[] | undefined
+  backgroundColor: string | undefined
   typesArray: string[] | undefined
   url: string | undefined
 }
@@ -105,7 +104,7 @@ export const fetchFavoritePokemons = async (): Promise<PokemonData[]> => {
 
       return {
         id: data.id,
-        backgroundColors: data.backgroundColors || [],
+        backgroundColor: data.backgroundColor,
         chipColors: data.chipColors || [],
         extendedId: data.extendedId || '',
         name: data.name || '',
@@ -125,20 +124,28 @@ export const fetchFavoritePokemons = async (): Promise<PokemonData[]> => {
   }
 }
 
-export const checkIfFavorite = async (shortenedId: string | undefined) => {
+export const checkIfFavorite = async (shortenedId: string | undefined): Promise<boolean> => {
   const userId = auth.currentUser?.uid
+
   if (!userId || !shortenedId) return false
 
-  const q = query(collection(firestore, `users/${userId}/favorites`), where('shortenedId', '==', shortenedId))
-  const querySnapshot = await getDocs(q)
-  return !querySnapshot.empty
+  try {
+    const q = query(collection(firestore, `users/${userId}/favorites`), where('shortenedId', '==', shortenedId))
+    const querySnapshot = await getDocs(q)
+
+    return !querySnapshot.empty
+  } catch (error) {
+    console.error('Error checking favorites:', error)
+    return false
+  }
 }
 
 export const toggleFavoritePokemon = async (
   pokemonData: PokemonFavoriteData,
   setIsFavorite: (isFavorite: boolean) => void
 ) => {
-  const { name, shortenedId, extendedId, backgroundColorsArray, chipColorsArray, typesArray, url } = pokemonData
+  const { name, shortenedId, extendedId, backgroundColor, typesArray, url } = pokemonData
+
   const userId = auth.currentUser?.uid
 
   if (!userId) {
@@ -155,8 +162,7 @@ export const toggleFavoritePokemon = async (
         name,
         shortenedId,
         extendedId,
-        backgroundColors: backgroundColorsArray,
-        chipColors: chipColorsArray,
+        backgroundColor,
         types: typesArray,
         url
       })

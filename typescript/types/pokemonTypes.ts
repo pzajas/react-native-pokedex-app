@@ -6,7 +6,7 @@ export interface PokemonData {
   isFavorite: boolean
   types: string[]
   chipColors: string[]
-  backgroundColors: string[]
+  backgroundColor: string
   stats: {
     hp: number
     attack: number

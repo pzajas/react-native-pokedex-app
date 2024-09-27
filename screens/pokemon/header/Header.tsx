@@ -1,41 +1,40 @@
-import { useLocalSearchParams } from 'expo-router'
 import { capitalize } from 'lodash'
 import { useEffect, useState } from 'react'
 import { SafeAreaView, StyleSheet, View } from 'react-native'
 
 import { CustomText } from '@/components/typography/customText'
+import { useNameLocalSearchParams } from '@/hooks/useNameLocalSearchParams'
 import { IconButton } from '@/screens/pokemons/components/search/SearchBarButton'
 import { checkIfFavorite, toggleFavoritePokemon } from '@/services/firebase/firebaseFunctions'
+import { usePokemonData } from '@/services/hooks/usePokemonData'
+import { getPokemonTypeColor } from '@/utils/colors/getPokemonTypeColor'
 import { useNavigateBack } from '@/utils/navigation/useNavigateBack'
 
 import palette from '@/constants/palette'
 import debounce from 'lodash/debounce'
 
 export const Header = () => {
-  const navigateBack = useNavigateBack()
-  const { name, shortenedId, extendedId, url, types, chip, backgroundColors } = useLocalSearchParams()
+  const { navigateBack } = useNavigateBack()
+  const { name } = useNameLocalSearchParams()
+  const { shortenedId, extendedId, url, types: typesArray } = usePokemonData(name)
   const [isFavorite, setIsFavorite] = useState(false)
 
-  const backgroundColorsArray = backgroundColors?.split(',').map((color: string) => color.trim())
-  const typesArray = types?.split(',').map((color: string) => color.trim())
-  const chipColorsArray = chip?.split(',').map((color: string) => color.trim())
+  const backgroundColor = getPokemonTypeColor(typesArray[0])
 
   useEffect(() => {
-    const checkFavoriteDebounced = debounce(async () => {
-      const isFav = await checkIfFavorite(shortenedId)
-      setIsFavorite(isFav)
-    }, 1000)
+    const checkFavorite = async () => {
+      const isFavoritePokemon = await checkIfFavorite(shortenedId)
 
-    checkFavoriteDebounced()
-
-    return () => {
-      checkFavoriteDebounced.cancel()
+      setIsFavorite(isFavoritePokemon)
     }
+
+    checkFavorite()
   }, [shortenedId])
 
   const handleToggleFavorite = debounce(() => {
     toggleFavoritePokemon(
-      { name, shortenedId, extendedId, backgroundColorsArray, chipColorsArray, typesArray, url },
+      { name, shortenedId, extendedId, backgroundColor, typesArray, url },
+
       setIsFavorite
     )
   }, 1000)
