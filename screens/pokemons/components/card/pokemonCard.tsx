@@ -11,11 +11,11 @@ export const PokemonCard = ({
   pokemon: PokemonData
   handleNavigatePokemon: any
 }) => {
-  const { backgroundColors } = pokemon
+  const { name, shortenedId, backgroundColor } = pokemon
 
   return (
-    <Pressable onPress={() => handleNavigatePokemon && handleNavigatePokemon(pokemon)}>
-      <View style={[styles.wrapper, { backgroundColor: backgroundColors[0] || palette.typeColors.default }]}>
+    <Pressable onPress={() => handleNavigatePokemon && handleNavigatePokemon(name, shortenedId)}>
+      <View style={[styles.wrapper, { backgroundColor: backgroundColor || palette.typeColors.default }]}>
         <View style={styles.infoContainer}>
           <PokemonCardInfo pokemon={pokemon} />
         </View>

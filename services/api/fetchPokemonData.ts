@@ -32,11 +32,11 @@ const transformPokemonData = (pokemon: PokemonData) => {
   const types = typesMap.get(pokemonName.toUpperCase()) || []
 
   const chipColors: string[] = []
-  const backgroundColors: string[] = []
+  const backgroundColor: string[] = []
 
   types.forEach((type) => {
     chipColors.push(getTypeColor(type, 'chip'))
-    backgroundColors.push(getTypeColor(type, 'background'))
+    backgroundColor.push(getTypeColor(type, 'background'))
   })
 
   return {
@@ -45,7 +45,7 @@ const transformPokemonData = (pokemon: PokemonData) => {
     extendedId,
     url: pokemonUrl,
     chipColors,
-    backgroundColors,
+    backgroundColor: backgroundColor[0],
     isFavorite: false,
     types,
     species: pokemon.species,

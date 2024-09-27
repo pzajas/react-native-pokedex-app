@@ -1,3 +1,5 @@
+import constants from '@/constants/constants'
+import { formatPokemonId } from '@/utils/formatters/formatPokemonId'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 
@@ -149,7 +151,8 @@ export const usePokemonData = (name: string) => {
             value: s.base_stat
           })) || [],
         moves: pokemonQuery.data.moves?.map((m) => m.move.name) || [],
-        forms: pokemonQuery.data.forms?.map((f) => f.name) || []
+        forms: pokemonQuery.data.forms?.map((f) => f.name) || [],
+        types: pokemonQuery.data.types?.map((pokemon: string) => pokemon?.type?.name) || []
       }
     : null
 
@@ -157,7 +160,8 @@ export const usePokemonData = (name: string) => {
     ? {
         description: getEnglishEntry(speciesQuery.data.flavor_text_entries),
         genera: speciesQuery.data.genera?.filter((g) => g.language.name === 'en').map((g) => g.genus) || [],
-        genderRate: speciesQuery.data.gender_rate
+        genderRate: speciesQuery.data.gender_rate,
+        id: speciesQuery.data.id
       }
     : null
 
@@ -179,18 +183,24 @@ export const usePokemonData = (name: string) => {
       }
     : null
 
+  const shortenedId = speciesData?.id
+
   return {
+    shortenedId,
+    extendedId: formatPokemonId(shortenedId),
     weight: pokemonData?.weight,
     height: pokemonData?.height,
     abilities: pokemonData?.abilities,
     moves: pokemonData?.moves,
     stats: pokemonData?.stats || [],
+    types: pokemonData?.types || [],
     genera: speciesData?.genera || [],
     description: speciesData?.description || '',
     genderRate: speciesData?.genderRate || 0,
     evolutions: evolutionChainData,
     habitat: habitatData?.habitatName || '',
     shape: shapeData?.shapeName || '',
+    url: `${constants.api.ARTWORK_API_URL}/${shortenedId}.png` || '',
     isLoading:
       pokemonQuery.isLoading ||
       speciesQuery.isLoading ||

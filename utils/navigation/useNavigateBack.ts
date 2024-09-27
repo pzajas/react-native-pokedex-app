@@ -7,5 +7,5 @@ export const useNavigateBack = () => {
     router.back()
   }
 
-  return navigateBack
+  return { navigateBack }
 }

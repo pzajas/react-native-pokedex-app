@@ -60,7 +60,7 @@ export default function PokeScreen() {
         onScroll={handleScroll}
         ListFooterComponent={isFetchingNextPage ? <LoadingIndicator /> : null}
         ListHeaderComponent={
-          <View style={{ backgroundColor: 'white' }}>
+          <View style={styles.listHeaderComponentContainer}>
             <PokemonsHeader />
             <SearchInput
               isFocused={isFocused}
@@ -93,5 +93,8 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     marginBottom: 16
+  },
+  listHeaderComponentContainer: {
+    backgroundColor: palette.colors.white
   }
 })

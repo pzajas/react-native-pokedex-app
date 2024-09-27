@@ -1,24 +1,30 @@
-import { useLocalSearchParams } from 'expo-router'
+import { useMemo } from 'react'
 import { Image, StyleSheet, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { Header } from '@/screens/pokemon/header/Header'
 import { PokeTabs } from '@/screens/pokemon/tabs/PokeTabs'
+import { usePokemonData } from '@/services/hooks/usePokemonData'
+
+import { useNameLocalSearchParams } from '@/hooks/useNameLocalSearchParams'
+import { getPokemonTypeColor } from '@/utils/colors/getPokemonTypeColor'
 
 import palette from '@/constants/palette'
 
 export default function PokemonScreen() {
-  const { backgroundColors, url } = useLocalSearchParams()
+  const { name } = useNameLocalSearchParams()
+  const { url, types } = usePokemonData(name)
 
-  const pokeballImage = require('../../../assets/images/pokeball.png') || ''
-  const pokemonTypeColor = typeof backgroundColors === 'string' ? backgroundColors.split(',')[0] : ''
+  const pokeballImage = require('../../../assets/images/pokeball.png')
+  const pokemonImageSource = url ? { uri: url } : pokeballImage
+  const pokemonTypeDatabaseColor = useMemo(() => getPokemonTypeColor(types[0]), [types])
 
   return (
-    <SafeAreaView style={[styles.outerContainer, { backgroundColor: pokemonTypeColor }]} edges={['top']}>
+    <SafeAreaView style={[styles.outerContainer, { backgroundColor: pokemonTypeDatabaseColor }]} edges={['top']}>
       <Header />
       <View style={styles.tabContainer}>
         <Image source={pokeballImage} style={styles.pokeballImage} />
-        <Image source={{ uri: url }} style={styles.pokemonImage} />
+        <Image source={pokemonImageSource} style={styles.pokemonImage} />
         <PokeTabs />
       </View>
     </SafeAreaView>

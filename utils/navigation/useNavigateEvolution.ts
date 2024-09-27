@@ -13,8 +13,8 @@ export const useNavigateEvolution = () => {
       pathname: '/pokemon/[name]',
       params: {
         name,
-        id,
-        backgroundColor
+        backgroundColor,
+        shortenedId: id
       }
     })
   }
