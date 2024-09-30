@@ -5,6 +5,7 @@ import { Stats } from './stats/Stats'
 
 import { pokemonTabLabels } from '@/constants/pokemons'
 import { PokeTabWrapper } from './PokeTabWrapper'
+import { Media } from './media/Media'
 
 export const tabs = [
   {
@@ -36,6 +37,14 @@ export const tabs = [
     component: (
       <PokeTabWrapper>
         <Evolutions />
+      </PokeTabWrapper>
+    )
+  },
+  {
+    label: pokemonTabLabels.media,
+    component: (
+      <PokeTabWrapper>
+        <Media />
       </PokeTabWrapper>
     )
   }

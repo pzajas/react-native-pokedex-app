@@ -1,7 +1,8 @@
-import constants from '@/constants/constants'
 import { PokemonData } from '@/typescript/types/pokemonTypes'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
+
+import constants from '@/constants/constants'
 
 export const PokemonCardImage = ({ pokemon }: { pokemon: PokemonData }) => {
   const artworkUrl = constants.api.ARTWORK_API_URL

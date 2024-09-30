@@ -20,6 +20,8 @@ export const typography = {
     gender: 'Gender',
     moves: 'Moves',
     evolutions: 'Evolutions',
+    cries: 'Cries',
+
     male: 'male',
     female: 'female'
   },

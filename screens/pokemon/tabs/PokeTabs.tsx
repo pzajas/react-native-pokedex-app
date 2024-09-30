@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { FlatList, StyleSheet, View } from 'react-native'
 
 import { PokeTabButton } from './PokeTabButton'
 import { tabs } from './PokeTabsConfig'
@@ -12,18 +12,22 @@ export const PokeTabs = () => {
   return (
     <View style={styles.container}>
       <View style={styles.tabHeaderContainer}>
-        <View style={styles.tabHeader}>
-          {tabs.map((tab) => (
+        <FlatList
+          data={tabs}
+          horizontal
+          keyExtractor={(item) => item.label}
+          contentContainerStyle={styles.tabHeader}
+          renderItem={({ item: tab }) => (
             <PokeTabButton
-              key={tab.label}
               label={tab.label}
               isActive={selectedTab === tab.label}
               onPress={() => setSelectedTab(tab.label)}
               accessibilityRole="tab"
               accessibilityState={{ selected: selectedTab === tab.label }}
             />
-          ))}
-        </View>
+          )}
+          showsHorizontalScrollIndicator={false}
+        />
       </View>
       <View style={styles.tabContentContainer}>{tabs.find((tab) => tab.label === selectedTab)?.component}</View>
     </View>
@@ -45,8 +49,6 @@ const styles = StyleSheet.create({
     backgroundColor: palette.colors.white
   },
   tabHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
     paddingHorizontal: 8,
     paddingTop: 32
   },

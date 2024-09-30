@@ -10,9 +10,12 @@ interface PokemonData {
   stats: Array<{ base_stat: number; stat: { name: string } }>
   moves: Array<{ move: { name: string } }>
   forms: Array<{ name: string }>
+  types: Array<{ type: { name: string } }>
+  cries: CryData
 }
 
 interface PokemonSpeciesData {
+  id: string
   flavor_text_entries: Array<{ flavor_text: string; language: { name: string } }>
   genera: Array<{ genus: string; language: { name: string } }>
   gender_rate: number
@@ -49,6 +52,10 @@ interface PokemonHabitatData {
 interface PokemonShapeData {
   name: string
   url: string
+}
+interface CryData {
+  latest: string
+  legacy: string
 }
 
 const fetchPokemonByName = async (name: string): Promise<PokemonData> => {
@@ -152,7 +159,11 @@ export const usePokemonData = (name: string) => {
           })) || [],
         moves: pokemonQuery.data.moves?.map((m) => m.move.name) || [],
         forms: pokemonQuery.data.forms?.map((f) => f.name) || [],
-        types: pokemonQuery.data.types?.map((pokemon: string) => pokemon?.type?.name) || []
+        types: pokemonQuery.data.types?.map((type) => type.type.name) || [],
+        cries: {
+          latest: pokemonQuery.data.cries?.latest || '',
+          legacy: pokemonQuery.data.cries?.legacy || ''
+        }
       }
     : null
 
@@ -194,6 +205,7 @@ export const usePokemonData = (name: string) => {
     moves: pokemonData?.moves,
     stats: pokemonData?.stats || [],
     types: pokemonData?.types || [],
+    cries: pokemonData?.cries || { latest: '', legacy: '' },
     genera: speciesData?.genera || [],
     description: speciesData?.description || '',
     genderRate: speciesData?.genderRate || 0,
