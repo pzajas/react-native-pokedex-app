@@ -32,6 +32,7 @@
     "eslint-define-config": "^2.1.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "expo": "~51.0.28",
+    "expo-av": "^14.0.7",
     "expo-constants": "~16.0.2",
     "expo-font": "~12.0.9",
     "expo-linking": "~6.3.1",

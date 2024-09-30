@@ -23,5 +23,6 @@ export const pokemonTabLabels = {
   about: 'About',
   stats: 'Stats',
   evolution: 'Evolution',
-  moves: 'Moves'
+  moves: 'Moves',
+  media: 'Media'
 }
