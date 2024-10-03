@@ -6,7 +6,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import * as ImageManipulator from 'expo-image-manipulator'
 import * as ImagePicker from 'expo-image-picker'
 import { getDownloadURL, listAll, ref, uploadBytesResumable } from 'firebase/storage'
-import { Alert, Image, ScrollView, StyleSheet, View } from 'react-native'
+import { useState } from 'react'
+import { Alert, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
+import ImageViewing from 'react-native-image-viewing'
 import { PokeTabSectionHeader } from '../PokeTabSectionHeader'
 import { PokemonCries } from './components/PokemonCries'
 
@@ -42,6 +44,9 @@ export const Media = () => {
   const { name } = useNameLocalSearchParams()
   const { cries } = usePokemonData(name)
   const queryClient = useQueryClient()
+
+  const [isVisible, setIsVisible] = useState(false)
+  const [currentIndex, setCurrentIndex] = useState(0)
 
   const { data: imageUris = [] } = useQuery({
     queryKey: ['images', name],
@@ -90,6 +95,11 @@ export const Media = () => {
     }
   }
 
+  const openImageFullscreen = (index) => {
+    setCurrentIndex(index)
+    setIsVisible(true)
+  }
+
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
@@ -101,7 +111,9 @@ export const Media = () => {
           <View>
             <View style={styles.thumbnailContainer}>
               {imageUris.map((uri, index) => (
-                <Image key={index} source={{ uri }} style={styles.thumbnail} resizeMode="cover" />
+                <TouchableOpacity key={index} onPress={() => openImageFullscreen(index)}>
+                  <Image source={{ uri }} style={styles.thumbnail} resizeMode="cover" />
+                </TouchableOpacity>
               ))}
             </View>
           </View>
@@ -109,6 +121,13 @@ export const Media = () => {
       </ScrollView>
 
       <SmallRoundButton onPress={pickAndUploadImage} iconName="add" />
+
+      <ImageViewing
+        images={imageUris.map((uri) => ({ uri }))}
+        imageIndex={currentIndex}
+        visible={isVisible}
+        onRequestClose={() => setIsVisible(false)}
+      />
     </View>
   )
 }
