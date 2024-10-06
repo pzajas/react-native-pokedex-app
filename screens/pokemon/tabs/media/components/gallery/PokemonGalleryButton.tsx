@@ -1,11 +1,10 @@
-import { Alert } from 'react-native'
-
 import { SmallRoundButton } from '@/components/buttons/SmallRoundButton'
 import { uploadImage } from '@/services/firebase/firebaseFunctions'
 import { QueryClient, useMutation } from '@tanstack/react-query'
 
 import * as ImageManipulator from 'expo-image-manipulator'
 import * as ImagePicker from 'expo-image-picker'
+import Toast from 'react-native-toast-message'
 
 interface PokemonGalleryButtonProps {
   name: string
@@ -16,18 +15,30 @@ export const PokemonGalleryButton = ({ name, queryClient }: PokemonGalleryButton
   const uploadImageMutation = useMutation({
     mutationFn: (pickedUri: string) => uploadImage(pickedUri, name),
     onSuccess: (url: string) => {
-      Alert.alert('Upload successful', 'Image has been uploaded successfully!')
+      Toast.show({
+        type: 'success',
+        text1: 'Upload successful',
+        text2: 'Image has been uploaded successfully!'
+      })
     },
     onError: (error: Error) => {
       console.error('Error uploading image:', error)
-      Alert.alert('Upload failed', error.message || 'An unknown error occurred.')
+      Toast.show({
+        type: 'error',
+        text1: 'Upload failed',
+        text2: error.message || 'An unknown error occurred.'
+      })
     }
   })
 
   const pickAndUploadImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
     if (!permissionResult.granted) {
-      Alert.alert('Permission to access the camera roll is required!')
+      Toast.show({
+        type: 'error',
+        text1: 'Permission denied',
+        text2: 'Permission to access the camera roll is required!'
+      })
       return
     }
 

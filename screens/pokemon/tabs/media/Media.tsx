@@ -1,14 +1,17 @@
+import { useState } from 'react'
+import { FlatList, StyleSheet, View } from 'react-native'
+
 import { useNameLocalSearchParams } from '@/hooks/useNameLocalSearchParams'
 import { fetchImages } from '@/services/firebase/firebaseFunctions'
 import { usePokemonData } from '@/services/hooks/usePokemonData'
 import { queryClient } from '@/services/tanstack/queryClient'
 import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
-import { FlatList, StyleSheet, View } from 'react-native'
-import ImageViewing from 'react-native-image-viewing'
+
 import { PokemonCries } from './components/cries/PokemonCries'
 import { ImageGallery } from './components/gallery/PokemonGallery'
 import { PokemonGalleryButton } from './components/gallery/PokemonGalleryButton'
+
+import ImageViewing from 'react-native-image-viewing'
 
 export const Media = () => {
   const { name } = useNameLocalSearchParams()

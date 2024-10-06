@@ -12,6 +12,7 @@ import * as SplashScreen from 'expo-splash-screen'
 import { onAuthStateChanged } from 'firebase/auth'
 import { useEffect, useState } from 'react'
 import 'react-native-reanimated'
+import Toast from 'react-native-toast-message'
 import { PoppinsBold, PoppinsLight, PoppinsMedium, PoppinsRegular, PoppinsSemiBold } from '../assets/fonts'
 
 SplashScreen.preventAutoHideAsync()
@@ -87,6 +88,7 @@ function RootLayoutNav({ isLoggedIn }: { isLoggedIn: boolean }) {
           </Stack>
         )}
       </ThemeProvider>
+      <Toast />
     </PersistQueryClientProvider>
   )
 }
