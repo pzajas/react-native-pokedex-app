@@ -1,49 +1,18 @@
-import { SmallRoundButton } from '@/components/buttons/SmallRoundButton'
 import { useNameLocalSearchParams } from '@/hooks/useNameLocalSearchParams'
-import { storage } from '@/services/firebase/firebase'
+import { fetchImages } from '@/services/firebase/firebaseFunctions'
 import { usePokemonData } from '@/services/hooks/usePokemonData'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import * as ImageManipulator from 'expo-image-manipulator'
-import * as ImagePicker from 'expo-image-picker'
-import { getDownloadURL, listAll, ref, uploadBytesResumable } from 'firebase/storage'
+import { queryClient } from '@/services/tanstack/queryClient'
+import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
-import { Alert, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { FlatList, StyleSheet, View } from 'react-native'
 import ImageViewing from 'react-native-image-viewing'
-import { PokeTabSectionHeader } from '../PokeTabSectionHeader'
-import { PokemonCries } from './components/PokemonCries'
-
-const fetchImages = async (name) => {
-  const storageRef = ref(storage, `images/${name}/`)
-  const listResponse = await listAll(storageRef)
-  const urls = await Promise.all(listResponse.items.map((item) => getDownloadURL(item)))
-  return urls
-}
-
-const uploadImage = async (pickedUri, name) => {
-  const response = await fetch(pickedUri)
-  const blob = await response.blob()
-  const storageRef = ref(storage, `images/${name}/${Date.now()}`)
-  const uploadTask = uploadBytesResumable(storageRef, blob)
-  return new Promise((resolve, reject) => {
-    uploadTask.on(
-      'state_changed',
-      (snapshot) => {},
-      (error) => {
-        console.error('Upload failed:', error)
-        reject(error)
-      },
-      async () => {
-        const url = await getDownloadURL(uploadTask.snapshot.ref)
-        resolve(url)
-      }
-    )
-  })
-}
+import { PokemonCries } from './components/cries/PokemonCries'
+import { ImageGallery } from './components/gallery/PokemonGallery'
+import { PokemonGalleryButton } from './components/gallery/PokemonGalleryButton'
 
 export const Media = () => {
   const { name } = useNameLocalSearchParams()
   const { cries } = usePokemonData(name)
-  const queryClient = useQueryClient()
 
   const [isVisible, setIsVisible] = useState(false)
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -51,76 +20,44 @@ export const Media = () => {
   const { data: imageUris = [] } = useQuery({
     queryKey: ['images', name],
     queryFn: () => fetchImages(name),
-    enabled: !!name
+    enabled: !!name,
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false
   })
 
-  const uploadImageMutation = useMutation({
-    mutationFn: (pickedUri) => uploadImage(pickedUri, name),
-    onSuccess: (url) => {
-      Alert.alert('Upload successful', 'Image has been uploaded successfully!')
-    },
-    onError: (error) => {
-      console.error('Error uploading image:', error)
-      Alert.alert('Upload failed', error.message)
-    }
-  })
-
-  const pickAndUploadImage = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
-    if (!permissionResult.granted) {
-      Alert.alert('Permission to access the camera roll is required!')
-      return
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 1
-    })
-
-    if (!result.canceled) {
-      const pickedUri = result.assets[0].uri
-      console.log('Picked Image URI:', pickedUri)
-
-      const manipResult = await ImageManipulator.manipulateAsync(pickedUri, [{ resize: { width: 800 } }], {
-        compress: 0.7,
-        format: ImageManipulator.SaveFormat.WEBP
-      })
-
-      const compressedUri = manipResult.uri
-      console.log('Compressed Image URI (WEBP):', compressedUri)
-
-      queryClient.setQueryData(['images', name], (oldData) => [...oldData, compressedUri])
-      uploadImageMutation.mutate(compressedUri)
-    }
-  }
-
-  const openImageFullscreen = (index) => {
+  const openImageFullscreen = (index: number) => {
     setCurrentIndex(index)
     setIsVisible(true)
   }
 
+  const combinedData = [
+    { type: 'cries', data: cries },
+    { type: 'gallery', data: imageUris }
+  ]
+
+  const renderItem = ({ item }: { item: { type: string; data: any } }) => {
+    if (item.type === 'cries') {
+      return <PokemonCries latest={item.data.latest} legacy={item.data.legacy} />
+    }
+    if (item.type === 'gallery' && item.data.length > 0) {
+      return <ImageGallery imageUris={item.data} onOpenImage={openImageFullscreen} />
+    }
+    return null
+  }
+
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        <PokemonCries latest={cries.latest} legacy={cries.legacy} />
+      <FlatList
+        data={combinedData}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => `${item}-${index}`}
+        showsVerticalScrollIndicator={false}
+      />
 
-        <PokeTabSectionHeader title={'Gallery'} />
-
-        {imageUris.length > 0 && (
-          <View>
-            <View style={styles.thumbnailContainer}>
-              {imageUris.map((uri, index) => (
-                <TouchableOpacity key={index} onPress={() => openImageFullscreen(index)}>
-                  <Image source={{ uri }} style={styles.thumbnail} resizeMode="cover" />
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-        )}
-      </ScrollView>
-
-      <SmallRoundButton onPress={pickAndUploadImage} iconName="add" />
+      <View style={styles.buttonContainer}>
+        <PokemonGalleryButton name={name} queryClient={queryClient} />
+      </View>
 
       <ImageViewing
         images={imageUris.map((uri) => ({ uri }))}
@@ -135,22 +72,12 @@ export const Media = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: 'relative'
+    position: 'relative',
+    paddingBottom: 20
   },
-  scrollView: {
-    paddingBottom: 80
-  },
-  thumbnailContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between'
-  },
-  thumbnail: {
-    width: '15%',
-    height: 50,
-    aspectRatio: 1,
-    marginBottom: 10,
-    marginHorizontal: '0.5%',
-    borderRadius: 8
+  buttonContainer: {
+    position: 'absolute',
+    bottom: -20,
+    right: 0
   }
 })

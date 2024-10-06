@@ -1,6 +1,6 @@
 import { typography } from '@/constants/typography'
 import { View } from 'react-native'
-import { PokeTabSectionHeader } from '../../PokeTabSectionHeader'
+import { PokeTabSectionHeader } from '../../../PokeTabSectionHeader'
 import { PokemonCry } from './PokemonCry'
 
 interface PokemonCriesProps {
