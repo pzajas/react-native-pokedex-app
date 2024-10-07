@@ -2,7 +2,6 @@ import { useLocalSearchParams } from 'expo-router'
 import { FlatList, StyleSheet, View } from 'react-native'
 
 import { EvolutionsItem } from './EvolutionItem'
-
 interface EvolutionsListProps {
   evolutionList: { name: string; id: number }[]
 }
