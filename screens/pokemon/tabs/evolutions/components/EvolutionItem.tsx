@@ -19,7 +19,7 @@ export const EvolutionsItem = ({ name, item }: IEvolutionsItem) => {
       style={isCurrentPokemon ? [styles.currentPokemonCard, { opacity: 0.4 }] : styles.card}
       disabled={isCurrentPokemon}
     >
-      <CustomText style={styles.item}>{capitalize(name)}</CustomText>
+      <CustomText style={styles.item}>{capitalize(item.name)}</CustomText>
       <Image source={{ uri: `${pokemonImageUri}/${item.id}.png` }} style={styles.image} />
     </Pressable>
   )

@@ -182,8 +182,6 @@ export const toggleFavoritePokemon = async (
 }
 
 export const fetchImages = async (name: string) => {
-  console.log('Fetching images....')
-
   const storageRef = ref(storage, `images/${name}/`)
   const listResponse = await listAll(storageRef)
   const urls = await Promise.all(listResponse.items.map((item) => getDownloadURL(item)))
