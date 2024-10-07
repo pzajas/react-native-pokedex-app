@@ -8,8 +8,9 @@ import {
   signOut
 } from 'firebase/auth'
 import { addDoc, collection, deleteDoc, doc, getDocs, query, where } from 'firebase/firestore'
+import { getDownloadURL, listAll, ref, uploadBytesResumable } from 'firebase/storage'
 import { capitalize } from 'lodash'
-import { auth, firestore } from '../../services/firebase/firebase'
+import { auth, firestore, storage } from '../../services/firebase/firebase'
 import { queryClient } from '../tanstack/queryClient'
 interface IUserCredentials {
   email: string
@@ -178,4 +179,39 @@ export const toggleFavoritePokemon = async (
     console.error('Error toggling favorite: ', error)
     alert('Failed to toggle favorite status.')
   }
+}
+
+export const fetchImages = async (name: string) => {
+  console.log('Fetching images....')
+
+  const storageRef = ref(storage, `images/${name}/`)
+  const listResponse = await listAll(storageRef)
+  const urls = await Promise.all(listResponse.items.map((item) => getDownloadURL(item)))
+  return urls
+}
+
+export const uploadImage = async (pickedUri: string, name: string): Promise<string> => {
+  const response = await fetch(pickedUri)
+  const blob = await response.blob()
+  const storageRef = ref(storage, `images/${name}/${Date.now()}`)
+
+  const uploadTask = uploadBytesResumable(storageRef, blob)
+
+  return new Promise<string>((resolve, reject) => {
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        console.log(`Upload is ${progress}% done`)
+      },
+      (error) => {
+        console.error('Upload failed:', error.code, error.message)
+        reject(new Error(error.message))
+      },
+      async () => {
+        const url = await getDownloadURL(uploadTask.snapshot.ref)
+        resolve(url)
+      }
+    )
+  })
 }
