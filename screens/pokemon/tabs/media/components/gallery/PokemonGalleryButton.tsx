@@ -5,7 +5,6 @@ import { QueryClient, useMutation } from '@tanstack/react-query'
 import * as ImageManipulator from 'expo-image-manipulator'
 import * as ImagePicker from 'expo-image-picker'
 import Toast from 'react-native-toast-message'
-
 interface PokemonGalleryButtonProps {
   name: string
   queryClient: QueryClient

@@ -1,6 +1,5 @@
 import { FlatList, Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { PokeTabSectionHeader } from '../../../PokeTabSectionHeader'
-
 interface ImageGalleryProps {
   imageUris: string[]
   onOpenImage: (index: number) => void
