@@ -9,7 +9,7 @@ import {
 } from 'firebase/auth'
 import { addDoc, collection, deleteDoc, doc, getDocs, query, where } from 'firebase/firestore'
 import { getDownloadURL, listAll, ref, uploadBytesResumable } from 'firebase/storage'
-import { capitalize } from 'lodash'
+import Toast from 'react-native-toast-message'
 import { auth, firestore, storage } from '../../services/firebase/firebase'
 import { queryClient } from '../tanstack/queryClient'
 interface IUserCredentials {
@@ -150,7 +150,11 @@ export const toggleFavoritePokemon = async (
   const userId = auth.currentUser?.uid
 
   if (!userId) {
-    alert('You must be logged in to add favorites.')
+    Toast.show({
+      type: 'error',
+      text1: 'An error occured!',
+      text2: 'You must be logged in to add pokemons to favorites!'
+    })
     return
   }
 
@@ -168,12 +172,20 @@ export const toggleFavoritePokemon = async (
         url
       })
       setIsFavorite(true)
-      alert(`${capitalize(name)} added to favorites!`)
+      Toast.show({
+        type: 'success',
+        text1: 'Congratulations!',
+        text2: 'Pokemon added to favorites successfully!'
+      })
     } else {
       const docId = querySnapshot.docs[0].id
       await deleteDoc(doc(firestore, `users/${userId}/favorites/${docId}`))
       setIsFavorite(false)
-      alert(`${capitalize(name)} removed from favorites!`)
+      Toast.show({
+        type: 'error',
+        text1: 'What a sadge moment!',
+        text2: 'You just removed a pokemon from favorites list!'
+      })
     }
   } catch (error) {
     console.error('Error toggling favorite: ', error)
