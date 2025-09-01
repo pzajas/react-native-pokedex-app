@@ -1,0 +1,11 @@
+node_modules
+build
+android
+ios
+dist
+.expo
+.expo-shared
+.next
+out
+coverage
+package-lock.json 
