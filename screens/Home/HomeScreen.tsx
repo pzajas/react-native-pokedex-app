@@ -1,9 +1,16 @@
-import { Text, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
+import { NewsListSection } from './list/NewsListSection';
+import { SearchSection } from './search/SearchSection';
+import { TilesSection } from './tiles/TilesSection';
 
-export default function HomeScreen() {
+export const HomeScreen = () => {
   return (
-    <View className="flex-1 justify-center items-center">
-      <Text className="text-xl text-red-500">Home</Text>
+    <View className="flex-1 bg-surfaceSecondary dark:bg-surfaceSecondary-dark">
+      <ScrollView contentContainerClassName="pb-16" showsVerticalScrollIndicator={false}>
+        <SearchSection value="" onChangeText={() => {}} />
+        <TilesSection />
+        <NewsListSection />
+      </ScrollView>
     </View>
   );
-}
+};

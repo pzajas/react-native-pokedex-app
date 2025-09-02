@@ -1,5 +1,7 @@
-import { Colors } from '@/constants/Colors';
+import { AppHeader } from '@/components/headers/AppHeader';
+import { Colors } from '@/constants/color';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { HeaderBackButton } from '@react-navigation/elements';
 import { Tabs } from 'expo-router';
 import { Platform } from 'react-native';
 
@@ -8,16 +10,36 @@ export default function TabLayout() {
 
   return (
     <Tabs
-      screenOptions={{
+      screenOptions={({ navigation }) => ({
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
+        headerShown: true,
+        headerLeft: (props) =>
+          navigation.canGoBack() ? (
+            <HeaderBackButton {...props} onPress={() => navigation.goBack()} />
+          ) : undefined,
+        headerTitleAlign: 'left',
+        headerShadowVisible: false,
+        headerTintColor: Colors[colorScheme ?? 'light'].text,
+        headerStyle: { backgroundColor: Colors[colorScheme ?? 'light'].background },
+        headerTitleStyle: {
+          fontSize: 22,
+          fontWeight: '700',
+          color: Colors[colorScheme ?? 'light'].text,
+        },
+        header: ({ options }) => (
+          <AppHeader
+            title={(options?.title as string) || ''}
+            showBackButton={navigation.canGoBack()}
+            onPressBack={() => navigation.goBack()}
+          />
+        ),
         tabBarStyle: Platform.select({
           ios: {
             position: 'absolute',
           },
           default: {},
         }),
-      }}
+      })}
     >
       <Tabs.Screen
         name="index"
