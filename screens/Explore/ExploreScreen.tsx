@@ -1,9 +1,12 @@
-import { Text, View } from 'react-native';
+import { ThemedText } from '@/components/typography/ThemedText';
+import { View } from 'react-native';
 
-export default function ExploreScreen() {
+export const ExploreScreen = () => {
   return (
     <View className="flex-1 justify-center items-center">
-      <Text className="text-xl font-semibold text-blue-500">Explore</Text>
+      <ThemedText weight="bold" className="text-[20px]" color="text">
+        Explore
+      </ThemedText>
     </View>
   );
-}
+};
