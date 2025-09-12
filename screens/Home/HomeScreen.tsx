@@ -10,6 +10,8 @@ export const HomeScreen = () => {
   const bottomInset = Platform.OS === 'ios' ? tabBarHeight : 0;
   const [query, setQuery] = useState('');
 
+  console.log('bottomInset');
+
   return (
     <View className="flex-1 bg-surfaceSecondary dark:bg-surfaceSecondary-dark">
       <ScrollView
