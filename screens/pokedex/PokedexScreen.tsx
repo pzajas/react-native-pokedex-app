@@ -181,7 +181,7 @@ const PokemonRow = ({ name }: { name: string }) => {
           }}
         >
           {/* Gloss overlay */}
-          <View className="absolute inset-0 rounded-3xl overflow-hidden">
+          <View className="overflow-hidden absolute inset-0 rounded-3xl">
             <LinearGradient
               colors={['rgba(255,255,255,0.18)', 'rgba(255,255,255,0.08)', 'rgba(255,255,255,0)']}
               locations={[0, 0.35, 1]}
@@ -234,7 +234,7 @@ const PokemonRow = ({ name }: { name: string }) => {
         }}
       >
         {/* Gloss overlay */}
-        <View className="absolute inset-0 rounded-3xl overflow-hidden">
+        <View className="overflow-hidden absolute inset-0 rounded-3xl">
           <LinearGradient
             colors={['rgba(255,255,255,0.18)', 'rgba(255,255,255,0.08)', 'rgba(255,255,255,0)']}
             locations={[0, 0.35, 1]}
