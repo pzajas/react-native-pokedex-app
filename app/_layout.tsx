@@ -57,6 +57,30 @@ export default function RootLayout() {
               animation: 'slide_from_right',
             }}
           />
+          {/* Added details route header without title */}
+          <Stack.Screen
+            name="(content)/pokedex/[name]"
+            options={{
+              title: '',
+              headerTitleAlign: 'left',
+              headerShadowVisible: false,
+              headerTintColor: Colors[colorScheme ?? 'light'].text,
+              headerStyle: { backgroundColor: Colors[colorScheme ?? 'light'].background },
+              headerTitleStyle: {
+                fontSize: 22,
+                fontWeight: '700',
+                color: Colors[colorScheme ?? 'light'].text,
+              },
+              header: ({ navigation }) => (
+                <AppHeader
+                  title=""
+                  showBackButton={navigation.canGoBack()}
+                  onPressBack={() => navigation.goBack()}
+                />
+              ),
+              animation: 'slide_from_right',
+            }}
+          />
         </Stack>
         <StatusBar style="auto" />
       </ThemeProvider>
